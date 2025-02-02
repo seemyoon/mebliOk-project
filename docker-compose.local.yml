@@ -9,7 +9,7 @@ services:
       POSTGRES_DB: '${POSTGRES_DB:-mebliok-database}'
     restart: on-failure
 
-  mebliok-management-redis:
+  mebliok-redis:
     image: redis:7.2.3
     ports:
       - '${REDIS_PORT:-6379}:6379'
@@ -17,5 +17,19 @@ services:
       --requirepass '${REDIS_PASSWORD:-redispassword}'
     restart: unless-stopped
 
+  mebliok-s3:
+    image: quay.io/minio/minio:latest
+    command: server /data --console-address ":9001"
+    restart: unless-stopped
+    ports:
+      - "8000:9000"
+      - "8001:9001"
+    volumes:
+      - ./mebliok-s3-data:/usr/src/app/s3
+    environment:
+      MINIO_ROOT_USER: '${AWS_S3_ACCESS_KEY:-awsackey}'
+      MINIO_ROOT_PASSWORD: '${AWS_S3_SECRET_KEY:-awssekey}'
+
 volumes:
-  order-management-db:
+  mebliok-db:
+  mebliok-s3:

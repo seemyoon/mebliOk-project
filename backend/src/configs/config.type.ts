@@ -1,13 +1,24 @@
+import { ObjectCannedACL } from '@aws-sdk/client-s3';
+
 export type Config = {
   app: AppConfig;
   database: DatabaseConfig;
   redis: RedisConfig;
+  aws: AWSConfig;
   jwt: JwtConfig;
 };
 
 export type AppConfig = {
   port: number;
   host: string;
+};
+export type AWSConfig = {
+  accessKey: string;
+  secretKey: string;
+  region: string;
+  bucket_name: string;
+  ACL: ObjectCannedACL;
+  endpoint: string;
 };
 
 export type DatabaseConfig = {

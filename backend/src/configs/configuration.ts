@@ -1,6 +1,7 @@
 import * as process from 'node:process';
 
 import { Config } from './config.type';
+import { ObjectCannedACL } from '@aws-sdk/client-s3';
 
 export default (): Config => ({
   app: {
@@ -18,6 +19,14 @@ export default (): Config => ({
     host: process.env.REDIS_HOST,
     port: parseInt(process.env.REDIS_PORT, 10) || 6379,
     password: process.env.REDIS_PASSWORD,
+  },
+  aws: {
+    accessKey: process.env.AWS_ACCESS_KEY,
+    secretKey: process.env.AWS_SECRET_KEY,
+    region: process.env.AWS_S3_REGION,
+    bucket_name: process.env.AWS_S3_BUCKET_NAME,
+    ACL: process.env.AWS_S3_ACL as ObjectCannedACL,
+    endpoint: process.env.AWS_S3_ENDPOINT,
   },
   jwt: {
     accessSecret: process.env.ACCESS_SECRET,
