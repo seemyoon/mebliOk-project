@@ -26,6 +26,16 @@ $ yarn run start:prod
 $ yarn run test
 ```
 
+## Migrations
+
+```bash
+# generate migrations 
+$ name=add_base_entities yarn run migration:generate
+
+# run migrations
+$ yarn run migration:run
+```
+
 ## Stay in touch
 
 - Author - [Oleksandr Semenets](https://www.linkedin.com/in/alexandrsemenets/)

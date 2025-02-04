@@ -1,0 +1,5 @@
+export enum UserEnum {
+  REGISTERED_CLIENT = 'REGISTERED_CLIENT',
+  ADMIN = 'ADMIN',
+  MANAGER = 'MANAGER',
+}

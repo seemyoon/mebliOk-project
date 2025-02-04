@@ -7,6 +7,9 @@ import configuration from './configs/configuration';
 import { LoggerModule } from './modules/logger/logger.module';
 import { PostgresModule } from './modules/postgres/postgres.module';
 import { RedisModule } from './modules/redis/redis.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { UserModule } from './modules/user/user.module';
+import { RepositoryModule } from './modules/repository/repository.module';
 
 @Module({
   imports: [
@@ -17,6 +20,9 @@ import { RedisModule } from './modules/redis/redis.module';
     LoggerModule,
     RedisModule,
     PostgresModule,
+    AuthModule,
+    UserModule,
+    RepositoryModule
   ],
   providers: [
     {
