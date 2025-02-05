@@ -13,23 +13,7 @@ import { SKIP_AUTH } from '../decorators/skip-auth.decorator';
 import { TokenType } from '../models/enums/token-type.enum';
 import { AccessTokenService } from '../services/access-token.service';
 import { TokenService } from '../services/token.service';
-// @Injectable()
-// export class JwtAccessGuard implements CanActivate {
-//   constructor(
-//     private readonly refactor: Reflector,
-//     private readonly tokenService: TokenService,
-//     private readonly authCacheService: AccessTokenService,
-//     private readonly userRepository: UserRepository,
-//   ) {}
-//
-//   async canActivate(context: ExecutionContext): Promise<boolean> {
-//     const skipAuth = this.refactor.getAllAndOverride<boolean>(SKIP_AUTH, [
-//       context.getHandler(),
-//       context.getClass(),
-//     ]);
-//     if (skipAuth) {
-//       return true;
-//     }
+
 @Injectable()
 export class JwtAccessGuard implements CanActivate {
   constructor(

@@ -1,8 +1,17 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Req,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 import { CurrentUser } from '../decorators/current-user.decorator';
 import { SkipAuth } from '../decorators/skip-auth.decorator';
+import { GoogleAuthGuard } from '../guards/google-auth.guard';
 import { JwtRefreshGuard } from '../guards/jwt-refresh.guard';
 import { IUserData } from '../interfaces/user-data.interface';
 import { SignInReqDto } from '../models/dto/req/sign-in.req.dto';
@@ -42,5 +51,22 @@ export class AuthController {
     @CurrentUser() userData: IUserData,
   ): Promise<TokenPairResDto> {
     return await this.authService.refreshToken(userData);
+  }
+
+  @SkipAuth()
+  @UseGuards(GoogleAuthGuard)
+  @Get('google/login')
+  async googleLogin() {}
+
+  @SkipAuth()
+  @UseGuards(GoogleAuthGuard)
+  @Get('google/callback')
+  async googleCallback(@Req() req: any, @Res() res: any) {
+    try {
+      const response = await this.authService.loginWithGoogle(req.user.id);
+      res.json({ token: response.accessToken });
+    } catch (error) {
+      res.status(500).json({ message: 'Something went wrong', error });
+    }
   }
 }

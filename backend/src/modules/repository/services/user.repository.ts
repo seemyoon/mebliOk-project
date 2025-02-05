@@ -19,6 +19,14 @@ export class UserRepository extends Repository<UserEntity> {
     return await qb.getOne();
   }
 
+  public async findByEmail(email: string) {
+    const qb = this.createQueryBuilder('user').where('user.email = :email', {
+      email,
+    });
+
+    return await qb.getOne();
+  }
+
   public async findAll(
     query: ListUsersQueryDto,
   ): Promise<[UserEntity[], number]> {

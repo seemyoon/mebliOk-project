@@ -3,6 +3,7 @@ import { Transform, Type } from 'class-transformer';
 import {
   IsEnum,
   IsNotIn,
+  IsOptional,
   IsPhoneNumber,
   IsString,
   Length,
@@ -40,6 +41,11 @@ export class BaseUserReqDto {
       'Password must contain at least 1 letter, 1 number, and be at least 8 characters long',
   })
   password: string;
+
+  @IsOptional()
+  @IsString()
+  @Length(0, 3000)
+  avatar?: string;
 
   @ApiProperty({
     enum: UserEnum,

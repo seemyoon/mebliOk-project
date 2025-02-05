@@ -6,6 +6,7 @@ export type Config = {
   redis: RedisConfig;
   aws: AWSConfig;
   jwt: JwtConfig;
+  googleAuth: GoogleAuthConfig;
 };
 
 export type AppConfig = {
@@ -40,4 +41,10 @@ export type JwtConfig = {
   accessExpireIn: number;
   refreshSecret: string;
   refreshExpireIn: number;
+};
+
+export type GoogleAuthConfig = {
+  google_client_id: string;
+  google_client_secret: string;
+  callback_url: string;
 };

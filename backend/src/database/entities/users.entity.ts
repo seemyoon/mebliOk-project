@@ -20,6 +20,9 @@ export class UserEntity extends CreateUpdateModel {
   @Column('text')
   phoneNumber: string;
 
+  @Column('text', { nullable: true })
+  avatar?: string;
+
   @Column('text', { select: false })
   password: string;
 

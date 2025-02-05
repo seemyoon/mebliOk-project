@@ -1,7 +1,8 @@
 import * as process from 'node:process';
 
-import { Config } from './config.type';
 import { ObjectCannedACL } from '@aws-sdk/client-s3';
+
+import { Config } from './config.type';
 
 export default (): Config => ({
   app: {
@@ -33,5 +34,10 @@ export default (): Config => ({
     accessExpireIn: parseInt(process.env.ACCESS_EXPIREIN, 10) || 3600,
     refreshSecret: process.env.REFRESH_SECRET,
     refreshExpireIn: parseInt(process.env.REFRESH_EXPIREIN, 10) || 8640,
+  },
+  googleAuth: {
+    google_client_id: process.env.GOOGLE_CLIENT_ID,
+    google_client_secret: process.env.GOOGLE_CLIENT_SECRET,
+    callback_url: process.env.CALLBACK_URL,
   },
 });

@@ -10,6 +10,7 @@ import { AccessTokenService } from './services/access-token.service';
 import { AuthService } from './services/auth.service';
 import { PasswordService } from './services/password.service';
 import { TokenService } from './services/token.service';
+import { GoogleStrategy } from './strategies/google.strategy';
 
 @Module({
   imports: [RedisModule, JwtModule],
@@ -21,6 +22,7 @@ import { TokenService } from './services/token.service';
     },
     JwtRefreshGuard,
     AuthService,
+    GoogleStrategy,
     AccessTokenService,
     TokenService,
     PasswordService,
