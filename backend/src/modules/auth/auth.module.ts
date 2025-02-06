@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
+import { PassportModule } from '@nestjs/passport';
 
 import { RedisModule } from '../redis/redis.module';
 import { AuthController } from './controllers/auth.controller';
@@ -13,7 +14,7 @@ import { TokenService } from './services/token.service';
 import { GoogleStrategy } from './strategies/google.strategy';
 
 @Module({
-  imports: [RedisModule, JwtModule],
+  imports: [RedisModule, JwtModule, PassportModule],
   controllers: [AuthController],
   providers: [
     {

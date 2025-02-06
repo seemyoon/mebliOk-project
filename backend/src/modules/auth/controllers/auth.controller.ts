@@ -1,12 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Post,
-  Req,
-  Res,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 import { CurrentUser } from '../decorators/current-user.decorator';
@@ -56,17 +48,13 @@ export class AuthController {
   @SkipAuth()
   @UseGuards(GoogleAuthGuard)
   @Get('google/login')
-  async googleLogin() {}
+  public async googleLogin() {}
 
   @SkipAuth()
   @UseGuards(GoogleAuthGuard)
   @Get('google/callback')
-  async googleCallback(@Req() req: any, @Res() res: any) {
-    try {
-      const response = await this.authService.loginWithGoogle(req.user.id);
-      res.json({ token: response.accessToken });
-    } catch (error) {
-      res.status(500).json({ message: 'Something went wrong', error });
-    }
+  async googleCallback(@Req() req) {
+    console.log('googleAuthRedirect START:', req.user);
+    await this.authService.googleAuthRedirect(req.user);
   }
 }

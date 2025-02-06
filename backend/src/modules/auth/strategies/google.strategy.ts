@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
-import { Strategy, VerifyCallback } from 'passport-google-oauth20';
+import { Strategy } from 'passport-google-oauth20';
 
 import { Config, GoogleAuthConfig } from '../../../configs/config.type';
 import { AuthService } from '../services/auth.service';
@@ -10,9 +10,15 @@ import { AuthService } from '../services/auth.service';
 export class GoogleStrategy extends PassportStrategy(Strategy) {
   constructor(
     private readonly configService: ConfigService<Config>,
-    private authService: AuthService,
+    private readonly authService: AuthService,
   ) {
     const googleAuthConfig = configService.get<GoogleAuthConfig>('googleAuth');
+    if (
+      !googleAuthConfig?.google_client_id ||
+      !googleAuthConfig?.google_client_secret
+    ) {
+      throw new Error('Google OAuth credentials are missing in config!');
+    }
 
     super({
       clientID: googleAuthConfig.google_client_id,
@@ -23,28 +29,27 @@ export class GoogleStrategy extends PassportStrategy(Strategy) {
   }
 
   public async validate(
-    accessToken: string,
-    refreshToken: string,
+    accessTokenOauth: string,
+    refreshTokenOauth: string,
     profile: any,
-    done: VerifyCallback,
   ) {
-    try {
-      const userData = {
-        email: profile.emails[0]?.value,
-        phoneNumber: profile.phone || '',
-        name: profile.name?.givenName,
-        avatar: profile.photos[0]?.value,
-        accessToken,
-        refreshToken,
-        password: '',
-      };
+    // console.log('Google validate START:', {
+    //   accessTokenOauth,
+    //   profile,
+    // });
+    const { emails, photos } = profile;
+    const userData = {
+      email: emails?.[0]?.value,
+      password: null,
+      name: profile?.displayName,
+      phoneNumber: null,
+      avatar: photos?.[0]?.value,
+    };
 
-      const { user, tokens } =
-        await this.authService.validateGoogleUser(userData);
-
-      done(null, { user, tokens });
-    } catch (error) {
-      done(error, false);
-    }
+    return await this.authService.validateGoogleUser(
+      userData,
+      accessTokenOauth,
+      refreshTokenOauth,
+    );
   }
 }

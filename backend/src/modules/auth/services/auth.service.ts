@@ -1,8 +1,10 @@
 import {
   BadRequestException,
   Injectable,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
+import { Response } from 'express';
 
 import { UserEntity } from '../../../database/entities/users.entity';
 import { RefreshTokenRepository } from '../../repository/services/refresh-token.repository';
@@ -11,7 +13,7 @@ import { UserEnum } from '../../user/enum/users.enum';
 import { UserMapper } from '../../user/services/user.mapper';
 import { ITokenPair } from '../interfaces/token-pair.interface';
 import { IUserData } from '../interfaces/user-data.interface';
-import { GoogleSignUpReqDto } from '../models/dto/req/google-sign-up.req.dto';
+import { GoogleLoginReqDto } from '../models/dto/req/google-login.req.dto';
 import { SignInReqDto } from '../models/dto/req/sign-in.req.dto';
 import { SignUpReqDto } from '../models/dto/req/sign-up.req.dto';
 import { AuthResDto } from '../models/dto/res/auth.res.dto';
@@ -19,7 +21,6 @@ import { TokenPairResDto } from '../models/dto/res/token-pair.res.dto';
 import { AccessTokenService } from './access-token.service';
 import { PasswordService } from './password.service';
 import { TokenService } from './token.service';
-import { UserID } from '../../../common/types/entity-ids.type';
 
 @Injectable()
 export class AuthService {
@@ -100,13 +101,14 @@ export class AuthService {
     return { user: UserMapper.toResDto(userEntity), tokens };
   }
 
-  public async loginWithGoogle(userId: UserID): Promise<TokenPairResDto> {
-    const user = await this.userRepository.findOne({ where: { id: userId } });
-    if (!user) {
-      throw new UnauthorizedException('User not found');
-    }
+  public async googleAuthRedirect(user: UserEntity) {
+    if (!user) throw new NotFoundException('User Google account not found');
 
-    return await this.createTokens(user);
+    const tokens = await this.createTokens(user);
+
+    const userEntity = await this.userRepository.findOneBy({ id: user.id });
+
+    return { user: UserMapper.toResDto(userEntity), tokens };
   }
 
   public async logOut(userData: IUserData): Promise<void> {
@@ -141,13 +143,29 @@ export class AuthService {
   }
 
   public async validateGoogleUser(
-    dto: GoogleSignUpReqDto,
-  ): Promise<AuthResDto> {
-    let user = await this.userRepository.findByEmail(dto.email);
+    dto: GoogleLoginReqDto,
+    accessTokenOauth: string,
+    refreshTokenOauth: string,
+  ): Promise<any> {
+    console.log(accessTokenOauth);
+    console.log(refreshTokenOauth);
+    let user = await this.userRepository.findOne({
+      where: { email: dto.email },
+    });
 
-    user = user ?? (await this.createUser(dto));
+    user = user ?? (await this.createUserViaGoogle(dto));
 
-    const tokens = await this.createTokens(user);
+    return {
+      user: UserMapper.toResDto(user),
+      accessTokenOauth,
+      refreshTokenOauth,
+    };
+  }
+
+  private async createTokens(user: UserEntity): Promise<ITokenPair> {
+    const tokens = await this.tokenService.generateTokens({
+      userId: user.id,
+    });
 
     await Promise.all([
       this.authCacheService.saveToken(tokens.accessToken, user.id),
@@ -159,22 +177,16 @@ export class AuthService {
       ),
     ]);
 
-    return { user: UserMapper.toResDto(user), tokens };
+    return tokens;
   }
 
-  private async createTokens(user: UserEntity): Promise<ITokenPair> {
-    return await this.tokenService.generateTokens({
-      userId: user.id,
-    });
-  }
-
-  private async createUser(dto: SignUpReqDto): Promise<UserEntity> {
-    const password = await this.passwordService.hashPassword(dto.password, 10);
+  private async createUserViaGoogle(
+    dto: GoogleLoginReqDto,
+  ): Promise<UserEntity> {
     const quantityPersons = await this.userRepository.findAndCount();
     return await this.userRepository.save(
       this.userRepository.create({
         ...dto,
-        password,
         role:
           quantityPersons[1] === 0
             ? UserEnum.ADMIN

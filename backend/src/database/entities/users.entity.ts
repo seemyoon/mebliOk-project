@@ -17,13 +17,13 @@ export class UserEntity extends CreateUpdateModel {
   @Column('text')
   name: string;
 
-  @Column('text')
+  @Column('text', { nullable: true })
   phoneNumber: string;
 
   @Column('text', { nullable: true })
   avatar?: string;
 
-  @Column('text', { select: false })
+  @Column('text', { select: false, nullable: true })
   password: string;
 
   @Column('timestamp', { nullable: true })
