@@ -1,0 +1,81 @@
+import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post, Query, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+
+import { FurnitureID } from '../../../common/types/entity-ids.type';
+import { SkipAuth } from '../../auth/decorators/skip-auth.decorator';
+import { ROLES } from '../../user/decorators/roles.decorator';
+import { UserEnum } from '../../user/enum/users.enum';
+import { RolesGuard } from '../../user/guard/roles.guard';
+import { CreateFurnitureReqDto } from '../dto/req/create-furniture.req.dto';
+import { ListFurnitureQueryDto } from '../dto/req/list-furniture-query.dto';
+import { UpdateFurnitureReqDto } from '../dto/req/update-furniture.req.dto';
+import { FurnitureBaseResDto } from '../dto/res/base-furniture.res.dto';
+import { FurnitureListResDto } from '../dto/res/furniture-list.res.dto';
+import { FurnitureMapper } from '../service/furniture.mapper';
+import { FurnitureService } from '../service/furniture.service';
+
+@ApiBearerAuth()
+@ApiTags('Furniture')
+@Controller('furniture')
+export class FurnitureController {
+  constructor(private readonly furnitureService: FurnitureService) {}
+
+  @SkipAuth()
+  @Get('getAllFurniture')
+  public async getAllFurniture(
+    @Query() query: ListFurnitureQueryDto,
+  ): Promise<FurnitureListResDto> {
+    const [entities, total] =
+      await this.furnitureService.getAllFurniture(query);
+    return FurnitureMapper.toResDtoList(entities, total, query);
+  }
+
+  @UseGuards(RolesGuard)
+  @ROLES(UserEnum.ADMIN, UserEnum.MANAGER)
+  @Post('createFurniture')
+  public async createFurniture(
+    @Body() dto: CreateFurnitureReqDto,
+  ): Promise<FurnitureBaseResDto> {
+    return FurnitureMapper.toResDto(
+      await this.furnitureService.createFurniture(dto),
+    );
+  }
+
+  @UseGuards(RolesGuard)
+  @ROLES(UserEnum.ADMIN, UserEnum.MANAGER)
+  @Patch(':furnitureId/activeDiscount')
+  public async activeDiscount(
+    @Param('furnitureId', ParseUUIDPipe) furnitureId: FurnitureID,
+  ): Promise<void> {
+    await this.furnitureService.activeDiscount(furnitureId);
+  }
+
+  @UseGuards(RolesGuard)
+  @ROLES(UserEnum.ADMIN, UserEnum.MANAGER)
+  @Patch(':furnitureId')
+  public async editFurniture(
+    @Param('furnitureId', ParseUUIDPipe) furnitureId: FurnitureID,
+    @Body() dto: UpdateFurnitureReqDto,
+  ): Promise<void> {
+    return await this.furnitureService.editFurniture(furnitureId, dto);
+  }
+
+  @UseGuards(RolesGuard)
+  @ROLES(UserEnum.ADMIN, UserEnum.MANAGER)
+  @Delete(':furnitureId')
+  public async deleteFurniture(
+    @Param('furnitureId', ParseUUIDPipe) furnitureId: FurnitureID,
+  ): Promise<void> {
+    return await this.furnitureService.deleteFurniture(furnitureId);
+  }
+
+  @SkipAuth()
+  @Get(':furnitureId')
+  public async getFurniture(
+    @Param('furnitureId', ParseUUIDPipe) furnitureId: FurnitureID,
+  ): Promise<FurnitureBaseResDto> {
+    return FurnitureMapper.toResDto(
+      await this.furnitureService.getFurniture(furnitureId),
+    );
+  }
+}

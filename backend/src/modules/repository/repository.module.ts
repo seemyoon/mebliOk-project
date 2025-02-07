@@ -1,9 +1,14 @@
 import { Global, Module } from '@nestjs/common';
 
+import { FurnitureRepository } from './services/furniture.repository';
 import { RefreshTokenRepository } from './services/refresh-token.repository';
 import { UserRepository } from './services/user.repository';
 
-const repository = [UserRepository, RefreshTokenRepository];
+const repository = [
+  UserRepository,
+  RefreshTokenRepository,
+  FurnitureRepository,
+];
 
 @Global()
 @Module({
