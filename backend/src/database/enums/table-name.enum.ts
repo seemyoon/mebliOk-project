@@ -3,5 +3,6 @@ export enum TableNameEnum {
   USERS = 'users',
   FURNITURE = 'furniture',
   ORDER = 'order',
+  ORDERS_ALL = 'all_orders',
   SIZE = 'size',
 }

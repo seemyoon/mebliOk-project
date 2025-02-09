@@ -1,8 +1,25 @@
-import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post, Query, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseUUIDPipe,
+  Patch,
+  Post,
+  Query,
+  UploadedFile,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiBearerAuth, ApiConsumes, ApiTags } from '@nestjs/swagger';
 
+import { ApiFile } from '../../../common/decorators/api-file.decorator';
 import { FurnitureID } from '../../../common/types/entity-ids.type';
+import { CurrentUser } from '../../auth/decorators/current-user.decorator';
 import { SkipAuth } from '../../auth/decorators/skip-auth.decorator';
+import { IUserData } from '../../auth/interfaces/user-data.interface';
 import { ROLES } from '../../user/decorators/roles.decorator';
 import { UserEnum } from '../../user/enum/users.enum';
 import { RolesGuard } from '../../user/guard/roles.guard';
@@ -14,7 +31,6 @@ import { FurnitureListResDto } from '../dto/res/furniture-list.res.dto';
 import { FurnitureMapper } from '../service/furniture.mapper';
 import { FurnitureService } from '../service/furniture.service';
 
-@ApiBearerAuth()
 @ApiTags('Furniture')
 @Controller('furniture')
 export class FurnitureController {
@@ -30,17 +46,18 @@ export class FurnitureController {
     return FurnitureMapper.toResDtoList(entities, total, query);
   }
 
+  @ApiBearerAuth()
   @UseGuards(RolesGuard)
   @ROLES(UserEnum.ADMIN, UserEnum.MANAGER)
   @Post('createFurniture')
   public async createFurniture(
     @Body() dto: CreateFurnitureReqDto,
   ): Promise<FurnitureBaseResDto> {
-    return FurnitureMapper.toResDto(
-      await this.furnitureService.createFurniture(dto),
-    );
+    const furniture = await this.furnitureService.createFurniture(dto);
+    return FurnitureMapper.toResDto(furniture);
   }
 
+  @ApiBearerAuth()
   @UseGuards(RolesGuard)
   @ROLES(UserEnum.ADMIN, UserEnum.MANAGER)
   @Patch(':furnitureId/activeDiscount')
@@ -50,6 +67,21 @@ export class FurnitureController {
     await this.furnitureService.activeDiscount(furnitureId);
   }
 
+  @ApiBearerAuth()
+  @UseGuards(RolesGuard)
+  @ROLES(UserEnum.ADMIN, UserEnum.MANAGER)
+  @ApiConsumes('multipart/form-data')
+  @UseInterceptors(FileInterceptor('image'))
+  @ApiFile('image', false, true)
+  @Post('/uploadPhotos/:furnitureId')
+  public async uploadFurnitureImage(
+    @Param('furnitureId') furnitureId: FurnitureID,
+    @UploadedFile() file: Express.Multer.File,
+  ): Promise<void> {
+    await this.furnitureService.uploadFurnitureImage(furnitureId, file);
+  }
+
+  @ApiBearerAuth()
   @UseGuards(RolesGuard)
   @ROLES(UserEnum.ADMIN, UserEnum.MANAGER)
   @Patch(':furnitureId')
@@ -60,6 +92,7 @@ export class FurnitureController {
     return await this.furnitureService.editFurniture(furnitureId, dto);
   }
 
+  @ApiBearerAuth()
   @UseGuards(RolesGuard)
   @ROLES(UserEnum.ADMIN, UserEnum.MANAGER)
   @Delete(':furnitureId')

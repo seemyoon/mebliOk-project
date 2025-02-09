@@ -2,7 +2,10 @@ import { ConflictException, Injectable } from '@nestjs/common';
 
 import { FurnitureID } from '../../../common/types/entity-ids.type';
 import { FurnitureEntity } from '../../../database/entities/furniture.entity';
+import { FileTypeEnum } from '../../file-storage/enum/file-type.enum';
+import { FileStorageService } from '../../file-storage/services/file-storage.service';
 import { FurnitureRepository } from '../../repository/services/furniture.repository';
+import { SellerEnum } from '../../user/enum/seller.enum';
 import { CreateFurnitureReqDto } from '../dto/req/create-furniture.req.dto';
 import { ListFurnitureQueryDto } from '../dto/req/list-furniture-query.dto';
 import { UpdateFurnitureReqDto } from '../dto/req/update-furniture.req.dto';
@@ -11,6 +14,7 @@ import { UpdateFurnitureReqDto } from '../dto/req/update-furniture.req.dto';
 export class FurnitureService {
   constructor(
     private readonly furnitureRepository: FurnitureRepository,
+    private readonly fileStorageService: FileStorageService,
   ) {}
 
   public async getAllFurniture(
@@ -23,6 +27,23 @@ export class FurnitureService {
     await this.furnitureRepository.remove(
       await this.returnFurnitureOrThrow(furnitureID),
     );
+  }
+
+  public async uploadFurnitureImage(
+    furnitureID: FurnitureID,
+    file: Express.Multer.File,
+  ): Promise<void> {
+    const furniture = await this.getFurniture(furnitureID);
+    if (!furniture) {
+      throw new ConflictException('Article not found');
+    }
+    const filePath = await this.fileStorageService.uploadFile(
+      file,
+      FileTypeEnum.IMAGE,
+      furnitureID,
+    );
+
+    await this.furnitureRepository.save({ ...furniture, photos: [filePath] });
   }
 
   public async getFurniture(
@@ -47,7 +68,8 @@ export class FurnitureService {
       body: dto.body,
       color: dto.color,
       price: dto.price,
-      discount: dto.discount,
+      discount: dto?.discount,
+      sellerType: SellerEnum.SELLER, // todo. its temporary
     });
 
     return await this.furnitureRepository.save(furniture);

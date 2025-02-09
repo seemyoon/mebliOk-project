@@ -38,8 +38,12 @@ export class FileStorageService {
   public async uploadFile(
     file: Express.Multer.File,
     fileType: FileTypeEnum,
-    userId: UserID,
-  ): Promise<string> {
+    userId: string,
+  ): Promise<string | undefined> {
+    if (!file) {
+      this.loggerService.error('File is not provided');
+      return;
+    }
     try {
       const filePath = this.buildPath(fileType, userId, file.originalname);
       await this.s3Client.send(
@@ -72,7 +76,7 @@ export class FileStorageService {
 
   private buildPath(
     fileType: FileTypeEnum,
-    userId: UserID,
+    userId: string,
     fileName: string,
   ): string {
     return `${fileType}/${userId}/${randomUUID()}${path.extname(fileName)}`;

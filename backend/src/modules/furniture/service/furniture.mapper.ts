@@ -13,13 +13,14 @@ export class FurnitureMapper {
       name: data.name,
       brand: data.brand,
       description: data.description,
-      photos: data?.photos.map((photo) => photo),
-      materials: data.materials.map((material) => material),
+      materials: Array.isArray(data.materials)
+        ? data.materials.map((m) => m)
+        : [],
+      color: Array.isArray(data.color) ? data.color.map((c) => c) : [],
       body: data.body,
-      color: data.color,
       is_discount: data.is_discount,
       price: data.price,
-      discount: data.discount,
+      discount: data?.discount,
       created: data.createdAt,
       updated: data.updatedAt,
       deleted: data.deleted,

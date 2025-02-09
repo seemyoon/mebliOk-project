@@ -33,7 +33,7 @@ export class FurnitureBaseResDto {
   @ApiProperty({
     description: "Furniture's array photos",
   })
-  photos?: string[];
+  photos?: string[] | null;
 
   @ApiProperty({
     description: "Furniture's array materials",
@@ -52,7 +52,6 @@ export class FurnitureBaseResDto {
   })
   color: string[];
 
-  @Transform(TransformHelper.toTrim)
   @IsInt()
   @ApiProperty({
     example: 5000,
@@ -70,7 +69,7 @@ export class FurnitureBaseResDto {
     example: 10,
     description: 'Discount (percent) of the furniture',
   })
-  discount?: number;
+  discount?: number | null;
 
   @ApiProperty({
     example: '2021-09-29T10:00:00.000Z',

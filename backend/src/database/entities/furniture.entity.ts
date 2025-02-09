@@ -1,17 +1,18 @@
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 import { FurnitureID } from '../../common/types/entity-ids.type';
 import { SellerEnum } from '../../modules/user/enum/seller.enum';
 import { TableNameEnum } from '../enums/table-name.enum';
 import { CreateUpdateModel } from '../model/create-update.model';
 import { SizeEntity } from './size.entity';
+import { OrdersAllEntity } from './order-all.entity';
 
 @Entity(TableNameEnum.FURNITURE)
 export class FurnitureEntity extends CreateUpdateModel {
   @PrimaryGeneratedColumn('uuid')
   id: FurnitureID;
 
-  @Column('text', { default: [] })
+  @Column('json', { default: [] })
   photos?: string[];
 
   @Column('text')
@@ -32,7 +33,7 @@ export class FurnitureEntity extends CreateUpdateModel {
   @Column({ type: 'int', default: 0 })
   price: number;
 
-  @Column('text', { default: [] })
+  @Column('json', { default: [] })
   materials: string[];
 
   @Column('text', { default: [] })
@@ -47,8 +48,8 @@ export class FurnitureEntity extends CreateUpdateModel {
   @Column('boolean', { default: false })
   in_stock: boolean;
 
-  @Column('int', { default: 0 })
-  discount: number;
+  @Column('int', { default: null, nullable: true })
+  discount?: number;
 
   @Column('timestamp', { nullable: true })
   deleted?: Date;
@@ -57,4 +58,7 @@ export class FurnitureEntity extends CreateUpdateModel {
     onDelete: 'CASCADE',
   })
   size?: SizeEntity;
+
+  @OneToMany(() => OrdersAllEntity, (ordersAll) => ordersAll.furniture)
+  ordersAll: OrdersAllEntity[];
 }

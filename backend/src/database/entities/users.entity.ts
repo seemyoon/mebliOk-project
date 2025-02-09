@@ -4,6 +4,7 @@ import { UserID } from '../../common/types/entity-ids.type';
 import { UserEnum } from '../../modules/user/enum/users.enum';
 import { TableNameEnum } from '../enums/table-name.enum';
 import { CreateUpdateModel } from '../model/create-update.model';
+import { OrderEntity } from './order.entity';
 import { RefreshTokenEntity } from './refresh-token.entity';
 
 @Entity(TableNameEnum.USERS)
@@ -31,6 +32,9 @@ export class UserEntity extends CreateUpdateModel {
 
   @Column({ type: 'enum', enum: UserEnum })
   role: UserEnum;
+
+  @OneToMany(() => OrderEntity, (order) => order.user)
+  orders?: OrderEntity[];
 
   @OneToMany(() => RefreshTokenEntity, (entity) => entity.user)
   refreshTokens?: RefreshTokenEntity[];
