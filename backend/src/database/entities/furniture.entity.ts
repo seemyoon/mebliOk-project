@@ -1,11 +1,27 @@
-import { Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
-import { FurnitureID } from '../../common/types/entity-ids.type';
+import {
+  BrandID,
+  CategoryFurnitureID,
+  FurnitureID,
+  SubCategoryFurnitureID,
+} from '../../common/types/entity-ids.type';
 import { SellerEnum } from '../../modules/user/enum/seller.enum';
 import { TableNameEnum } from '../enums/table-name.enum';
 import { CreateUpdateModel } from '../model/create-update.model';
-import { SizeEntity } from './size.entity';
+import { BrandEntity } from './brand.entity';
+import { CategoryFurnitureEntity } from './category-furniture.entity';
 import { OrdersAllEntity } from './order-all.entity';
+import { SizeEntity } from './size.entity';
+import { SubCategoryFurnitureEntity } from './subcategory-furniture.entity';
 
 @Entity(TableNameEnum.FURNITURE)
 export class FurnitureEntity extends CreateUpdateModel {
@@ -14,9 +30,6 @@ export class FurnitureEntity extends CreateUpdateModel {
 
   @Column('json', { default: [] })
   photos?: string[];
-
-  @Column('text')
-  brand: string;
 
   @Column('text')
   name: string;
@@ -36,7 +49,7 @@ export class FurnitureEntity extends CreateUpdateModel {
   @Column('json', { default: [] })
   materials: string[];
 
-  @Column('text', { default: [] })
+  @Column('json', { default: [] })
   color: string[];
 
   @Column('boolean', { default: false })
@@ -57,8 +70,33 @@ export class FurnitureEntity extends CreateUpdateModel {
   @OneToOne(() => SizeEntity, (entity) => entity.furniture, {
     onDelete: 'CASCADE',
   })
+  @JoinColumn()
   size?: SizeEntity;
 
+  @Column()
+  brand_id: BrandID;
+  @ManyToOne(() => BrandEntity, (entity) => entity.furniture, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'brand_id' })
+  brand?: BrandEntity;
+
+  @Column()
+  category_id: CategoryFurnitureID;
+  @ManyToOne(() => CategoryFurnitureEntity, (entity) => entity.furniture, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'category_id' })
+  category?: CategoryFurnitureEntity;
+
+  @Column({ nullable: true })
+  subcategory_id: SubCategoryFurnitureID;
+  @ManyToOne(() => SubCategoryFurnitureEntity, (entity) => entity.furniture, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'subcategory_id' })
+  subcategory?: SubCategoryFurnitureEntity;
+
   @OneToMany(() => OrdersAllEntity, (ordersAll) => ordersAll.furniture)
-  ordersAll: OrdersAllEntity[];
+  ordersAll?: OrdersAllEntity[];
 }

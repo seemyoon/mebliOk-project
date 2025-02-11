@@ -1,12 +1,10 @@
 import { PickType } from '@nestjs/swagger';
+import { CreateFurnitureReqDto } from './create-furniture.req.dto';
 
-import { FurnitureBaseResDto } from '../res/base-furniture.res.dto';
-
-export class UpdateFurnitureReqDto extends PickType(FurnitureBaseResDto, [
+export class UpdateFurnitureReqDto extends PickType(CreateFurnitureReqDto, [
   'name',
   'brand',
   'description',
-  'photos',
   'materials',
   'body',
   'color',

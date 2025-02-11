@@ -1,4 +1,10 @@
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 import { FurnitureID, SizeID } from '../../common/types/entity-ids.type';
 import { TableNameEnum } from '../enums/table-name.enum';

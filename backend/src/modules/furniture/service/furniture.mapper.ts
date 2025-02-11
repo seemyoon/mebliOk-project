@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 import { FurnitureEntity } from '../../../database/entities/furniture.entity';
+import { BrandMapper } from '../../brand/services/brand.mapper';
 import { ListFurnitureQueryDto } from '../dto/req/list-furniture-query.dto';
 import { FurnitureBaseResDto } from '../dto/res/base-furniture.res.dto';
 import { FurnitureListResDto } from '../dto/res/furniture-list.res.dto';
@@ -11,7 +12,7 @@ export class FurnitureMapper {
     return {
       id: data.id,
       name: data.name,
-      brand: data.brand,
+      brand: data.brand ? BrandMapper.toResDto(data.brand) : null,
       description: data.description,
       materials: Array.isArray(data.materials)
         ? data.materials.map((m) => m)

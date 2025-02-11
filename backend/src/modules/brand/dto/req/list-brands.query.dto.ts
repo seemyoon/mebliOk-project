@@ -3,7 +3,7 @@ import { IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
 
 import { TransformHelper } from '../../../../common/helpers/transform.helper';
 
-export class ListFurnitureQueryDto {
+export class ListBrandsQueryDto {
   @Type(() => Number)
   @IsInt()
   @Max(100)
@@ -22,20 +22,4 @@ export class ListFurnitureQueryDto {
   @IsOptional()
   @IsString()
   search?: string;
-
-  @IsOptional()
-  @IsString()
-  sortBy?: 'price' | 'popularity' | 'novelty' | 'name';
-
-  @IsOptional()
-  @IsString()
-  sortOrder?: 'asc' | 'desc';
-
-  @IsOptional()
-  @IsString()
-  brand?: string;
-
-  @IsOptional()
-  @IsString()
-  inStock?: boolean;
 }

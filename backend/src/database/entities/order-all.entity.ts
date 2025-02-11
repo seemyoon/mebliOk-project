@@ -20,21 +20,21 @@ export class OrdersAllEntity {
   @PrimaryGeneratedColumn('uuid')
   id: OrdersAllID;
 
+  @Column()
+  order_id: OrderID;
   @ManyToOne(() => OrderEntity, (order) => order.ordersAll, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'order_id' })
-  order: OrderEntity;
-  @Column()
-  order_id: OrderID;
+  order?: OrderEntity;
 
+  @Column()
+  furniture_id: FurnitureID;
   @ManyToOne(() => FurnitureEntity, (furniture) => furniture.ordersAll, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'furniture_id' }) //todo. add changes to rep level
-  furniture: FurnitureEntity;
-  @Column()
-  furniture_id: FurnitureID;
+  furniture?: FurnitureEntity;
 
   @Column('decimal')
   quantity: number;

@@ -60,6 +60,17 @@ export class FurnitureController {
   @ApiBearerAuth()
   @UseGuards(RolesGuard)
   @ROLES(UserEnum.ADMIN, UserEnum.MANAGER)
+  @Post('addBrand')
+  public async addBrand(
+    @Body() dto: CreateFurnitureReqDto,
+  ): Promise<FurnitureBaseResDto> {
+    const furniture = await this.furnitureService.createFurniture(dto);
+    return FurnitureMapper.toResDto(furniture);
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(RolesGuard)
+  @ROLES(UserEnum.ADMIN, UserEnum.MANAGER)
   @Patch(':furnitureId/activeDiscount')
   public async activeDiscount(
     @Param('furnitureId', ParseUUIDPipe) furnitureId: FurnitureID,

@@ -1,8 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Transform } from 'class-transformer';
 import { IsInt } from 'class-validator';
 
-import { TransformHelper } from '../../../../common/helpers/transform.helper';
+import { BrandResDto } from '../../../brand/dto/res/brand.res.dto';
 import { SellerEnum } from '../../../user/enum/seller.enum';
 
 export class FurnitureBaseResDto {
@@ -22,7 +21,7 @@ export class FurnitureBaseResDto {
     example: 'KAN',
     description: 'Brand of the furniture',
   })
-  brand: string;
+  brand: BrandResDto;
 
   @ApiProperty({
     example: 'Comfortable sofa for the whole family',

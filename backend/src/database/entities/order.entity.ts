@@ -27,7 +27,7 @@ export class OrderEntity extends CreateUpdateModel {
   @OneToMany(() => OrdersAllEntity, (ordersAll) => ordersAll.order, {
     cascade: true,
   })
-  ordersAll: OrdersAllEntity[];
+  ordersAll?: OrdersAllEntity[];
 
   @Column()
   user_id: UserID;
