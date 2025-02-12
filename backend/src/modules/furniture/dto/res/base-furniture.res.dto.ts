@@ -59,12 +59,6 @@ export class FurnitureBaseResDto {
   price: number;
 
   @ApiProperty({
-    example: true,
-    description: 'Discount of the furniture',
-  })
-  is_discount: boolean;
-
-  @ApiProperty({
     example: 10,
     description: 'Discount (percent) of the furniture',
   })

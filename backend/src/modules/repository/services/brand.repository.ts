@@ -15,6 +15,8 @@ export class BrandRepository extends Repository<BrandEntity> {
     query: ListBrandsQueryDto,
   ): Promise<[BrandEntity[], number]> {
     const qb = this.createQueryBuilder('brand');
+    qb.leftJoinAndSelect('brand.furniture', 'furniture');
+
     if (query.search) {
       qb.andWhere('brand.brand_name ILIKE :search');
       qb.setParameter('search', `%${query.search}%`);

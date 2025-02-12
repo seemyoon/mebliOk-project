@@ -19,7 +19,6 @@ export class FurnitureMapper {
         : [],
       color: Array.isArray(data.color) ? data.color.map((c) => c) : [],
       body: data.body,
-      is_discount: data.is_discount,
       price: data.price,
       discount: data?.discount,
       created: data.createdAt,

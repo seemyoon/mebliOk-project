@@ -5,6 +5,8 @@ import { APP_FILTER } from '@nestjs/core';
 import { GlobalExceptionFilter } from './common/filters/global-exception.filter';
 import configuration from './configs/configuration';
 import { AuthModule } from './modules/auth/auth.module';
+import { BrandModule } from './modules/brand/brand.module';
+import { CategoriesModule } from './modules/categories/categories.module';
 import { FurnitureModule } from './modules/furniture/furniture.module';
 import { LoggerModule } from './modules/logger/logger.module';
 import { PostgresModule } from './modules/postgres/postgres.module';
@@ -22,6 +24,8 @@ import { UserModule } from './modules/user/user.module';
     RedisModule,
     FurnitureModule,
     PostgresModule,
+    BrandModule,
+    CategoriesModule,
     AuthModule,
     UserModule,
     RepositoryModule,

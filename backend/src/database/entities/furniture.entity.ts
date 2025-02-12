@@ -52,9 +52,6 @@ export class FurnitureEntity extends CreateUpdateModel {
   @Column('json', { default: [] })
   color: string[];
 
-  @Column('boolean', { default: false })
-  is_discount: boolean;
-
   @Column('int', { default: 0 })
   weight: number;
 

@@ -10,26 +10,25 @@ export class BrandResDto {
   id: BrandID;
 
   @ApiProperty({
-    example: 'Brand name',
+    example: 'Daming',
     description: 'Brand name',
   })
   brand_name: string;
 
   @ApiProperty({
-    example: null,
     description: 'When the brand was removed',
   })
-  deleted?: Date | null;
+  deleted?: Date;
 
   @ApiProperty({
     example: '2021-09-29T10:00:00.000Z',
-    description: 'Creation date of the article',
+    description: 'Creation date of the brand',
   })
   created: Date;
 
   @ApiProperty({
     example: '2021-09-29T10:00:00.000Z',
-    description: 'Last update date of the article',
+    description: 'Last update date of the brand',
   })
   updated: Date;
 }

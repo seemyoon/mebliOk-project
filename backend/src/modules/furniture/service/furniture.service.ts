@@ -117,14 +117,14 @@ export class FurnitureService {
     });
   }
 
-  public async activeDiscount(furnitureId: FurnitureID): Promise<void> {
+  public async activeStock(furnitureId: FurnitureID): Promise<void> {
     const furniture =
       await this.furnitureRepository.findByFurnitureId(furnitureId);
     if (!furniture) {
       throw new ConflictException('Furniture not found');
     }
-    if (furniture.is_discount == true) furniture.is_discount = false;
-    else if (furniture.is_discount == false) furniture.is_discount = true;
+    if (furniture.in_stock == true) furniture.in_stock = false;
+    else if (furniture.in_stock == false) furniture.in_stock = true;
 
     await this.furnitureRepository.save(furniture);
   }

@@ -17,9 +17,7 @@ import { ApiBearerAuth, ApiConsumes, ApiTags } from '@nestjs/swagger';
 
 import { ApiFile } from '../../../common/decorators/api-file.decorator';
 import { FurnitureID } from '../../../common/types/entity-ids.type';
-import { CurrentUser } from '../../auth/decorators/current-user.decorator';
 import { SkipAuth } from '../../auth/decorators/skip-auth.decorator';
-import { IUserData } from '../../auth/interfaces/user-data.interface';
 import { ROLES } from '../../user/decorators/roles.decorator';
 import { UserEnum } from '../../user/enum/users.enum';
 import { RolesGuard } from '../../user/guard/roles.guard';
@@ -71,11 +69,11 @@ export class FurnitureController {
   @ApiBearerAuth()
   @UseGuards(RolesGuard)
   @ROLES(UserEnum.ADMIN, UserEnum.MANAGER)
-  @Patch(':furnitureId/activeDiscount')
-  public async activeDiscount(
+  @Patch(':furnitureId/activeStock')
+  public async activeStock(
     @Param('furnitureId', ParseUUIDPipe) furnitureId: FurnitureID,
   ): Promise<void> {
-    await this.furnitureService.activeDiscount(furnitureId);
+    await this.furnitureService.activeStock(furnitureId);
   }
 
   @ApiBearerAuth()
