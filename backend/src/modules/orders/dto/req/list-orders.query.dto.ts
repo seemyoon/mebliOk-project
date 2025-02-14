@@ -22,4 +22,12 @@ export class ListOrdersQueryDto {
   @IsOptional()
   @IsString()
   search?: string;
+
+  @IsOptional()
+  @IsString()
+  sortBy?: 'price' | 'popularity' | 'novelty' | 'name';
+
+  @IsOptional()
+  @IsString()
+  inStock?: boolean;
 }

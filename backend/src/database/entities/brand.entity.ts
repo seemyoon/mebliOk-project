@@ -13,6 +13,6 @@ export class BrandEntity extends CreateUpdateModel {
   @Column('text')
   brand_name: string;
 
-  @OneToMany(() => FurnitureEntity, (furniture) => furniture.brand)
+  @OneToMany(() => FurnitureEntity, (entity) => entity.brand)
   furniture?: FurnitureEntity;
 }

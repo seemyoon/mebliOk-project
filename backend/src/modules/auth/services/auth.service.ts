@@ -4,7 +4,6 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { Response } from 'express';
 
 import { UserEntity } from '../../../database/entities/users.entity';
 import { RefreshTokenRepository } from '../../repository/services/refresh-token.repository';
@@ -33,19 +32,42 @@ export class AuthService {
   ) {}
 
   public async signUp(dto: SignUpReqDto): Promise<AuthResDto> {
-    await this.isEmailNotExistOrThrow(dto.email);
-    const password = await this.passwordService.hashPassword(dto.password, 10);
-    const quantityPersons = await this.userRepository.findAndCount();
-    const user = await this.userRepository.save(
-      this.userRepository.create({
+    let user: UserEntity | null = null;
+
+    if (dto.email) {
+      user = await this.userRepository.findOneBy({ email: dto.email });
+    }
+
+    if (!user && dto.phoneNumber) {
+      user = await this.userRepository.findOneBy({
+        phoneNumber: dto.phoneNumber,
+      });
+    }
+
+    if (user) {
+      if (user.role === UserEnum.UNREGISTERED_CLIENT) {
+        user.password = await this.passwordService.hashPassword(
+          dto.password,
+          10,
+        );
+        user.role = UserEnum.REGISTERED_CLIENT;
+        user.name = dto.name ?? user.name;
+        user.email = dto.email ?? user.email;
+        user.phoneNumber = dto.phoneNumber ?? user.phoneNumber;
+      } else {
+        throw new BadRequestException(
+          'User with this email or phone number already exists',
+        );
+      }
+    } else {
+      const quantityPersons = await this.userRepository.count();
+      user = this.userRepository.create({
         ...dto,
-        password,
+        password: await this.passwordService.hashPassword(dto.password, 10),
         role:
-          quantityPersons[1] === 0
-            ? UserEnum.ADMIN
-            : UserEnum.REGISTERED_CLIENT,
-      }),
-    );
+          quantityPersons === 0 ? UserEnum.ADMIN : UserEnum.REGISTERED_CLIENT,
+      });
+    }
 
     const tokens = await this.tokenService.generateTokens({
       userId: user.id,

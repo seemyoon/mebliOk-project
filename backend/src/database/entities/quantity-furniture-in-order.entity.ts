@@ -9,20 +9,20 @@ import {
 import {
   FurnitureID,
   OrderID,
-  OrdersAllID,
+  QuantityFurnitureInOrderEntityID,
 } from '../../common/types/entity-ids.type';
 import { TableNameEnum } from '../enums/table-name.enum';
 import { FurnitureEntity } from './furniture.entity';
 import { OrderEntity } from './order.entity';
 
-@Entity(TableNameEnum.ORDERS_ALL)
-export class OrdersAllEntity {
+@Entity(TableNameEnum.ORDER_FURNITURE)
+export class QuantityFurnitureInOrderEntity {
   @PrimaryGeneratedColumn('uuid')
-  id: OrdersAllID;
+  id: QuantityFurnitureInOrderEntityID;
 
   @Column()
   order_id: OrderID;
-  @ManyToOne(() => OrderEntity, (order) => order.ordersAll, {
+  @ManyToOne(() => OrderEntity, (entity) => entity.quantityFurniture, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'order_id' })
@@ -30,7 +30,7 @@ export class OrdersAllEntity {
 
   @Column()
   furniture_id: FurnitureID;
-  @ManyToOne(() => FurnitureEntity, (furniture) => furniture.ordersAll, {
+  @ManyToOne(() => FurnitureEntity, (entity) => entity.quantityFurniture, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'furniture_id' }) //todo. add changes to rep level

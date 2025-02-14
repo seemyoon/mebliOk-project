@@ -10,7 +10,7 @@ import {
 import { OrderID, UserID } from '../../common/types/entity-ids.type';
 import { TableNameEnum } from '../enums/table-name.enum';
 import { CreateUpdateModel } from '../model/create-update.model';
-import { OrdersAllEntity } from './order-all.entity';
+import { QuantityFurnitureInOrderEntity } from './quantity-furniture-in-order.entity';
 import { UserEntity } from './users.entity';
 
 @Entity(TableNameEnum.ORDER)
@@ -24,10 +24,10 @@ export class OrderEntity extends CreateUpdateModel {
   @Column('timestamp', { nullable: true })
   deleted?: Date;
 
-  @OneToMany(() => OrdersAllEntity, (ordersAll) => ordersAll.order, {
+  @OneToMany(() => QuantityFurnitureInOrderEntity, (entity) => entity.order, {
     cascade: true,
   })
-  ordersAll?: OrdersAllEntity[];
+  quantityFurniture?: QuantityFurnitureInOrderEntity[];
 
   @Column()
   user_id: UserID;

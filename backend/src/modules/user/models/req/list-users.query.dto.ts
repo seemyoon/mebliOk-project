@@ -1,5 +1,7 @@
-import { Type } from 'class-transformer';
-import { IsInt, IsOptional, Max, Min } from 'class-validator';
+import { Transform, Type } from 'class-transformer';
+import { IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
+
+import { TransformHelper } from '../../../../common/helpers/transform.helper';
 
 export class ListUsersQueryDto {
   @Type(() => Number)
@@ -14,4 +16,10 @@ export class ListUsersQueryDto {
   @IsInt()
   @IsOptional()
   offset?: number = 0;
+
+  @Transform(TransformHelper.toTrim)
+  @Transform(TransformHelper.toLowerCase)
+  @IsOptional()
+  @IsString()
+  search?: string;
 }

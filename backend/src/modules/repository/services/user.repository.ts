@@ -31,7 +31,12 @@ export class UserRepository extends Repository<UserEntity> {
     query: ListUsersQueryDto,
   ): Promise<[UserEntity[], number]> {
     const qb = this.createQueryBuilder('user');
-
+    if (query.search) {
+      qb.andWhere(
+        'CONCAT(user.name, user.email, user.phoneNumber) ILIKE :search',
+      );
+      qb.setParameter('search', `%${query.search}%`);
+    }
     qb.take(query.limit);
     qb.skip(query.offset);
 

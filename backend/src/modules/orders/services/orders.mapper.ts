@@ -16,7 +16,7 @@ export class OrdersMapper {
   public static toResDto(order: OrderEntity): OrderResDto {
     return {
       id: order.id,
-      furniture: (order.ordersAll || []).map((furniture) =>
+      furniture: (order.quantityFurniture || []).map((furniture) =>
         OrdersMapper.mapOrderFurniture(furniture),
       ),
       isReady: order.isReady,

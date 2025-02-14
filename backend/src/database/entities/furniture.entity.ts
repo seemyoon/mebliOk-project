@@ -19,9 +19,9 @@ import { TableNameEnum } from '../enums/table-name.enum';
 import { CreateUpdateModel } from '../model/create-update.model';
 import { BrandEntity } from './brand.entity';
 import { CategoryFurnitureEntity } from './category-furniture.entity';
-import { OrdersAllEntity } from './order-all.entity';
 import { SizeEntity } from './size.entity';
 import { SubCategoryFurnitureEntity } from './subcategory-furniture.entity';
+import { QuantityFurnitureInOrderEntity } from './quantity-furniture-in-order.entity';
 
 @Entity(TableNameEnum.FURNITURE)
 export class FurnitureEntity extends CreateUpdateModel {
@@ -94,6 +94,6 @@ export class FurnitureEntity extends CreateUpdateModel {
   @JoinColumn({ name: 'subcategory_id' })
   subcategory?: SubCategoryFurnitureEntity;
 
-  @OneToMany(() => OrdersAllEntity, (ordersAll) => ordersAll.furniture)
-  ordersAll?: OrdersAllEntity[];
+  @OneToMany(() => QuantityFurnitureInOrderEntity, (entity) => entity.furniture)
+  quantityFurniture?: QuantityFurnitureInOrderEntity[];
 }

@@ -12,14 +12,14 @@ export class UserEntity extends CreateUpdateModel {
   @PrimaryGeneratedColumn('uuid')
   id: UserID;
 
-  @Column('text', { unique: true })
-  email: string;
-
-  @Column('text')
-  name: string;
+  @Column('text', { unique: true, nullable: true })
+  email?: string;
 
   @Column('text', { nullable: true })
-  phoneNumber: string;
+  name?: string;
+
+  @Column('text', { unique: true, nullable: true })
+  phoneNumber?: string;
 
   @Column('text', { nullable: true })
   avatar?: string;
@@ -33,7 +33,7 @@ export class UserEntity extends CreateUpdateModel {
   @Column({ type: 'enum', enum: UserEnum })
   role: UserEnum;
 
-  @OneToMany(() => OrderEntity, (order) => order.user)
+  @OneToMany(() => OrderEntity, (entity) => entity.user)
   orders?: OrderEntity[];
 
   @OneToMany(() => RefreshTokenEntity, (entity) => entity.user)
