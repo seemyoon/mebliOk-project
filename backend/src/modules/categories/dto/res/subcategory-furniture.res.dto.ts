@@ -9,7 +9,7 @@ export class SubCategoryFurnitureResDto extends PickType(
 ) {
   @ApiProperty({
     example: '6744s24-5a28-a363-a5e1-023ae2e4780f',
-    description: 'Category Furniture ID',
+    description: 'SubCategory Furniture ID',
   })
   id: SubCategoryFurnitureID;
 }

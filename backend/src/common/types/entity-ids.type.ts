@@ -1,7 +1,6 @@
 import { Opaque } from './opaque.type';
 
 export type UserID = Opaque<string, 'UsersID'>;
-export type OrderID = Opaque<string, 'OrderID'>;
 export type QuantityFurnitureInOrderEntityID = Opaque<
   string,
   'QuantityFurnitureInOrderEntityID'

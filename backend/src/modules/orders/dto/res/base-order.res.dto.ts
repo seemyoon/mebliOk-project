@@ -1,22 +1,25 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsArray, ValidateNested } from 'class-validator';
 
-import { OrderID } from '../../../../common/types/entity-ids.type';
 import { UserResDto } from '../../../user/models/res/user.res.dto';
-import { ProductOrderDto } from '../req/furniture-order.dto';
+import { QuantityFurnitureInOrderDto } from '../req/quantity-furniture-in-order.dto';
 
 export class BaseOrderResDto {
-  @ApiProperty({ type: String })
-  id: OrderID;
+  @ApiProperty({
+    example: '1',
+    description: 'Order ID',
+  })
+  id: number;
   @ApiProperty({
     example: [
-      { furnitureId: 'furniture1-id', quantity: 2 },
-      { furnitureId: 'furniture2-id', quantity: 3 },
+      { id: '6744s24-5a28-a363-a5e1-023ae2e4780f', quantity: 3 },
+      { id: 'abc123-xyz456', quantity: 0 },
+      { id: 'new789-new456', quantity: 5 },
     ],
   })
   @IsArray()
   @ValidateNested({ each: true })
-  furniture: ProductOrderDto[];
+  furniture: QuantityFurnitureInOrderDto[];
   isReady: boolean;
   user: UserResDto;
   created: Date;

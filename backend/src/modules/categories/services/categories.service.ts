@@ -100,7 +100,6 @@ export class CategoriesService {
   public async editSubCategoryFurniture(
     dto: UpdateSubCategoryFurnitureReqDto,
     subCategoryFurnitureID: SubCategoryFurnitureID,
-    categoryFurnitureID?: CategoryFurnitureID,
   ): Promise<SubCategoryFurnitureEntity> {
     const subCategory =
       await this.subCategoryFurnitureRepository.findBySubCategoryId(
@@ -117,9 +116,6 @@ export class CategoriesService {
     }
 
     subCategory.title = dto.title;
-    if (categoryFurnitureID) {
-      subCategory.category_id = categoryFurnitureID;
-    }
 
     return await this.subCategoryFurnitureRepository.save(subCategory);
   }

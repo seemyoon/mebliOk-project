@@ -80,7 +80,10 @@ export class FurnitureRepository extends Repository<FurnitureEntity> {
     furnitureID: FurnitureID,
   ): Promise<FurnitureEntity> {
     const qb = this.createQueryBuilder('furniture');
-    qb.leftJoinAndSelect('furniture.size', 'size');
+    qb.leftJoinAndSelect('furniture.size', 'size')
+      .leftJoinAndSelect('furniture.quantityFurniture', 'quantityFurniture')
+      .leftJoinAndSelect('furniture.subcategory', 'subcategory')
+      .leftJoinAndSelect('furniture.category', 'category');
 
     qb.where('furniture.id = :furnitureID', { furnitureID });
     return await qb.getOne();

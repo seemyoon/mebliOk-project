@@ -54,6 +54,7 @@ export class AuthService {
         user.name = dto.name ?? user.name;
         user.email = dto.email ?? user.email;
         user.phoneNumber = dto.phoneNumber ?? user.phoneNumber;
+        await this.userRepository.save(user);
       } else {
         throw new BadRequestException(
           'User with this email or phone number already exists',
@@ -67,11 +68,14 @@ export class AuthService {
         role:
           quantityPersons === 0 ? UserEnum.ADMIN : UserEnum.REGISTERED_CLIENT,
       });
+      await this.userRepository.save(user);
     }
 
     const tokens = await this.tokenService.generateTokens({
       userId: user.id,
     });
+
+    await this.userRepository.save(user);
 
     await Promise.all([
       this.authCacheService.saveToken(tokens.accessToken, user.id),

@@ -8,9 +8,9 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
-import { FurnitureID, OrderID } from '../../../common/types/entity-ids.type';
+import { UserID } from '../../../common/types/entity-ids.type';
 import { CurrentUser } from '../../auth/decorators/current-user.decorator';
 import { SkipAuth } from '../../auth/decorators/skip-auth.decorator';
 import { IUserData } from '../../auth/interfaces/user-data.interface';
@@ -23,12 +23,14 @@ import { OrderResDto } from '../dto/res/order.res.dto';
 import { OrdersListResDto } from '../dto/res/orders-list.res.dto';
 import { OrdersMapper } from '../services/orders.mapper';
 import { OrdersService } from '../services/orders.service';
+import { EditOrderReqDto } from '../dto/req/edit-order.req.dto';
 
 @ApiTags('Orders')
 @Controller('orders')
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
 
+  @ApiBearerAuth()
   @UseGuards(RolesGuard)
   @ROLES(UserEnum.ADMIN, UserEnum.MANAGER, UserEnum.REGISTERED_CLIENT)
   @Get('getAllOrders')
@@ -39,6 +41,7 @@ export class OrdersController {
     return OrdersMapper.toResDtoList(entities, total, query);
   }
 
+  @ApiBearerAuth()
   @UseGuards(RolesGuard)
   @ROLES(UserEnum.REGISTERED_CLIENT)
   @Get('getMyOrders')
@@ -53,11 +56,12 @@ export class OrdersController {
     return OrdersMapper.toResDtoList(entities, total, query);
   }
 
+  @ApiBearerAuth()
   @UseGuards(RolesGuard)
   @ROLES(UserEnum.ADMIN, UserEnum.MANAGER)
   @Get('getClientOrders')
   public async getClientOrders(
-    @Param('orderId', ParseUUIDPipe) orderId: OrderID,
+    @Param('orderId', ParseUUIDPipe) orderId: number,
     @Query() query: ListOrdersQueryDto,
   ): Promise<OrdersListResDto> {
     const [entities, total] = await this.ordersService.getClientOrders(
@@ -70,50 +74,42 @@ export class OrdersController {
   @SkipAuth()
   @Post('createOrder')
   public async createOrder(
-    @Param('furnitureID', ParseUUIDPipe) furnitureID: FurnitureID,
     @Body() dto: BaseOrderReqDto,
     @CurrentUser() userData?: IUserData,
   ): Promise<OrderResDto> {
     return OrdersMapper.toResDto(
-      await this.ordersService.createOrder(userData, dto, furnitureID),
+      await this.ordersService.createOrder(userData, dto),
     );
   }
 
-  // @UseGuards(RolesGuard)
-  // @ROLES(UserEnum.REGISTERED_CLIENT)
-  // @Post('editOrder/:orderId')
-  // public async editOrder(
-  //   @CurrentUser() userData: IUserData,
-  //   @Body() dto: EditOrderReqDto,
-  // ): Promise<OrderResDto> {
-  //   return OrdersMapper.toResDto(
-  //     await this.ordersService.editOrder(userData, dto),
-  //   );
-  // }
-  //
-  // @UseGuards(RolesGuard)
-  // @ROLES(UserEnum.ADMIN, UserEnum.MANAGER)
-  // @Post('editClientOrder/:orderId')
-  // public async editClientOrder(
-  //   @Body() dto: EditOrderReqDto,
-  //   @CurrentUser() userData?: IUserData,
-  // ): Promise<OrderResDto> {
-  //   return OrdersMapper.toResDto(
-  //     await this.ordersService.editClientOrder(userData, dto),
-  //   );
-  // }
+  @ApiBearerAuth()
+  @UseGuards(RolesGuard)
+  @ROLES(UserEnum.ADMIN, UserEnum.MANAGER)
+  @Post('editClientOrder/:orderId')
+  public async editClientOrder(
+    @Body() dto: EditOrderReqDto,
+    @Param('orderId', ParseUUIDPipe) orderId: number,
+  ): Promise<OrderResDto> {
+    return OrdersMapper.toResDto(
+      await this.ordersService.editClientOrder(orderId, dto),
+    );
+  }
 
+  @ApiBearerAuth()
+  @UseGuards(RolesGuard)
+  @ROLES(UserEnum.ADMIN, UserEnum.MANAGER)
   @Post('pickOrderIsDoneOrNot/:orderId')
   public async pickOrderIsDoneOrNot(
-    @Param('orderId', ParseUUIDPipe) orderId: OrderID,
+    @Param('orderId', ParseUUIDPipe) orderId: number,
   ): Promise<void> {
     await this.ordersService.pickOrderIsDoneOrNot(orderId);
   }
 
-  // @Get(':orderId')
-  // public async getOrder(
-  //   @Param('orderId', ParseUUIDPipe) orderId: OrderID,
-  // ): Promise<OrderResDto> {
-  //   return OrdersMapper.toResDto(await this.ordersService.getOrder(orderId));
-  // }
+  @SkipAuth()
+  @Get(':orderId')
+  public async getOrder(
+    @Param('orderId', ParseUUIDPipe) orderId: number,
+  ): Promise<OrderResDto> {
+    return OrdersMapper.toResDto(await this.ordersService.getOrder(orderId));
+  }
 }

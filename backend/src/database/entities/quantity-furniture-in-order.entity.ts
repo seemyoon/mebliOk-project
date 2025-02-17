@@ -8,7 +8,6 @@ import {
 
 import {
   FurnitureID,
-  OrderID,
   QuantityFurnitureInOrderEntityID,
 } from '../../common/types/entity-ids.type';
 import { TableNameEnum } from '../enums/table-name.enum';
@@ -21,7 +20,7 @@ export class QuantityFurnitureInOrderEntity {
   id: QuantityFurnitureInOrderEntityID;
 
   @Column()
-  order_id: OrderID;
+  order_id: number;
   @ManyToOne(() => OrderEntity, (entity) => entity.quantityFurniture, {
     onDelete: 'CASCADE',
   })

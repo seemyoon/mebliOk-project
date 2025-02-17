@@ -9,8 +9,8 @@ export class UpdateSubCategoryFurnitureReqDto {
   @Transform(TransformHelper.toTrim)
   @IsString()
   @ApiProperty({
-    example: 'UPD furniture for the kitchen',
-    description: 'Category of the furniture',
+    example: 'Inexpensive kitchens',
+    description: 'SubCategory of the furniture',
   })
   title: string;
 }

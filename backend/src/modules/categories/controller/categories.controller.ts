@@ -47,25 +47,6 @@ export class CategoriesController {
     return CategoriesMapper.toResCategoryFurnitureList(entities, total, query);
   }
 
-  @SkipAuth()
-  @Get('getSubCategoriesFurniture')
-  public async getSubCategoriesFurniture(
-    @Param('categoryFurnitureID', ParseUUIDPipe)
-    categoryFurnitureID: CategoryFurnitureID,
-    @Query() query: ListSubCategoriesFurnitureQueryDto,
-  ): Promise<SubCategoriesFurnitureListResDto> {
-    const [entities, total] =
-      await this.categoriesService.getSubCategoriesFurniture(
-        query,
-        categoryFurnitureID,
-      );
-    return CategoriesMapper.toResSubCategoryFurnitureList(
-      entities,
-      total,
-      query,
-    );
-  }
-
   @ApiBearerAuth()
   @UseGuards(RolesGuard)
   @ROLES(UserEnum.ADMIN, UserEnum.MANAGER)
@@ -75,23 +56,6 @@ export class CategoriesController {
   ): Promise<CategoryFurnitureResDto> {
     return CategoriesMapper.toResCategoryFurnitureDto(
       await this.categoriesService.createCategoryFurniture(dto),
-    );
-  }
-
-  @ApiBearerAuth()
-  @UseGuards(RolesGuard)
-  @ROLES(UserEnum.ADMIN, UserEnum.MANAGER)
-  @Post(':subCategoryFurnitureID')
-  public async createSubCategoryFurniture(
-    @Param('categoryFurnitureID', ParseUUIDPipe)
-    categoryFurnitureID: CategoryFurnitureID,
-    @Body() dto: SubCategoryReqDto,
-  ): Promise<SubCategoryFurnitureResDto> {
-    return CategoriesMapper.toResSubCategoryFurnitureDto(
-      await this.categoriesService.createSubCategoryFurniture(
-        dto,
-        categoryFurnitureID,
-      ),
     );
   }
 
@@ -117,19 +81,14 @@ export class CategoriesController {
   @ROLES(UserEnum.ADMIN, UserEnum.MANAGER)
   @Patch(':subCategoryFurnitureID')
   public async editSubCategoryFurniture(
-    @Param()
-    params: {
-      categoryFurnitureID?: CategoryFurnitureID;
-      subCategoryFurnitureID?: SubCategoryFurnitureID;
-    },
+    @Param('subCategoryFurnitureID', ParseUUIDPipe)
+    subCategoryFurnitureID: SubCategoryFurnitureID,
     @Body() dto: UpdateSubCategoryFurnitureReqDto,
   ): Promise<SubCategoryFurnitureResDto> {
-    const { categoryFurnitureID, subCategoryFurnitureID } = params;
     return CategoriesMapper.toResSubCategoryFurnitureDto(
       await this.categoriesService.editSubCategoryFurniture(
         dto,
         subCategoryFurnitureID,
-        categoryFurnitureID,
       ),
     );
   }
@@ -154,6 +113,41 @@ export class CategoriesController {
     return CategoriesMapper.toResSubCategoryFurnitureDto(
       await this.categoriesService.getSubCategoryFurniture(
         subCategoryFurnitureID,
+      ),
+    );
+  }
+  @SkipAuth()
+  @Get(':categoryFurnitureID/getSubCategoriesFurniture')
+  public async getSubCategoriesFurniture(
+    @Param('categoryFurnitureID', ParseUUIDPipe)
+    categoryFurnitureID: CategoryFurnitureID,
+    @Query() query: ListSubCategoriesFurnitureQueryDto,
+  ): Promise<SubCategoriesFurnitureListResDto> {
+    const [entities, total] =
+      await this.categoriesService.getSubCategoriesFurniture(
+        query,
+        categoryFurnitureID,
+      );
+    return CategoriesMapper.toResSubCategoryFurnitureList(
+      entities,
+      total,
+      query,
+    );
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(RolesGuard)
+  @ROLES(UserEnum.ADMIN, UserEnum.MANAGER)
+  @Post(':categoryFurnitureID/createSubCategoryFurniture')
+  public async createSubCategoryFurniture(
+    @Param('categoryFurnitureID', ParseUUIDPipe)
+    categoryFurnitureID: CategoryFurnitureID,
+    @Body() dto: SubCategoryReqDto,
+  ): Promise<SubCategoryFurnitureResDto> {
+    return CategoriesMapper.toResSubCategoryFurnitureDto(
+      await this.categoriesService.createSubCategoryFurniture(
+        dto,
+        categoryFurnitureID,
       ),
     );
   }

@@ -24,14 +24,14 @@ export class BaseOrderReqDto {
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => QuantityFurnitureInOrderDto)
-  furniture: QuantityFurnitureInOrderDto[];
+  furniture?: QuantityFurnitureInOrderDto[];
 
   @ApiProperty({ example: 'John Doe' })
   @IsString()
   @Length(3, 50)
   @Transform(TransformHelper.toTrim)
   @Type(() => String)
-  name?: string;
+  user_name?: string;
 
   @ApiProperty({ example: 'testuser@gmail.com' })
   @IsString()
@@ -42,5 +42,5 @@ export class BaseOrderReqDto {
   @ApiProperty({ example: '+380631353945' })
   @IsString()
   @IsPhoneNumber(null, { message: 'Phone number must be valid' })
-  phoneNumber?: string;
+  phoneNumber: string;
 }

@@ -83,19 +83,12 @@ export class UserService {
   }
 
   public async createUser(dto: CreateUserReqUserDto): Promise<UserEntity> {
-    await this.isEmailNotExistOrThrow(dto.email);
+    await this.isEmailAndNumberNotExistOrThrow(dto.email, dto.phoneNumber);
+
     const password = await this.passwordService.hashPassword(dto.password, 10);
-    await this.userRepository.save(
-      this.userRepository.create({ ...dto, password }),
-    );
+    const user = this.userRepository.create({ ...dto, password });
 
-    const user = await this.userRepository.findOne({
-      where: { email: dto.email },
-      select: ['id', 'password'],
-    });
-
-    await this.userRepository.save(user);
-    return user;
+    return await this.userRepository.save(user);
   }
 
   public async getUser(userId: UserID): Promise<UserEntity> {
@@ -107,10 +100,19 @@ export class UserService {
     return user;
   }
 
-  private async isEmailNotExistOrThrow(email: string): Promise<void> {
-    const user = await this.userRepository.findOneBy({ email });
-    if (user) {
+  private async isEmailAndNumberNotExistOrThrow(
+    email: string,
+    phoneNumber: string,
+  ): Promise<void> {
+    const userEmail = await this.userRepository.findOneBy({ email });
+    if (userEmail) {
       throw new BadRequestException('Email already exists');
+    }
+    const userPhoneNumber = await this.userRepository.findOneBy({
+      phoneNumber,
+    });
+    if (userPhoneNumber) {
+      throw new BadRequestException('PhoneNumber already exists');
     }
   }
 }

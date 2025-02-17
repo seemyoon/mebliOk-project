@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 
-import { OrderID, UserID } from '../../../common/types/entity-ids.type';
 import { OrderEntity } from '../../../database/entities/order.entity';
 import { IUserData } from '../../auth/interfaces/user-data.interface';
 import { ListOrdersQueryDto } from '../../orders/dto/req/list-orders.query.dto';
@@ -41,7 +40,7 @@ export class OrderRepository extends Repository<OrderEntity> {
   }
 
   public async findClientsOrders(
-    orderId: OrderID,
+    orderId: number,
     query: ListOrdersQueryDto,
   ): Promise<[OrderEntity[], number]> {
     const qb = this.createQueryBuilder('order');
@@ -52,5 +51,16 @@ export class OrderRepository extends Repository<OrderEntity> {
       .skip(query.offset);
 
     return await qb.getManyAndCount();
+  }
+
+  public async findByOrderId(orderID: number): Promise<OrderEntity> {
+    const qb = this.createQueryBuilder('order');
+    qb.leftJoinAndSelect(
+      'order.quantityFurniture',
+      'quantityFurniture',
+    ).leftJoinAndSelect('order.user', 'user');
+
+    qb.where('order.id = :orderID', { orderID });
+    return await qb.getOne();
   }
 }

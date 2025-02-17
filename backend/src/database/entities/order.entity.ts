@@ -7,7 +7,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-import { OrderID, UserID } from '../../common/types/entity-ids.type';
+import { UserID } from '../../common/types/entity-ids.type';
 import { TableNameEnum } from '../enums/table-name.enum';
 import { CreateUpdateModel } from '../model/create-update.model';
 import { QuantityFurnitureInOrderEntity } from './quantity-furniture-in-order.entity';
@@ -15,8 +15,8 @@ import { UserEntity } from './users.entity';
 
 @Entity(TableNameEnum.ORDER)
 export class OrderEntity extends CreateUpdateModel {
-  @PrimaryGeneratedColumn('uuid')
-  id: OrderID;
+  @PrimaryGeneratedColumn({ type: 'int' })
+  id: number;
 
   @Column('boolean', { default: false })
   isReady?: boolean;
