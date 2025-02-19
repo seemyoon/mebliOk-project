@@ -7,8 +7,10 @@ import configuration from './configs/configuration';
 import { AuthModule } from './modules/auth/auth.module';
 import { BrandModule } from './modules/brand/brand.module';
 import { CategoriesModule } from './modules/categories/categories.module';
+import { ColorModule } from './modules/color/color.module';
 import { FurnitureModule } from './modules/furniture/furniture.module';
 import { LoggerModule } from './modules/logger/logger.module';
+import { MaterialModule } from './modules/material/material.module';
 import { OrdersModule } from './modules/orders/orders.module';
 import { PostgresModule } from './modules/postgres/postgres.module';
 import { RedisModule } from './modules/redis/redis.module';
@@ -25,6 +27,8 @@ import { UserModule } from './modules/user/user.module';
     RedisModule,
     FurnitureModule,
     PostgresModule,
+    ColorModule,
+    MaterialModule,
     OrdersModule,
     BrandModule,
     CategoriesModule,

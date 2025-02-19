@@ -19,6 +19,7 @@ export class CategoriesMapper {
       title: data.title,
       created: data.createdAt,
       updated: data.updatedAt,
+      deleted: data.deleted,
     };
   }
 
@@ -42,6 +43,7 @@ export class CategoriesMapper {
       title: data.title,
       created: data.createdAt,
       updated: data.updatedAt,
+      deleted: data.deleted,
     };
   }
 

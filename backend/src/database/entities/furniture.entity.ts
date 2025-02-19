@@ -1,7 +1,7 @@
 import {
   Column,
   Entity,
-  JoinColumn,
+  JoinColumn, ManyToMany,
   ManyToOne,
   OneToMany,
   OneToOne,
@@ -11,7 +11,9 @@ import {
 import {
   BrandID,
   CategoryFurnitureID,
+  ColorID,
   FurnitureID,
+  MaterialID, SizeID,
   SubCategoryFurnitureID,
 } from '../../common/types/entity-ids.type';
 import { SellerEnum } from '../../modules/user/enum/seller.enum';
@@ -19,55 +21,53 @@ import { TableNameEnum } from '../enums/table-name.enum';
 import { CreateUpdateModel } from '../model/create-update.model';
 import { BrandEntity } from './brand.entity';
 import { CategoryFurnitureEntity } from './category-furniture.entity';
+import { ColorEntity } from './color.entity';
+import { MaterialEntity } from './material.entity';
+import { QuantityFurnitureInOrderEntity } from './quantity-furniture-in-order.entity';
 import { SizeEntity } from './size.entity';
 import { SubCategoryFurnitureEntity } from './subcategory-furniture.entity';
-import { QuantityFurnitureInOrderEntity } from './quantity-furniture-in-order.entity';
 
 @Entity(TableNameEnum.FURNITURE)
 export class FurnitureEntity extends CreateUpdateModel {
   @PrimaryGeneratedColumn('uuid')
   id: FurnitureID;
 
-  @Column('json', { default: [] })
-  photos?: string[];
-
   @Column('text')
   name: string;
 
-  @Column('text')
-  description: string;
+  @Column('json', { nullable: true })
+  photos?: string[];
 
-  @Column('text')
-  body: string;
+  @Column({ type: 'text', nullable: true })
+  description?: string;
+
+  @Column({ type: 'text', nullable: true })
+  body?: string;
 
   @Column({ type: 'enum', enum: SellerEnum, nullable: true })
   sellerType?: SellerEnum;
 
-  @Column({ type: 'int', default: 0 })
+  @Column({ type: 'int' })
   price: number;
 
-  @Column('json', { default: [] })
-  materials: string[];
+  @Column('int', { default: 0, nullable: true })
+  weight?: string;
 
-  @Column('json', { default: [] })
-  color: string[];
-
-  @Column('int', { default: 0 })
-  weight: number;
-
-  @Column('boolean', { default: false })
+  @Column('boolean', { default: true })
   in_stock: boolean;
 
-  @Column('int', { default: null, nullable: true })
+  @Column('int', { default: 0, nullable: true })
   discount?: number;
 
   @Column('timestamp', { nullable: true })
   deleted?: Date;
 
+  @Column()
+  size_id: SizeID;
   @OneToOne(() => SizeEntity, (entity) => entity.furniture, {
     onDelete: 'CASCADE',
   })
-  @JoinColumn()
+  @JoinColumn({ name: 'size_id' })
   size?: SizeEntity;
 
   @Column()
@@ -77,6 +77,22 @@ export class FurnitureEntity extends CreateUpdateModel {
   })
   @JoinColumn({ name: 'brand_id' })
   brand?: BrandEntity;
+
+  @Column()
+  color_id: ColorID;
+  @ManyToOne(() => ColorEntity, (entity) => entity.furniture, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'color_id' })
+  color?: ColorEntity[];
+
+  @Column()
+  material_id: MaterialID;
+  @ManyToOne(() => MaterialEntity, (entity) => entity.furniture, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'material_id' })
+  material?: MaterialEntity[];
 
   @Column()
   category_id: CategoryFurnitureID;

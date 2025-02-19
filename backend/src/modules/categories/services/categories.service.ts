@@ -133,7 +133,7 @@ export class CategoriesService {
     return category;
   }
 
-  public async getSubCategoryFurniture(
+  public async getSubCategoryFurnitureOne(
     subCategoryFurnitureID: SubCategoryFurnitureID,
   ): Promise<SubCategoryFurnitureEntity> {
     const subCategory =

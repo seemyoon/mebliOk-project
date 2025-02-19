@@ -1,91 +1,30 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsInt } from 'class-validator';
-
+import { FurnitureID } from '../../../../common/types/entity-ids.type';
 import { BrandResDto } from '../../../brand/dto/res/brand.res.dto';
+import { CategoryFurnitureResDto } from '../../../categories/dto/res/category-furniture.res.dto';
+import { SubCategoryFurnitureResDto } from '../../../categories/dto/res/subcategory-furniture.res.dto';
+import { ColorResDto } from '../../../color/dto/res/color.res.dto';
+import { MaterialResDto } from '../../../material/dto/res/material.res.dto';
 import { SellerEnum } from '../../../user/enum/seller.enum';
+import { SizeResDto } from './size.res.dto';
 
 export class FurnitureBaseResDto {
-  @ApiProperty({
-    example: '6744s24-5a28-a363-a5e1-023ae2e4780f',
-    description: 'Furniture ID',
-  })
-  id: string;
-
-  @ApiProperty({
-    example: 'Sofa Maria',
-    description: 'Name of the furniture',
-  })
+  id: FurnitureID;
   name: string;
-
-  @ApiProperty({
-    example: 'KAN',
-    description: 'Brand of the furniture',
-  })
   brand: BrandResDto;
-
-  @ApiProperty({
-    example: 'Comfortable sofa for the whole family',
-    description: 'Short description of the furniture',
-  })
-  description: string;
-
-  @ApiProperty({
-    description: "Furniture's array photos",
-  })
+  description?: string;
   photos?: string[] | null;
-
-  @ApiProperty({
-    description: "Furniture's array materials",
-  })
-  materials: string[];
-
-  @ApiProperty({
-    example: 'This furniture is made of high-quality materials',
-    description: 'Main content of the furniture',
-  })
-  body: string;
-
-  @ApiProperty({
-    example: 'This furniture is made of high-quality materials',
-    description: 'Main content of the furniture',
-  })
-  color: string[];
-
-  @IsInt()
-  @ApiProperty({
-    example: 5000,
-    description: 'Price of the furniture',
-  })
+  materials: MaterialResDto[];
+  body?: string;
+  weight: string;
+  in_stock: boolean;
+  size: SizeResDto;
+  category: CategoryFurnitureResDto;
+  subcategory: SubCategoryFurnitureResDto;
+  color: ColorResDto[];
   price: number;
-
-  @ApiProperty({
-    example: 10,
-    description: 'Discount (percent) of the furniture',
-  })
-  discount?: number | null;
-
-  @ApiProperty({
-    example: '2021-09-29T10:00:00.000Z',
-    description: 'Creation date of the article',
-  })
+  discount?: number | 0;
   created: Date;
-
-  @ApiProperty({
-    example: '2021-09-29T10:00:00.000Z',
-    description: 'Last update date of the article',
-  })
   updated: Date;
-
-  @ApiProperty({
-    example: '2021-09-29T10:00:00.000Z',
-    description: 'Deleted date of the article',
-  })
   deleted: Date;
-
-  @ApiProperty({
-    enum: SellerEnum,
-    example: SellerEnum.SELLER,
-    description: 'Type of seller',
-  })
   sellerType?: SellerEnum;
 }

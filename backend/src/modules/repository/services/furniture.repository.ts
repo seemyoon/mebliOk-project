@@ -24,11 +24,6 @@ export class FurnitureRepository extends Repository<FurnitureEntity> {
       qb.setParameter('search', `%${query.search}%`);
     }
 
-    if (query.brand) {
-      qb.andWhere('furniture.brand = :brand');
-      qb.setParameter('brand', query.brand);
-    }
-
     if (query.inStock !== undefined) {
       qb.andWhere('furniture.in_stock = :in_stock');
       qb.setParameter('in_stock', query.inStock);
@@ -36,11 +31,6 @@ export class FurnitureRepository extends Repository<FurnitureEntity> {
 
     qb.take(query.limit);
     qb.skip(query.offset);
-
-    if (query.brand) {
-      qb.andWhere('furniture.brand = :brand');
-      qb.setParameter('brand', query.brand);
-    }
 
     if (query.sortBy && query.sortOrder) {
       switch (query.sortBy) {

@@ -1,6 +1,6 @@
 import {
   Body,
-  Controller,
+  Controller, DefaultValuePipe,
   Delete,
   Get,
   Param,
@@ -16,11 +16,19 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth, ApiConsumes, ApiTags } from '@nestjs/swagger';
 
 import { ApiFile } from '../../../common/decorators/api-file.decorator';
-import { FurnitureID } from '../../../common/types/entity-ids.type';
+import {
+  BrandID,
+  CategoryFurnitureID,
+  ColorID,
+  FurnitureID,
+  MaterialID,
+  SubCategoryFurnitureID,
+} from '../../../common/types/entity-ids.type';
 import { SkipAuth } from '../../auth/decorators/skip-auth.decorator';
 import { ROLES } from '../../user/decorators/roles.decorator';
 import { UserEnum } from '../../user/enum/users.enum';
 import { RolesGuard } from '../../user/guard/roles.guard';
+import { AssignDiscountReqDto } from '../dto/req/assign-discount.req.dto';
 import { CreateFurnitureReqDto } from '../dto/req/create-furniture.req.dto';
 import { ListFurnitureQueryDto } from '../dto/req/list-furniture-query.dto';
 import { UpdateFurnitureReqDto } from '../dto/req/update-furniture.req.dto';
@@ -50,30 +58,26 @@ export class FurnitureController {
   @Post('createFurniture')
   public async createFurniture(
     @Body() dto: CreateFurnitureReqDto,
+    @Param('categoryFurnitureID', ParseUUIDPipe)
+    categoryFurnitureID: CategoryFurnitureID,
+    @Param('subCategoryFurnitureID', ParseUUIDPipe)
+    subCategoryFurnitureID: SubCategoryFurnitureID,
+    @Param('brandID', ParseUUIDPipe)
+    brandID: BrandID,
+    @Param('MaterialID', ParseUUIDPipe)
+    materialID: MaterialID[],
+    @Param('ColorID', ParseUUIDPipe)
+    colorID: ColorID[],
   ): Promise<FurnitureBaseResDto> {
-    const furniture = await this.furnitureService.createFurniture(dto);
+    const furniture = await this.furnitureService.createFurniture(
+      dto,
+      categoryFurnitureID,
+      subCategoryFurnitureID,
+      brandID,
+      colorID,
+      materialID,
+    );
     return FurnitureMapper.toResDto(furniture);
-  }
-
-  @ApiBearerAuth()
-  @UseGuards(RolesGuard)
-  @ROLES(UserEnum.ADMIN, UserEnum.MANAGER)
-  @Post('addBrand')
-  public async addBrand(
-    @Body() dto: CreateFurnitureReqDto,
-  ): Promise<FurnitureBaseResDto> {
-    const furniture = await this.furnitureService.createFurniture(dto);
-    return FurnitureMapper.toResDto(furniture);
-  }
-
-  @ApiBearerAuth()
-  @UseGuards(RolesGuard)
-  @ROLES(UserEnum.ADMIN, UserEnum.MANAGER)
-  @Patch(':furnitureId/activeStock')
-  public async activeStock(
-    @Param('furnitureId', ParseUUIDPipe) furnitureId: FurnitureID,
-  ): Promise<void> {
-    await this.furnitureService.activeStock(furnitureId);
   }
 
   @ApiBearerAuth()
@@ -93,12 +97,51 @@ export class FurnitureController {
   @ApiBearerAuth()
   @UseGuards(RolesGuard)
   @ROLES(UserEnum.ADMIN, UserEnum.MANAGER)
+  @Patch(':furnitureId/activeStock')
+  public async activeStock(
+    @Param('furnitureId', ParseUUIDPipe) furnitureId: FurnitureID,
+  ): Promise<void> {
+    await this.furnitureService.activeStock(furnitureId);
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(RolesGuard)
+  @ROLES(UserEnum.ADMIN, UserEnum.MANAGER)
+  @Patch(':furnitureId/assignDiscount')
+  public async assignDiscount(
+    @Param('furnitureId', ParseUUIDPipe) furnitureId: FurnitureID,
+    @Body() dto: AssignDiscountReqDto,
+  ): Promise<void> {
+    await this.furnitureService.assignDiscount(furnitureId, dto);
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(RolesGuard)
+  @ROLES(UserEnum.ADMIN, UserEnum.MANAGER)
   @Patch(':furnitureId')
   public async editFurniture(
     @Param('furnitureId', ParseUUIDPipe) furnitureId: FurnitureID,
+    @Param('categoryFurnitureID', ParseUUIDPipe)
+    categoryFurnitureID: CategoryFurnitureID | null,
+    @Param('subCategoryFurnitureID', ParseUUIDPipe)
+    subCategoryFurnitureID: SubCategoryFurnitureID | null,
+    @Param('brandID', ParseUUIDPipe)
+    brandID: BrandID | null,
+    @Param('materialID', ParseUUIDPipe)
+    materialID: MaterialID[] | null,
+    @Param('colorID', ParseUUIDPipe)
+    colorID: ColorID[] | null,
     @Body() dto: UpdateFurnitureReqDto,
   ): Promise<void> {
-    return await this.furnitureService.editFurniture(furnitureId, dto);
+    return await this.furnitureService.editFurniture(
+      furnitureId,
+      categoryFurnitureID,
+      subCategoryFurnitureID,
+      brandID,
+      colorID,
+      materialID,
+      dto,
+    );
   }
 
   @ApiBearerAuth()

@@ -43,7 +43,10 @@ export class UserService {
       FileTypeEnum.IMAGE,
       userData.userId,
     );
-    await this.userRepository.save({ ...user, image: filePath });
+    if (user.avatar) {
+      await this.fileStorageService.deleteFile(user.avatar);
+    }
+    await this.userRepository.save({ ...user, avatar: filePath });
   }
 
   public async editMe(

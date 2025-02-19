@@ -2,10 +2,13 @@ import { Global, Module } from '@nestjs/common';
 
 import { BrandRepository } from './services/brand.repository';
 import { CategoryFurnitureRepository } from './services/category-furniture.repository';
+import { ColorRepository } from './services/color.repository';
 import { FurnitureRepository } from './services/furniture.repository';
+import { MaterialRepository } from './services/material.repository';
 import { OrderRepository } from './services/order.repository';
 import { QuantityFurnitureInOrderRepository } from './services/quantity-furniture-in-order.repository';
 import { RefreshTokenRepository } from './services/refresh-token.repository';
+import { SizeRepository } from './services/size.repository';
 import { SubCategoryFurnitureRepository } from './services/subcategory-furniture.repository';
 import { UserRepository } from './services/user.repository';
 
@@ -14,6 +17,9 @@ const repository = [
   RefreshTokenRepository,
   FurnitureRepository,
   OrderRepository,
+  ColorRepository,
+  MaterialRepository,
+  SizeRepository,
   QuantityFurnitureInOrderRepository,
   BrandRepository,
   CategoryFurnitureRepository,

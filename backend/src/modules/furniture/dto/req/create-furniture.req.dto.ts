@@ -1,18 +1,20 @@
+import { Param, ParseUUIDPipe } from '@nestjs/common';
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform, Type } from 'class-transformer';
 import {
   ArrayNotEmpty,
   IsArray,
   IsInt,
-  IsOptional,
   IsString,
+  IsUUID,
 } from 'class-validator';
 
 import { TransformHelper } from '../../../../common/helpers/transform.helper';
+import { ColorID, MaterialID } from '../../../../common/types/entity-ids.type';
 
 export class CreateFurnitureReqDto {
   @ApiProperty({
-    example: 'Sofa Maria',
+    example: 'Chair',
     description: 'Name of the furniture',
   })
   @Type(() => String)
@@ -22,24 +24,14 @@ export class CreateFurnitureReqDto {
   name: string;
 
   @ApiProperty({
-    example: 'KAN',
-    description: 'Brand of the furniture',
-  })
-  @Type(() => String)
-  @Transform(TransformHelper.toTrim)
-  @Transform(TransformHelper.toLowerCase)
-  @IsString()
-  brand: string;
-
-  @ApiProperty({
-    example: 'Comfortable sofa for the whole family',
+    example: 'Attractive chair for the whole family',
     description: 'Short description of the furniture',
   })
   @Type(() => String)
   @Transform(TransformHelper.toTrim)
   @Transform(TransformHelper.toLowerCase)
   @IsString()
-  description: string;
+  description?: string;
 
   @ApiProperty({
     example: 'This furniture is made of high-quality materials',
@@ -49,33 +41,17 @@ export class CreateFurnitureReqDto {
   @Transform(TransformHelper.toTrim)
   @Transform(TransformHelper.toLowerCase)
   @IsString()
-  body: string;
+  body?: string;
 
   @ApiProperty({
-    example: ['wood', 'plastic'],
-    description: "Furniture's array materials",
+    example: '20 kg',
+    description: 'Main content of the furniture',
   })
-  @IsArray()
-  @ArrayNotEmpty()
-  @IsString({ each: true })
-  materials: string[];
-
-  @ApiProperty({
-    example: ['red', 'blue'],
-    description: 'Colors of the furniture',
-  })
-  @IsArray()
-  @ArrayNotEmpty()
-  @IsString({ each: true })
-  color: string[];
-
-  @ApiProperty({
-    example: 10,
-    description: 'Discount (percent) of the furniture',
-  })
-  @IsInt()
-  @IsOptional()
-  discount?: number | null;
+  @Type(() => String)
+  @Transform(TransformHelper.toTrim)
+  @Transform(TransformHelper.toLowerCase)
+  @IsString()
+  weight?: string;
 
   @IsInt()
   @ApiProperty({
@@ -83,4 +59,31 @@ export class CreateFurnitureReqDto {
     description: 'Price of the furniture',
   })
   price: number;
+
+  @IsInt()
+  @ApiProperty({
+    example: 100,
+    description: 'Price of the furniture',
+  })
+  height: number;
+
+  @IsInt()
+  @ApiProperty({
+    example: 200,
+    description: 'Price of the furniture',
+  })
+  width: number;
+
+  @IsInt()
+  @ApiProperty({
+    example: 300,
+    description: 'Price of the furniture',
+  })
+  length: number;
+
+  @IsUUID('4', { each: true })
+  materialIDs: MaterialID[];
+
+  @IsUUID('4', { each: true })
+  colorIDs: ColorID[];
 }

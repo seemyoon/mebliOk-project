@@ -5,7 +5,6 @@ import {
 } from '@nestjs/common';
 import { In } from 'typeorm';
 
-import { UserID } from '../../../common/types/entity-ids.type';
 import { OrderEntity } from '../../../database/entities/order.entity';
 import { UserEntity } from '../../../database/entities/users.entity';
 import { IUserData } from '../../auth/interfaces/user-data.interface';

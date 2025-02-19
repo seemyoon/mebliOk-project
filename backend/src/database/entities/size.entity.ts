@@ -6,7 +6,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-import { FurnitureID, SizeID } from '../../common/types/entity-ids.type';
+import { SizeID } from '../../common/types/entity-ids.type';
 import { TableNameEnum } from '../enums/table-name.enum';
 import { CreateUpdateModel } from '../model/create-update.model';
 import { FurnitureEntity } from './furniture.entity';
@@ -16,23 +16,19 @@ export class SizeEntity extends CreateUpdateModel {
   @PrimaryGeneratedColumn('uuid')
   id: SizeID;
 
-  @Column('text')
-  height: string;
+  @Column('int')
+  height: number;
 
-  @Column('text')
-  width: string;
+  @Column('int')
+  width: number;
 
-  @Column('text')
-  length: string;
+  @Column('int')
+  length: number;
 
   @Column('timestamp', { nullable: true })
   deleted?: Date;
 
-  @Column()
-  furniture_id: FurnitureID;
-  @OneToOne(() => FurnitureEntity, (entity) => entity.size, {
-    onDelete: 'CASCADE',
-  })
-  @JoinColumn({ name: 'article_id' })
+  @OneToOne(() => SizeEntity, (entity) => entity.furniture)
+  @JoinColumn()
   furniture?: FurnitureEntity;
 }

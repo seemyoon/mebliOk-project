@@ -4,11 +4,13 @@ import { CreateFurnitureReqDto } from './create-furniture.req.dto';
 
 export class UpdateFurnitureReqDto extends PickType(CreateFurnitureReqDto, [
   'name',
-  'brand',
   'description',
-  'materials',
   'body',
-  'color',
   'price',
-  'discount',
+  'weight',
+  'height',
+  'width',
+  'length',
+  'colorIDs',
+  'materialIDs',
 ]) {}

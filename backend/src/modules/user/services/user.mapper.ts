@@ -10,7 +10,7 @@ export class UserMapper {
       id: user.id,
       name: user.name,
       email: user.email,
-      avatar: user.avatar,
+      avatar: user?.avatar,
       phoneNumber: user.phoneNumber,
       role: user.role,
       created: user.createdAt,

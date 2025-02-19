@@ -30,7 +30,7 @@ import { CategoryFurnitureResDto } from '../dto/res/category-furniture.res.dto';
 import { SubCategoriesFurnitureListResDto } from '../dto/res/subcategories-list.res.dto';
 import { SubCategoryFurnitureResDto } from '../dto/res/subcategory-furniture.res.dto';
 import { CategoriesService } from '../services/categories.service';
-import { CategoriesMapper } from '../services/categories-mapper.service';
+import { CategoriesMapper } from '../services/categories.mapper.service';
 
 @ApiTags('Categories')
 @Controller('categories')
@@ -79,7 +79,7 @@ export class CategoriesController {
   @ApiBearerAuth()
   @UseGuards(RolesGuard)
   @ROLES(UserEnum.ADMIN, UserEnum.MANAGER)
-  @Patch(':subCategoryFurnitureID')
+  @Patch('editSubCategoryFurniture/:subCategoryFurnitureID')
   public async editSubCategoryFurniture(
     @Param('subCategoryFurnitureID', ParseUUIDPipe)
     subCategoryFurnitureID: SubCategoryFurnitureID,
@@ -105,17 +105,18 @@ export class CategoriesController {
   }
 
   @SkipAuth()
-  @Get(':subCategoryFurnitureID')
-  public async getSubCategoryFurniture(
+  @Get('/getSubCategoryFurnitureOne/:subCategoryFurnitureID')
+  public async getSubCategoryFurnitureOne(
     @Param('subCategoryFurnitureID', ParseUUIDPipe)
     subCategoryFurnitureID: SubCategoryFurnitureID,
   ): Promise<SubCategoryFurnitureResDto> {
     return CategoriesMapper.toResSubCategoryFurnitureDto(
-      await this.categoriesService.getSubCategoryFurniture(
+      await this.categoriesService.getSubCategoryFurnitureOne(
         subCategoryFurnitureID,
       ),
     );
   }
+
   @SkipAuth()
   @Get(':categoryFurnitureID/getSubCategoriesFurniture')
   public async getSubCategoriesFurniture(
