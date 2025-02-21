@@ -1,16 +1,8 @@
-import { Param, ParseUUIDPipe } from '@nestjs/common';
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform, Type } from 'class-transformer';
-import {
-  ArrayNotEmpty,
-  IsArray,
-  IsInt,
-  IsString,
-  IsUUID,
-} from 'class-validator';
+import { IsInt, IsString } from 'class-validator';
 
 import { TransformHelper } from '../../../../common/helpers/transform.helper';
-import { ColorID, MaterialID } from '../../../../common/types/entity-ids.type';
 
 export class CreateFurnitureReqDto {
   @ApiProperty({
@@ -80,10 +72,10 @@ export class CreateFurnitureReqDto {
     description: 'Price of the furniture',
   })
   length: number;
-
-  @IsUUID('4', { each: true })
-  materialIDs: MaterialID[];
-
-  @IsUUID('4', { each: true })
-  colorIDs: ColorID[];
+  //
+  // @IsUUID('4', { each: true })
+  // materialIDs: MaterialID[];
+  //
+  // @IsUUID('4', { each: true })
+  // colorIDs: ColorID[];
 }

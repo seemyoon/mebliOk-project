@@ -1,7 +1,9 @@
 import {
   Column,
   Entity,
-  JoinColumn, ManyToMany,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   OneToOne,
@@ -13,7 +15,8 @@ import {
   CategoryFurnitureID,
   ColorID,
   FurnitureID,
-  MaterialID, SizeID,
+  MaterialID,
+  SizeID,
   SubCategoryFurnitureID,
 } from '../../common/types/entity-ids.type';
 import { SellerEnum } from '../../modules/user/enum/seller.enum';
@@ -50,7 +53,7 @@ export class FurnitureEntity extends CreateUpdateModel {
   @Column({ type: 'int' })
   price: number;
 
-  @Column('int', { default: 0, nullable: true })
+  @Column('text', { default: 0, nullable: true })
   weight?: string;
 
   @Column('boolean', { default: true })
@@ -62,7 +65,7 @@ export class FurnitureEntity extends CreateUpdateModel {
   @Column('timestamp', { nullable: true })
   deleted?: Date;
 
-  @Column()
+  @Column({ type: 'uuid' })
   size_id: SizeID;
   @OneToOne(() => SizeEntity, (entity) => entity.furniture, {
     onDelete: 'CASCADE',
@@ -70,7 +73,7 @@ export class FurnitureEntity extends CreateUpdateModel {
   @JoinColumn({ name: 'size_id' })
   size?: SizeEntity;
 
-  @Column()
+  @Column({ type: 'uuid' })
   brand_id: BrandID;
   @ManyToOne(() => BrandEntity, (entity) => entity.furniture, {
     onDelete: 'CASCADE',
@@ -78,23 +81,27 @@ export class FurnitureEntity extends CreateUpdateModel {
   @JoinColumn({ name: 'brand_id' })
   brand?: BrandEntity;
 
-  @Column()
-  color_id: ColorID;
-  @ManyToOne(() => ColorEntity, (entity) => entity.furniture, {
+  @ManyToMany(() => ColorEntity, (entity) => entity.furniture, {
     onDelete: 'CASCADE',
   })
-  @JoinColumn({ name: 'color_id' })
+  @JoinTable({
+    name: 'furniture_color',
+    joinColumn: { name: 'furniture_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'color_id', referencedColumnName: 'id' },
+  })
   color?: ColorEntity[];
 
-  @Column()
-  material_id: MaterialID;
-  @ManyToOne(() => MaterialEntity, (entity) => entity.furniture, {
+  @ManyToMany(() => MaterialEntity, (entity) => entity.furniture, {
     onDelete: 'CASCADE',
   })
-  @JoinColumn({ name: 'material_id' })
+  @JoinTable({
+    name: 'furniture_material',
+    joinColumn: { name: 'furniture_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'material_id', referencedColumnName: 'id' },
+  })
   material?: MaterialEntity[];
 
-  @Column()
+  @Column({ type: 'uuid' })
   category_id: CategoryFurnitureID;
   @ManyToOne(() => CategoryFurnitureEntity, (entity) => entity.furniture, {
     onDelete: 'CASCADE',
@@ -102,7 +109,7 @@ export class FurnitureEntity extends CreateUpdateModel {
   @JoinColumn({ name: 'category_id' })
   category?: CategoryFurnitureEntity;
 
-  @Column({ nullable: true })
+  @Column({ type: 'uuid', nullable: true })
   subcategory_id: SubCategoryFurnitureID;
   @ManyToOne(() => SubCategoryFurnitureEntity, (entity) => entity.furniture, {
     onDelete: 'CASCADE',

@@ -11,6 +11,4 @@ export class UpdateFurnitureReqDto extends PickType(CreateFurnitureReqDto, [
   'height',
   'width',
   'length',
-  'colorIDs',
-  'materialIDs',
 ]) {}

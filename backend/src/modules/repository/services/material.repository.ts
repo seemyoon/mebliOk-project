@@ -37,12 +37,12 @@ export class MaterialRepository extends Repository<MaterialEntity> {
     return await qb.getOne();
   }
   public async findByMaterialIds(
-    materialIds: MaterialID[],
+    materialId: MaterialID[],
   ): Promise<MaterialEntity[]> {
     const qb = this.createQueryBuilder('material');
     qb.leftJoinAndSelect('material.furniture', 'furniture');
 
-    qb.where('material.id IN (:...materialId)', { materialIds });
+    qb.where('material.id IN (:...materialId)', { materialId });
     return await qb.getMany();
   }
 }

@@ -14,5 +14,5 @@ export class BrandEntity extends CreateUpdateModel {
   brand_name: string;
 
   @OneToMany(() => FurnitureEntity, (entity) => entity.brand)
-  furniture?: FurnitureEntity;
+  furniture?: FurnitureEntity[];
 }

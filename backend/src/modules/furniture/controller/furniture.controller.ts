@@ -1,6 +1,6 @@
 import {
   Body,
-  Controller, DefaultValuePipe,
+  Controller,
   Delete,
   Get,
   Param,
@@ -55,7 +55,9 @@ export class FurnitureController {
   @ApiBearerAuth()
   @UseGuards(RolesGuard)
   @ROLES(UserEnum.ADMIN, UserEnum.MANAGER)
-  @Post('createFurniture')
+  @Post(
+    'createFurniture/:categoryFurnitureID/:subCategoryFurnitureID/:brandID/:materialID/:colorID',
+  )
   public async createFurniture(
     @Body() dto: CreateFurnitureReqDto,
     @Param('categoryFurnitureID', ParseUUIDPipe)
@@ -64,18 +66,22 @@ export class FurnitureController {
     subCategoryFurnitureID: SubCategoryFurnitureID,
     @Param('brandID', ParseUUIDPipe)
     brandID: BrandID,
-    @Param('MaterialID', ParseUUIDPipe)
-    materialID: MaterialID[],
-    @Param('ColorID', ParseUUIDPipe)
-    colorID: ColorID[],
+    @Param('materialID') materialID: MaterialID,
+    @Param('colorID') colorID: ColorID,
   ): Promise<FurnitureBaseResDto> {
+    const materialIDArray = materialID
+      .split(',')
+      .map((id) => id.trim() as MaterialID);
+
+    const colorIDArray = colorID.split(',').map((id) => id.trim() as ColorID);
+
     const furniture = await this.furnitureService.createFurniture(
       dto,
       categoryFurnitureID,
       subCategoryFurnitureID,
       brandID,
-      colorID,
-      materialID,
+      colorIDArray,
+      materialIDArray,
     );
     return FurnitureMapper.toResDto(furniture);
   }

@@ -112,14 +112,14 @@ export class FurnitureService {
       );
     }
 
-    const [brand, category, subcategory, material, color] = await Promise.all([
+    const [brand, category, subcategory, color, material] = await Promise.all([
       this.brandRepository.findByBrandId(brandID),
       this.categoryFurnitureRepository.findByCategoryId(categoryFurnitureID),
       this.subCategoryFurnitureRepository.findBySubCategoryId(
         subCategoryFurnitureID,
       ),
-      this.materialRepository.findByMaterialIds(materialIDs),
       this.colorRepository.findByColorIds(colorIDs),
+      this.materialRepository.findByMaterialIds(materialIDs),
     ]);
 
     [

@@ -35,11 +35,11 @@ export class ColorRepository extends Repository<ColorEntity> {
     return await qb.getOne();
   }
 
-  public async findByColorIds(colorIds: ColorID[]): Promise<ColorEntity[]> {
+  public async findByColorIds(colorId: ColorID[]): Promise<ColorEntity[]> {
     const qb = this.createQueryBuilder('color');
     qb.leftJoinAndSelect('color.furniture', 'furniture');
 
-    qb.where('color.id IN (:...colorId)', { colorIds });
+    qb.where('color.id IN (:...colorId)', { colorId });
     return await qb.getMany();
   }
 }
