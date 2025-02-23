@@ -35,7 +35,7 @@ export class FurnitureMapper {
       updated: data.updatedAt,
       weight: data?.weight,
       in_stock: data.in_stock,
-      size: this.toResSizeDto(data.size),
+      size: this?.toResSizeDto(data.size),
       category: CategoriesMapper.toResCategoryFurnitureDto(data.category),
       subcategory: CategoriesMapper.toResSubCategoryFurnitureDto(
         data.subcategory,
@@ -51,7 +51,6 @@ export class FurnitureMapper {
       height: data?.height,
       width: data?.width,
       length: data?.length,
-      deleted: data?.deleted,
     };
   }
 

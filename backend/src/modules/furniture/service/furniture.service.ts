@@ -137,7 +137,7 @@ export class FurnitureService {
     const size = this.sizeRepository.create({
       height: dto.height,
       width: dto.width,
-      length: dto.length,
+      length: dto.length_furniture,
     });
 
     await this.sizeRepository.save(size);
@@ -162,63 +162,64 @@ export class FurnitureService {
   }
 
   public async editFurniture(
+    dto: UpdateFurnitureReqDto,
     furnitureId: FurnitureID,
-    categoryFurnitureID: CategoryFurnitureID | null,
-    subCategoryFurnitureID: SubCategoryFurnitureID | null,
-    brandID: BrandID | null,
-    colorIDs: ColorID[] | null,
-    materialIDs: MaterialID[] | null,
-    dto: UpdateFurnitureReqDto | null,
+    categoryFurnitureID: CategoryFurnitureID,
+    subCategoryFurnitureID: SubCategoryFurnitureID,
+    brandID: BrandID,
+    colorIDs: ColorID[],
+    materialIDs: MaterialID[],
   ): Promise<void> {
     const furniture = await this.returnFurnitureOrThrow(furnitureId);
 
-    const subCategoryFurniture =
-      await this.subCategoryFurnitureRepository.findBySubCategoryId(
-        subCategoryFurnitureID,
-      );
+    const subCategoryFurniture = subCategoryFurnitureID
+      ? await this.subCategoryFurnitureRepository.findBySubCategoryId(
+          subCategoryFurnitureID,
+        )
+      : furniture.subcategory;
 
     if (!subCategoryFurniture) {
       throw new ConflictException('SubCategoryFurniture not found');
     }
 
-    if (subCategoryFurniture.category_id !== categoryFurnitureID) {
-      throw new ConflictException(
-        'SubCategory does not belong to the specified category',
-      );
+    const categoryFurniture = categoryFurnitureID
+      ? await this.categoryFurnitureRepository.findByCategoryId(
+          categoryFurnitureID,
+        )
+      : furniture.category;
+
+    if (categoryFurnitureID && subCategoryFurnitureID) {
+      if (subCategoryFurniture.category_id !== categoryFurnitureID) {
+        throw new ConflictException(
+          'SubCategory does not belong to the specified category',
+        );
+      }
     }
 
-    const [brand, category, subcategory, material, color] = await Promise.all([
-      brandID ? this.brandRepository.findByBrandId(brandID) : null,
-      categoryFurnitureID
-        ? this.categoryFurnitureRepository.findByCategoryId(categoryFurnitureID)
-        : null,
-      subCategoryFurnitureID
-        ? this.subCategoryFurnitureRepository.findBySubCategoryId(
-            subCategoryFurnitureID,
-          )
-        : null,
-      materialIDs?.length > 0
-        ? this.materialRepository.findByMaterialIds(materialIDs)
-        : null,
-      colorIDs?.length > 0
+    const [brand, category, subcategory, color, material] = await Promise.all([
+      brandID
+        ? this.brandRepository.findByBrandId(furniture.brand.id)
+        : furniture.brand,
+      this.categoryFurnitureRepository.findByCategoryId(categoryFurniture.id),
+      this.subCategoryFurnitureRepository.findBySubCategoryId(
+        subCategoryFurniture.id,
+      ),
+      colorIDs
         ? this.colorRepository.findByColorIds(colorIDs)
-        : null,
+        : furniture.color,
+      materialIDs
+        ? this.materialRepository.findByMaterialIds(materialIDs)
+        : furniture.material,
     ]);
 
     [
-      { value: brandID && !brand, message: 'Brand not found' },
-      {
-        value: categoryFurnitureID && !category,
-        message: 'CategoryFurniture not found',
-      },
-      {
-        value: subCategoryFurnitureID && !subcategory,
-        message: 'SubCategoryFurniture not found',
-      },
-      { value: materialIDs && !material, message: 'Material not found' },
-      { value: colorIDs && !color, message: 'Color not found' },
+      { value: brand, message: 'Brand not found' },
+      { value: category, message: 'CategoryFurniture not found' },
+      { value: subcategory, message: 'SubCategoryFurniture not found' },
+      { value: material && material.length > 0, message: 'Material not found' },
+      { value: color && color.length > 0, message: 'Color not found' },
     ].forEach(({ value, message }) => {
-      if (value) {
+      if (!value) {
         throw new ConflictException(message);
       }
     });
@@ -227,28 +228,34 @@ export class FurnitureService {
       where: { id: furniture.size_id },
     });
     if (size) {
-      size.height = dto?.height;
-      size.width = dto?.width;
-      size.length = dto?.length;
+      size.height = dto?.height ?? size.height;
+      size.width = dto?.width ?? size.width;
+      size.length = dto?.length_furniture ?? size.length;
       await this.sizeRepository.save(size);
     } else {
       throw new ConflictException('Size not found');
     }
 
     await this.furnitureRepository.update(furnitureId, {
-      name: dto.name,
+      ...(dto.name && { name: dto.name }),
+      ...(dto.description && { description: dto.description }),
+      ...(dto.body && { body: dto.body }),
+      ...(dto.price && { price: dto.price }),
+      ...(dto.weight && { weight: dto.weight }),
       brand,
-      description: dto?.description || null,
-      body: dto?.body || null,
       category,
       subcategory,
-      color,
-      size,
-      price: dto.price,
-      weight: dto?.weight,
-      material,
+      color: colorIDs.length
+        ? await this.colorRepository.findByColorIds(colorIDs)
+        : furniture.color,
+      material: materialIDs.length
+        ? await this.materialRepository.findByMaterialIds(materialIDs)
+        : furniture.material,
+      // todo. fix an error '[Nest] 419173  - 02/23/2025, 4:41:36 AM   ERROR [ExceptionsHandler] Cannot query across
+      //  many-to-many for property color Error: Cannot query across many-to-many for property color'
       // sellerType: SellerEnum.SELLER,
     });
+    await this.furnitureRepository.save(furniture);
   }
 
   public async assignDiscount(
@@ -260,7 +267,7 @@ export class FurnitureService {
     if (!furniture) {
       throw new ConflictException('Furniture not found');
     }
-    if (furniture.in_stock && furniture.discount && furniture.price) {
+    if (furniture.in_stock && furniture.price) {
       furniture.discount = dto.discount;
     }
     await this.furnitureRepository.save(furniture);

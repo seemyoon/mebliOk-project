@@ -1,4 +1,4 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 import { MaterialID } from '../../common/types/entity-ids.type';
 import { TableNameEnum } from '../enums/table-name.enum';
@@ -13,6 +13,6 @@ export class MaterialEntity extends CreateUpdateModel {
   @Column('text')
   material_name: string;
 
-  @OneToMany(() => FurnitureEntity, (entity) => entity.material)
+  @ManyToMany(() => FurnitureEntity, (entity) => entity.material)
   furniture?: FurnitureEntity[];
 }

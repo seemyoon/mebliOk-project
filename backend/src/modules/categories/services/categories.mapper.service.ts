@@ -15,11 +15,8 @@ export class CategoriesMapper {
     data: CategoryFurnitureEntity,
   ): CategoryFurnitureResDto {
     return {
-      id: data.id,
-      title: data.title,
-      created: data.createdAt,
-      updated: data.updatedAt,
-      deleted: data.deleted,
+      id: data?.id,
+      title: data?.title,
     };
   }
 
@@ -39,11 +36,8 @@ export class CategoriesMapper {
     data: SubCategoryFurnitureEntity,
   ): SubCategoryFurnitureResDto {
     return {
-      id: data.id,
-      title: data.title,
-      created: data.createdAt,
-      updated: data.updatedAt,
-      deleted: data.deleted,
+      id: data?.id,
+      title: data?.title,
     };
   }
 

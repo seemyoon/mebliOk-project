@@ -5,5 +5,4 @@ export class SizeResDto {
   height?: number;
   width?: number;
   length?: number;
-  deleted?: Date;
 }

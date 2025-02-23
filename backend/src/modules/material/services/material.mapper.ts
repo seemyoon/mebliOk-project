@@ -11,8 +11,6 @@ export class MaterialFurnitureMapper {
     return {
       id: data.id,
       material_name: data.material_name,
-      created: data.createdAt,
-      updated: data.updatedAt,
     };
   }
 

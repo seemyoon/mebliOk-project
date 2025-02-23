@@ -1,4 +1,4 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 import { ColorID } from '../../common/types/entity-ids.type';
 import { TableNameEnum } from '../enums/table-name.enum';
@@ -13,6 +13,6 @@ export class ColorEntity extends CreateUpdateModel {
   @Column('text')
   color_name: string;
 
-  @OneToMany(() => FurnitureEntity, (entity) => entity.color)
+  @ManyToMany(() => FurnitureEntity, (entity) => entity.color)
   furniture?: FurnitureEntity[];
 }

@@ -16,6 +16,12 @@ export class FurnitureRepository extends Repository<FurnitureEntity> {
   ): Promise<[FurnitureEntity[], number]> {
     const qb = this.createQueryBuilder('furniture');
     qb.leftJoinAndSelect('furniture.size', 'size');
+    qb.leftJoinAndSelect('furniture.quantityFurniture', 'quantityFurniture');
+    qb.leftJoinAndSelect('furniture.subcategory', 'subcategory');
+    qb.leftJoinAndSelect('furniture.category', 'category');
+    qb.leftJoinAndSelect('furniture.material', 'material');
+    qb.leftJoinAndSelect('furniture.color', 'color');
+    qb.leftJoinAndSelect('furniture.brand', 'brand');
 
     if (query.search) {
       qb.andWhere(
@@ -73,7 +79,10 @@ export class FurnitureRepository extends Repository<FurnitureEntity> {
     qb.leftJoinAndSelect('furniture.size', 'size')
       .leftJoinAndSelect('furniture.quantityFurniture', 'quantityFurniture')
       .leftJoinAndSelect('furniture.subcategory', 'subcategory')
-      .leftJoinAndSelect('furniture.category', 'category');
+      .leftJoinAndSelect('furniture.category', 'category')
+      .leftJoinAndSelect('furniture.material', 'material')
+      .leftJoinAndSelect('furniture.color', 'color')
+      .leftJoinAndSelect('furniture.brand', 'brand');
 
     qb.where('furniture.id = :furnitureID', { furnitureID });
     return await qb.getOne();

@@ -11,8 +11,6 @@ export class BrandMapper {
     return {
       id: data.id,
       brand_name: data.brand_name,
-      created: data.createdAt,
-      updated: data.updatedAt,
     };
   }
 

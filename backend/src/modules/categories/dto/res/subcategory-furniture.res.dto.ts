@@ -5,7 +5,7 @@ import { CategoryFurnitureResDto } from './category-furniture.res.dto';
 
 export class SubCategoryFurnitureResDto extends PickType(
   CategoryFurnitureResDto,
-  ['title', 'deleted', 'created', 'updated'],
+  ['title'],
 ) {
   id: SubCategoryFurnitureID;
 }

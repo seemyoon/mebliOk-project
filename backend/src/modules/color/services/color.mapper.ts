@@ -11,8 +11,6 @@ export class ColorFurnitureMapper {
     return {
       id: data.id,
       color_name: data.color_name,
-      created: data.createdAt,
-      updated: data.updatedAt,
     };
   }
 

@@ -71,11 +71,5 @@ export class CreateFurnitureReqDto {
     example: 300,
     description: 'Price of the furniture',
   })
-  length: number;
-  //
-  // @IsUUID('4', { each: true })
-  // materialIDs: MaterialID[];
-  //
-  // @IsUUID('4', { each: true })
-  // colorIDs: ColorID[];
+  length_furniture: number;
 }

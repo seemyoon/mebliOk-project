@@ -89,6 +89,41 @@ export class FurnitureController {
   @ApiBearerAuth()
   @UseGuards(RolesGuard)
   @ROLES(UserEnum.ADMIN, UserEnum.MANAGER)
+  @Patch(
+    'updateFurniture/:furnitureId/:categoryFurnitureID/:subCategoryFurnitureID/:brandID/:materialID/:colorID',
+  )
+  public async editFurniture(
+    @Body() dto: UpdateFurnitureReqDto,
+    @Param('furnitureId', ParseUUIDPipe) furnitureId: FurnitureID,
+    @Param('categoryFurnitureID', ParseUUIDPipe)
+    categoryFurnitureID: CategoryFurnitureID,
+    @Param('subCategoryFurnitureID', ParseUUIDPipe)
+    subCategoryFurnitureID: SubCategoryFurnitureID,
+    @Param('brandID', ParseUUIDPipe)
+    brandID: BrandID,
+    @Param('materialID') materialID: MaterialID,
+    @Param('colorID') colorID: ColorID,
+  ): Promise<void> {
+    const materialIDArray = materialID
+      .split(',')
+      .map((id) => id.trim() as MaterialID);
+
+    const colorIDArray = colorID.split(',').map((id) => id.trim() as ColorID);
+
+    return await this.furnitureService.editFurniture(
+      dto,
+      furnitureId,
+      categoryFurnitureID,
+      subCategoryFurnitureID,
+      brandID,
+      colorIDArray,
+      materialIDArray,
+    );
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(RolesGuard)
+  @ROLES(UserEnum.ADMIN, UserEnum.MANAGER)
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(FileInterceptor('image'))
   @ApiFile('image', false, true)
@@ -119,35 +154,6 @@ export class FurnitureController {
     @Body() dto: AssignDiscountReqDto,
   ): Promise<void> {
     await this.furnitureService.assignDiscount(furnitureId, dto);
-  }
-
-  @ApiBearerAuth()
-  @UseGuards(RolesGuard)
-  @ROLES(UserEnum.ADMIN, UserEnum.MANAGER)
-  @Patch(':furnitureId')
-  public async editFurniture(
-    @Param('furnitureId', ParseUUIDPipe) furnitureId: FurnitureID,
-    @Param('categoryFurnitureID', ParseUUIDPipe)
-    categoryFurnitureID: CategoryFurnitureID | null,
-    @Param('subCategoryFurnitureID', ParseUUIDPipe)
-    subCategoryFurnitureID: SubCategoryFurnitureID | null,
-    @Param('brandID', ParseUUIDPipe)
-    brandID: BrandID | null,
-    @Param('materialID', ParseUUIDPipe)
-    materialID: MaterialID[] | null,
-    @Param('colorID', ParseUUIDPipe)
-    colorID: ColorID[] | null,
-    @Body() dto: UpdateFurnitureReqDto,
-  ): Promise<void> {
-    return await this.furnitureService.editFurniture(
-      furnitureId,
-      categoryFurnitureID,
-      subCategoryFurnitureID,
-      brandID,
-      colorID,
-      materialID,
-      dto,
-    );
   }
 
   @ApiBearerAuth()

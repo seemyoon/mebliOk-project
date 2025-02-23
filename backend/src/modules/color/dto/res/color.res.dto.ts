@@ -14,21 +14,4 @@ export class ColorResDto {
     description: 'Color name',
   })
   color_name: string;
-
-  @ApiProperty({
-    description: 'When the color was removed',
-  })
-  deleted?: Date;
-
-  @ApiProperty({
-    example: '2021-09-29T10:00:00.000Z',
-    description: 'Creation date of the color',
-  })
-  created: Date;
-
-  @ApiProperty({
-    example: '2021-09-29T10:00:00.000Z',
-    description: 'Last update date of the color',
-  })
-  updated: Date;
 }
