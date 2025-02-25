@@ -13,3 +13,4 @@ export type SubCategoryFurnitureID = Opaque<string, 'SubCategoryFurnitureID'>;
 export type RefreshTokenID = Opaque<string, 'RefreshTokenID'>;
 export type ColorID = Opaque<string, 'ColorID'>;
 export type MaterialID = Opaque<string, 'MaterialID'>;
+export type BannerID = Opaque<string, 'BannerID'>;

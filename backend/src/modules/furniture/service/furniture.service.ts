@@ -253,7 +253,7 @@ export class FurnitureService {
         : furniture.material,
       // todo. fix an error '[Nest] 419173  - 02/23/2025, 4:41:36 AM   ERROR [ExceptionsHandler] Cannot query across
       //  many-to-many for property color Error: Cannot query across many-to-many for property color'
-      // sellerType: SellerEnum.SELLER,
+      // sellerType: OffersTypeEnum.SELLER,
     });
     await this.furnitureRepository.save(furniture);
   }

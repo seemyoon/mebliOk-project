@@ -7,8 +7,8 @@ import {
 import { BrandID } from '../../../common/types/entity-ids.type';
 import { BrandEntity } from '../../../database/entities/brand.entity';
 import { BrandRepository } from '../../repository/services/brand.repository';
-import { ListUsersQueryDto } from '../../user/models/req/list-users.query.dto';
 import { BrandReqDto } from '../dto/req/brand.req.dto';
+import { ListBrandsQueryDto } from '../dto/req/list-brands.query.dto';
 import { UpdateBrandReqDto } from '../dto/req/update-brand.req.dto';
 
 @Injectable()
@@ -16,7 +16,7 @@ export class BrandService {
   constructor(private readonly brandRepository: BrandRepository) {}
 
   public async getBrands(
-    query: ListUsersQueryDto,
+    query: ListBrandsQueryDto,
   ): Promise<[BrandEntity[], number]> {
     return await this.brandRepository.findAll(query);
   }

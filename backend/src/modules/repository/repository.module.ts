@@ -1,5 +1,6 @@
 import { Global, Module } from '@nestjs/common';
 
+import { BannerRepository } from './services/banner.repository';
 import { BrandRepository } from './services/brand.repository';
 import { CategoryFurnitureRepository } from './services/category-furniture.repository';
 import { ColorRepository } from './services/color.repository';
@@ -24,6 +25,7 @@ const repository = [
   BrandRepository,
   CategoryFurnitureRepository,
   SubCategoryFurnitureRepository,
+  BannerRepository,
 ];
 
 @Global()
