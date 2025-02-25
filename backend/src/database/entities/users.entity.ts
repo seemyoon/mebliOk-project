@@ -25,7 +25,7 @@ export class UserEntity extends CreateUpdateModel {
   avatar?: string;
 
   @Column('text', { select: false, nullable: true })
-  password: string;
+  password?: string;
 
   @Column('timestamp', { nullable: true })
   deleted?: Date;

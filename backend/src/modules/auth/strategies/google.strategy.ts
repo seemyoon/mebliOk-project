@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
-import { Strategy } from 'passport-google-oauth20';
+import { Profile, Strategy } from 'passport-google-oauth20';
 
 import { Config, GoogleAuthConfig } from '../../../configs/config.type';
 import { AuthService } from '../services/auth.service';
@@ -29,27 +29,19 @@ export class GoogleStrategy extends PassportStrategy(Strategy) {
   }
 
   public async validate(
-    accessTokenOauth: string,
-    refreshTokenOauth: string,
-    profile: any,
+    _accessTokenOauth: string,
+    _refreshTokenOauth: string,
+    profile: Profile,
   ) {
-    // console.log('Google validate START:', {
-    //   accessTokenOauth,
-    //   profile,
-    // });
-    const { emails, photos } = profile;
-    const userData = {
-      email: emails?.[0]?.value,
-      password: null,
-      name: profile?.displayName,
-      phoneNumber: null,
-      avatar: photos?.[0]?.value,
-    };
+    const email = profile?.emails?.at(0)?.value;
+    if (!email) {
+      throw new UnauthorizedException('Email not found in Google profile');
+    }
+    const userPayload = await this.authService.createGoogleUser(email);
 
-    return await this.authService.validateGoogleUser(
-      userData,
-      accessTokenOauth,
-      refreshTokenOauth,
-    );
+    if (!userPayload) {
+      throw new UnauthorizedException('Invalid google email account');
+    }
+    return userPayload;
   }
 }

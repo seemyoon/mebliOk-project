@@ -1,9 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 
 import { UserEntity } from '../../../database/entities/users.entity';
 import { RefreshTokenRepository } from '../../repository/services/refresh-token.repository';
@@ -12,7 +7,6 @@ import { UserEnum } from '../../user/enum/users.enum';
 import { UserMapper } from '../../user/services/user.mapper';
 import { ITokenPair } from '../interfaces/token-pair.interface';
 import { IUserData } from '../interfaces/user-data.interface';
-import { GoogleLoginReqDto } from '../models/dto/req/google-login.req.dto';
 import { SignInReqDto } from '../models/dto/req/sign-in.req.dto';
 import { SignUpReqDto } from '../models/dto/req/sign-up.req.dto';
 import { AuthResDto } from '../models/dto/res/auth.res.dto';
@@ -127,16 +121,6 @@ export class AuthService {
     return { user: UserMapper.toResDto(userEntity), tokens };
   }
 
-  public async googleAuthRedirect(user: UserEntity) {
-    if (!user) throw new NotFoundException('User Google account not found');
-
-    const tokens = await this.createTokens(user);
-
-    const userEntity = await this.userRepository.findOneBy({ id: user.id });
-
-    return { user: UserMapper.toResDto(userEntity), tokens };
-  }
-
   public async logOut(userData: IUserData): Promise<void> {
     await Promise.all([
       this.authCacheService.deleteToken(userData.userId),
@@ -168,27 +152,17 @@ export class AuthService {
     return tokens;
   }
 
-  public async validateGoogleUser(
-    dto: GoogleLoginReqDto,
-    accessTokenOauth: string,
-    refreshTokenOauth: string,
-  ): Promise<any> {
-    console.log(accessTokenOauth);
-    console.log(refreshTokenOauth);
+  public async createGoogleUser(email: string): Promise<UserEntity> {
     let user = await this.userRepository.findOne({
-      where: { email: dto.email },
+      where: { email: email },
     });
 
-    user = user ?? (await this.createUserViaGoogle(dto));
+    user = user ?? (await this.createUserViaGoogle(email));
 
-    return {
-      user: UserMapper.toResDto(user),
-      accessTokenOauth,
-      refreshTokenOauth,
-    };
+    return user;
   }
 
-  private async createTokens(user: UserEntity): Promise<ITokenPair> {
+  private async signInViaGoogle(user: UserEntity): Promise<ITokenPair> {
     const tokens = await this.tokenService.generateTokens({
       userId: user.id,
     });
@@ -206,25 +180,16 @@ export class AuthService {
     return tokens;
   }
 
-  private async createUserViaGoogle(
-    dto: GoogleLoginReqDto,
-  ): Promise<UserEntity> {
+  private async createUserViaGoogle(email: string): Promise<UserEntity> {
     const quantityPersons = await this.userRepository.findAndCount();
     return await this.userRepository.save(
       this.userRepository.create({
-        ...dto,
+        email,
         role:
           quantityPersons[1] === 0
             ? UserEnum.ADMIN
             : UserEnum.REGISTERED_CLIENT,
       }),
     );
-  }
-
-  private async isEmailNotExistOrThrow(email: string): Promise<void> {
-    const user = await this.userRepository.findOneBy({ email });
-    if (user) {
-      throw new BadRequestException('Email already exists');
-    }
   }
 }

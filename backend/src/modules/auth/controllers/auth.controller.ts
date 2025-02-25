@@ -45,16 +45,18 @@ export class AuthController {
     return await this.authService.refreshToken(userData);
   }
 
+  // @HttpCode(HttpStatus.OK)
   @SkipAuth()
   @UseGuards(GoogleAuthGuard)
   @Get('google/login')
-  public async googleLogin() {}
+  public async googleLogin(): Promise<void> {}
 
   @SkipAuth()
   @UseGuards(GoogleAuthGuard)
   @Get('google/callback')
-  async googleCallback(@Req() req) {
-    console.log('googleAuthRedirect START:', req.user);
-    await this.authService.googleAuthRedirect(req.user);
+  async googleCallback(@Req() request: Request): Promise<void> {
+    // const { accessToken, refreshToken } =
+    // await this.authService.signInViaGoogle(request);
+    // await this.authService.googleAuthRedirect(req.user);
   }
 }
