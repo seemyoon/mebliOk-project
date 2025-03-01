@@ -15,6 +15,7 @@ import { BrandRepository } from '../../repository/services/brand.repository';
 import { CategoryFurnitureRepository } from '../../repository/services/category-furniture.repository';
 import { ColorRepository } from '../../repository/services/color.repository';
 import { FurnitureRepository } from '../../repository/services/furniture.repository';
+import { FurnitureStatisticRepository } from '../../repository/services/furniture-statistic.repository';
 import { MaterialRepository } from '../../repository/services/material.repository';
 import { SizeRepository } from '../../repository/services/size.repository';
 import { SubCategoryFurnitureRepository } from '../../repository/services/subcategory-furniture.repository';
@@ -35,6 +36,7 @@ export class FurnitureService {
     private readonly materialRepository: MaterialRepository,
     private readonly colorRepository: ColorRepository,
     private readonly sizeRepository: SizeRepository,
+    private readonly furnitureStatisticRepository: FurnitureStatisticRepository,
   ) {}
 
   public async getAllFurniture(
@@ -78,6 +80,19 @@ export class FurnitureService {
     if (!furniture) {
       throw new ConflictException('Furniture not found');
     }
+    let furnitureStat = await this.furnitureStatisticRepository.findOne({
+      where: { furniture_id: furnitureID },
+    });
+
+    if (!furnitureStat) {
+      furnitureStat = this.furnitureStatisticRepository.create({
+        furniture_id: furnitureID,
+        count_views: 1,
+      });
+    } else {
+      furnitureStat.count_views += 1;
+    }
+    await this.furnitureStatisticRepository.save(furnitureStat);
 
     return furniture;
   }

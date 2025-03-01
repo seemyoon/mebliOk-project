@@ -1,13 +1,17 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 
 import { FurnitureID } from '../../../common/types/entity-ids.type';
 import { FurnitureEntity } from '../../../database/entities/furniture.entity';
 import { ListFurnitureQueryDto } from '../../furniture/dto/req/list-furniture-query.dto';
+import { BrandRepository } from './brand.repository';
 
 @Injectable()
 export class FurnitureRepository extends Repository<FurnitureEntity> {
-  constructor(private readonly dataSource: DataSource) {
+  constructor(
+    private readonly dataSource: DataSource,
+    private readonly brandRepository: BrandRepository,
+  ) {
     super(FurnitureEntity, dataSource.manager);
   }
 
@@ -22,6 +26,10 @@ export class FurnitureRepository extends Repository<FurnitureEntity> {
     qb.leftJoinAndSelect('furniture.material', 'material');
     qb.leftJoinAndSelect('furniture.color', 'color');
     qb.leftJoinAndSelect('furniture.brand', 'brand');
+    qb.leftJoinAndSelect(
+      'furniture.furniture_statistic',
+      'furniture_statistic',
+    );
 
     if (query.search) {
       qb.andWhere(
@@ -33,6 +41,14 @@ export class FurnitureRepository extends Repository<FurnitureEntity> {
     if (query.inStock !== undefined) {
       qb.andWhere('furniture.in_stock = :in_stock');
       qb.setParameter('in_stock', query.inStock);
+    }
+
+    if (query.brandId) {
+      const brand = await this.brandRepository.findByBrandId(query.brandId);
+      if (!brand) {
+        throw new ConflictException('Brand not found');
+      }
+      qb.andWhere('furniture.brand_id = :brandId', { brandId: query.brandId });
     }
 
     qb.take(query.limit);
@@ -58,12 +74,18 @@ export class FurnitureRepository extends Repository<FurnitureEntity> {
             query.sortOrder === 'asc' ? 'ASC' : 'DESC',
           );
           break;
-        // case 'popularity':
-        //   qb.addOrderBy(
-        //     'furniture.popularity', // todo. popularity depends on the number of views or sold
-        //     query.sortOrder === 'asc' ? 'ASC' : 'DESC',
-        //   );
-        //   break;
+        case 'popularity':
+          const subQuery = this.createQueryBuilder('furniture_statistic')
+            .select('SUM(furniture_statistic.count_views)', 'count_views')
+            .where('furniture_statistic.furniture_id = furniture.id')
+            .groupBy('furniture_statistic.furniture_id')
+            .getQuery();
+
+          qb.addOrderBy(
+            `(${subQuery})`, // todo. add depends on the number of orders as well
+            query.sortOrder === 'asc' ? 'ASC' : 'DESC',
+          );
+          break;
         default:
           break;
       }

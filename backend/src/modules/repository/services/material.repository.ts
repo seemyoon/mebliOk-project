@@ -36,6 +36,7 @@ export class MaterialRepository extends Repository<MaterialEntity> {
     qb.where('material.id = :materialId', { materialId });
     return await qb.getOne();
   }
+
   public async findByMaterialIds(
     materialId: MaterialID[],
   ): Promise<MaterialEntity[]> {

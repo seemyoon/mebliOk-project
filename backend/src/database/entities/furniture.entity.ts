@@ -13,9 +13,7 @@ import {
 import {
   BrandID,
   CategoryFurnitureID,
-  ColorID,
   FurnitureID,
-  MaterialID,
   SizeID,
   SubCategoryFurnitureID,
 } from '../../common/types/entity-ids.type';
@@ -25,6 +23,7 @@ import { CreateUpdateModel } from '../model/create-update.model';
 import { BrandEntity } from './brand.entity';
 import { CategoryFurnitureEntity } from './category-furniture.entity';
 import { ColorEntity } from './color.entity';
+import { FurnitureStatisticEntity } from './furniture-statistic.entity';
 import { MaterialEntity } from './material.entity';
 import { QuantityFurnitureInOrderEntity } from './quantity-furniture-in-order.entity';
 import { SizeEntity } from './size.entity';
@@ -119,4 +118,7 @@ export class FurnitureEntity extends CreateUpdateModel {
 
   @OneToMany(() => QuantityFurnitureInOrderEntity, (entity) => entity.furniture)
   quantityFurniture?: QuantityFurnitureInOrderEntity[];
+
+  @OneToOne(() => FurnitureStatisticEntity, (entity) => entity.furniture)
+  furniture_statistic?: FurnitureStatisticEntity;
 }
