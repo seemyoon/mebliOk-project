@@ -14,7 +14,4 @@ export class PaymentInfoEntity extends CreateUpdateModel {
 
   @Column({ type: 'text', nullable: true })
   description?: string;
-
-  @Column({ type: 'text', nullable: true })
-  body?: string;
 }

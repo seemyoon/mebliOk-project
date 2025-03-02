@@ -16,8 +16,8 @@ export class ShippingInfoEntity extends CreateUpdateModel {
   photos?: string[];
 
   @Column({ type: 'text', nullable: true })
-  description?: string;
+  description: string;
 
   @Column({ type: 'text', nullable: true })
-  body?: string;
+  body: string;
 }

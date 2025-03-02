@@ -18,7 +18,7 @@ export class FurnitureStatisticService {
     const count = await this.calculateRateFurnitureRepository.count();
 
     if (count > 1) {
-      throw new ConflictException('CalculateRateFurniture must be only one!');
+      throw new ConflictException('Calculate rate furniture must be only one!');
     }
 
     let calculateRateFurniture =
@@ -42,11 +42,14 @@ export class FurnitureStatisticService {
     const count = await this.calculateRateFurnitureRepository.count();
 
     if (count > 1) {
-      throw new ConflictException('CalculateRateFurniture must be only one!');
+      throw new ConflictException('Calculate rate furniture must be only one');
     }
     const calculateRateFurniture =
       await this.calculateRateFurnitureRepository.findOne({ where: {} });
 
+    if (!calculateRateFurniture) {
+      throw new ConflictException('Calculate rate furniture not found!');
+    }
     calculateRateFurniture.order_criterion = dto?.order_criterion;
     calculateRateFurniture.view_criterion = dto?.view_criterion;
 
