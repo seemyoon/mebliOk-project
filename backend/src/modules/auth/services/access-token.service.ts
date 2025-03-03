@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 
 import { UserID } from '../../../common/types/entity-ids.type';
 import { Config, JwtConfig } from '../../../configs/config.type';
-import { RedisService } from '../../redis/services/redis.service';
+import { RedisService } from '../../../infrastructure/redis/services/redis.service';
 
 @Injectable()
 export class AccessTokenService {

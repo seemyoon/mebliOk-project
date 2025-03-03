@@ -4,10 +4,10 @@ import {
   CategoryFurnitureID,
   SubCategoryFurnitureID,
 } from '../../../common/types/entity-ids.type';
-import { CategoryFurnitureEntity } from '../../../database/entities/category-furniture.entity';
-import { SubCategoryFurnitureEntity } from '../../../database/entities/subcategory-furniture.entity';
-import { CategoryFurnitureRepository } from '../../repository/services/category-furniture.repository';
-import { SubCategoryFurnitureRepository } from '../../repository/services/subcategory-furniture.repository';
+import { CategoryFurnitureEntity } from '../../../infrastructure/postgres/entities/category-furniture.entity';
+import { SubCategoryFurnitureEntity } from '../../../infrastructure/postgres/entities/subcategory-furniture.entity';
+import { CategoryFurnitureRepository } from '../../../infrastructure/repository/services/category-furniture.repository';
+import { SubCategoryFurnitureRepository } from '../../../infrastructure/repository/services/subcategory-furniture.repository';
 import { CategoryReqDto } from '../dto/req/category.req.dto';
 import { ListCategoriesFurnitureQueryDto } from '../dto/req/list-categories-furniture.query.dto';
 import { ListSubCategoriesFurnitureQueryDto } from '../dto/req/list-subcategories-furniture.query.dto';

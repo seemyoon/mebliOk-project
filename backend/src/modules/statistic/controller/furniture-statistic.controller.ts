@@ -10,7 +10,7 @@ import {
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 import { FurnitureID } from '../../../common/types/entity-ids.type';
-import { CalculateRateFurnitureEntity } from '../../../database/entities/calculate-rate-furniture.entity';
+import { CalculateRateFurnitureEntity } from '../../../infrastructure/postgres/entities/calculate-rate-furniture.entity';
 import { SkipAuth } from '../../auth/decorators/skip-auth.decorator';
 import { ROLES } from '../../user/decorators/roles.decorator';
 import { UserEnum } from '../../user/enum/users.enum';

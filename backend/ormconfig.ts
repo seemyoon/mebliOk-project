@@ -17,10 +17,24 @@ export default new DataSource({
   password: config.password,
   database: config.database,
   entities: [
-    path.join(process.cwd(), 'src', 'database', 'entities', '*.entity.ts'),
+    path.join(
+      process.cwd(),
+      'src',
+      'infrastructure',
+      'postgres',
+      'entities',
+      '*.entity.ts',
+    ),
   ],
   migrations: [
-    path.join(process.cwd(), 'src', 'database', 'migrations', '*.ts'),
+    path.join(
+      process.cwd(),
+      'src',
+      'infrastructure',
+      'postgres',
+      'migrations',
+      '*.ts',
+    ),
   ],
   synchronize: false,
 });

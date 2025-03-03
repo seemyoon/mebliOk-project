@@ -11,12 +11,13 @@ import { CategoriesModule } from './modules/categories/categories.module';
 import { ColorModule } from './modules/color/color.module';
 import { ExtraInfoModule } from './modules/extra-info/extra-info.module';
 import { FurnitureModule } from './modules/furniture/furniture.module';
+import { HealthModule } from './modules/health/health.module';
 import { LoggerModule } from './modules/logger/logger.module';
 import { MaterialModule } from './modules/material/material.module';
 import { OrdersModule } from './modules/orders/orders.module';
-import { PostgresModule } from './modules/postgres/postgres.module';
-import { RedisModule } from './modules/redis/redis.module';
-import { RepositoryModule } from './modules/repository/repository.module';
+import { PostgresModule } from './infrastructure/postgres/postgres.module';
+import { RedisModule } from './infrastructure/redis/redis.module';
+import { RepositoryModule } from './infrastructure/repository/repository.module';
 import { StatisticModule } from './modules/statistic/statistic.module';
 import { UserModule } from './modules/user/user.module';
 
@@ -39,6 +40,7 @@ import { UserModule } from './modules/user/user.module';
     UserModule,
     RepositoryModule,
     StatisticModule,
+    HealthModule,
     ExtraInfoModule,
     BannerModule,
   ],

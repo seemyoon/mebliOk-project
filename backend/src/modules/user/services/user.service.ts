@@ -5,13 +5,13 @@ import {
 } from '@nestjs/common';
 
 import { UserID } from '../../../common/types/entity-ids.type';
-import { UserEntity } from '../../../database/entities/users.entity';
+import { UserEntity } from '../../../infrastructure/postgres/entities/users.entity';
 import { IUserData } from '../../auth/interfaces/user-data.interface';
 import { PasswordService } from '../../auth/services/password.service';
 import { FileTypeEnum } from '../../file-storage/enum/file-type.enum';
 import { FileStorageService } from '../../file-storage/services/file-storage.service';
-import { RefreshTokenRepository } from '../../repository/services/refresh-token.repository';
-import { UserRepository } from '../../repository/services/user.repository';
+import { RefreshTokenRepository } from '../../../infrastructure/repository/services/refresh-token.repository';
+import { UserRepository } from '../../../infrastructure/repository/services/user.repository';
 import { UserEnum } from '../enum/users.enum';
 import { CreateUserReqUserDto } from '../models/req/create-user.req.dto.';
 import { ListUsersQueryDto } from '../models/req/list-users.query.dto';

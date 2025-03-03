@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
-import { OrderEntity } from '../../../database/entities/order.entity';
-import { QuantityFurnitureInOrderEntity } from '../../../database/entities/quantity-furniture-in-order.entity';
+import { OrderEntity } from '../../../infrastructure/postgres/entities/order.entity';
+import { QuantityFurnitureInOrderEntity } from '../../../infrastructure/postgres/entities/quantity-furniture-in-order.entity';
 import { UserMapper } from '../../user/services/user.mapper';
 import { ListOrdersQueryDto } from '../dto/req/list-orders.query.dto';
 import { QuantityFurnitureInOrderDto } from '../dto/req/quantity-furniture-in-order.dto';

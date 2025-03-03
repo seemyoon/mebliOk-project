@@ -5,8 +5,8 @@ import {
 } from '@nestjs/common';
 
 import { MaterialID } from '../../../common/types/entity-ids.type';
-import { MaterialEntity } from '../../../database/entities/material.entity';
-import { MaterialRepository } from '../../repository/services/material.repository';
+import { MaterialEntity } from '../../../infrastructure/postgres/entities/material.entity';
+import { MaterialRepository } from '../../../infrastructure/repository/services/material.repository';
 import { ListMaterialsQueryDto } from '../dto/req/list-materials.query.dto';
 import { MaterialReqDto } from '../dto/req/material.req.dto';
 import { UpdateMaterialReqDto } from '../dto/req/update-material.req.dto';

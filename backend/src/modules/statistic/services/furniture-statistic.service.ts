@@ -1,9 +1,9 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 
 import { FurnitureID } from '../../../common/types/entity-ids.type';
-import { CalculateRateFurnitureEntity } from '../../../database/entities/calculate-rate-furniture.entity';
-import { CalculateRateFurnitureRepository } from '../../repository/services/calculate-rate-furniture.repository';
-import { FurnitureStatisticRepository } from '../../repository/services/furniture-statistic.repository';
+import { CalculateRateFurnitureEntity } from '../../../infrastructure/postgres/entities/calculate-rate-furniture.entity';
+import { CalculateRateFurnitureRepository } from '../../../infrastructure/repository/services/calculate-rate-furniture.repository';
+import { FurnitureStatisticRepository } from '../../../infrastructure/repository/services/furniture-statistic.repository';
 import { UpdateCalculateFurnitureRateReqDto } from '../dto/req/update-calculate-furniture-rate.req.dto';
 import { FurnitureStatisticBaseResDto } from '../dto/res/furniture-statistic-base.res.dto';
 

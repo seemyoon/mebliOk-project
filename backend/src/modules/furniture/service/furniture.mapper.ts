@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
-import { FurnitureEntity } from '../../../database/entities/furniture.entity';
-import { SizeEntity } from '../../../database/entities/size.entity';
+import { FurnitureEntity } from '../../../infrastructure/postgres/entities/furniture.entity';
+import { SizeEntity } from '../../../infrastructure/postgres/entities/size.entity';
 import { BrandMapper } from '../../brand/services/brand.mapper';
 import { CategoriesMapper } from '../../categories/services/categories.mapper.service';
 import { ColorFurnitureMapper } from '../../color/services/color.mapper';

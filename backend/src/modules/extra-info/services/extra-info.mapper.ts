@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
-import { PaymentInfoEntity } from '../../../database/entities/payment-info.entity';
-import { ShippingInfoEntity } from '../../../database/entities/shipping-info.entity';
+import { PaymentInfoEntity } from '../../../infrastructure/postgres/entities/payment-info.entity';
+import { ShippingInfoEntity } from '../../../infrastructure/postgres/entities/shipping-info.entity';
 import { PaymentInfoResDto } from '../dto/res/payment-info.res.dto';
 import { ShippingInfoResDto } from '../dto/res/shipping-info.res.dto';
 

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { MaterialEntity } from '../../../database/entities/material.entity';
+import { MaterialEntity } from '../../../infrastructure/postgres/entities/material.entity';
 import { ListMaterialsQueryDto } from '../dto/req/list-materials.query.dto';
 import { MaterialResDto } from '../dto/res/material.res.dto';
 import { MaterialsListResDto } from '../dto/res/materials-list.res.dto';

@@ -7,7 +7,7 @@ import {
 import { Reflector } from '@nestjs/core';
 import { IsNull } from 'typeorm';
 
-import { UserRepository } from '../../repository/services/user.repository';
+import { UserRepository } from '../../../infrastructure/repository/services/user.repository';
 import { UserMapper } from '../../user/services/user.mapper';
 import { SKIP_AUTH } from '../decorators/skip-auth.decorator';
 import { TokenType } from '../models/enums/token-type.enum';

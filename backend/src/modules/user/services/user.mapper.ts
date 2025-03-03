@@ -1,4 +1,4 @@
-import { UserEntity } from '../../../database/entities/users.entity';
+import { UserEntity } from '../../../infrastructure/postgres/entities/users.entity';
 import { IUserData } from '../../auth/interfaces/user-data.interface';
 import { ListUsersQueryDto } from '../models/req/list-users.query.dto';
 import { UserResDto } from '../models/res/user.res.dto';

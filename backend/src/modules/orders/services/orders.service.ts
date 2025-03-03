@@ -5,13 +5,13 @@ import {
 } from '@nestjs/common';
 import { In } from 'typeorm';
 
-import { OrderEntity } from '../../../database/entities/order.entity';
-import { UserEntity } from '../../../database/entities/users.entity';
+import { OrderEntity } from '../../../infrastructure/postgres/entities/order.entity';
+import { UserEntity } from '../../../infrastructure/postgres/entities/users.entity';
 import { IUserData } from '../../auth/interfaces/user-data.interface';
-import { FurnitureRepository } from '../../repository/services/furniture.repository';
-import { OrderRepository } from '../../repository/services/order.repository';
-import { QuantityFurnitureInOrderRepository } from '../../repository/services/quantity-furniture-in-order.repository';
-import { UserRepository } from '../../repository/services/user.repository';
+import { FurnitureRepository } from '../../../infrastructure/repository/services/furniture.repository';
+import { OrderRepository } from '../../../infrastructure/repository/services/order.repository';
+import { QuantityFurnitureInOrderRepository } from '../../../infrastructure/repository/services/quantity-furniture-in-order.repository';
+import { UserRepository } from '../../../infrastructure/repository/services/user.repository';
 import { UserEnum } from '../../user/enum/users.enum';
 import { BaseOrderReqDto } from '../dto/req/base-order.req.dto';
 import { EditOrderReqDto } from '../dto/req/edit-order.req.dto';

@@ -5,8 +5,8 @@ import {
 } from '@nestjs/common';
 
 import { ColorID } from '../../../common/types/entity-ids.type';
-import { ColorEntity } from '../../../database/entities/color.entity';
-import { ColorRepository } from '../../repository/services/color.repository';
+import { ColorEntity } from '../../../infrastructure/postgres/entities/color.entity';
+import { ColorRepository } from '../../../infrastructure/repository/services/color.repository';
 import { ColorReqDto } from '../dto/req/color.req.dto';
 import { ListColorsQueryDto } from '../dto/req/list-colors.query.dto';
 import { UpdateColorReqDto } from '../dto/req/update-color.req.dto';

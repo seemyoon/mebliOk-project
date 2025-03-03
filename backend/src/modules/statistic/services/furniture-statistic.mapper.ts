@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 import { FurnitureID } from '../../../common/types/entity-ids.type';
-import { CalculateRateFurnitureEntity } from '../../../database/entities/calculate-rate-furniture.entity';
+import { CalculateRateFurnitureEntity } from '../../../infrastructure/postgres/entities/calculate-rate-furniture.entity';
 import { FurnitureStatisticBaseResDto } from '../dto/res/furniture-statistic-base.res.dto';
 
 @Injectable()

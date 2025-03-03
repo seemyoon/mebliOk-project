@@ -5,8 +5,8 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 
-import { RefreshTokenRepository } from '../../repository/services/refresh-token.repository';
-import { UserRepository } from '../../repository/services/user.repository';
+import { RefreshTokenRepository } from '../../../infrastructure/repository/services/refresh-token.repository';
+import { UserRepository } from '../../../infrastructure/repository/services/user.repository';
 import { UserMapper } from '../../user/services/user.mapper';
 import { TokenType } from '../models/enums/token-type.enum';
 import { TokenService } from '../services/token.service';

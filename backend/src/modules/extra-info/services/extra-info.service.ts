@@ -1,11 +1,11 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 
-import { PaymentInfoEntity } from '../../../database/entities/payment-info.entity';
-import { ShippingInfoEntity } from '../../../database/entities/shipping-info.entity';
+import { PaymentInfoEntity } from '../../../infrastructure/postgres/entities/payment-info.entity';
+import { ShippingInfoEntity } from '../../../infrastructure/postgres/entities/shipping-info.entity';
 import { FileTypeEnum } from '../../file-storage/enum/file-type.enum';
 import { FileStorageService } from '../../file-storage/services/file-storage.service';
-import { PaymentInfoRepository } from '../../repository/services/payment-info.repository';
-import { ShippingInfoRepository } from '../../repository/services/shipping-info.repository';
+import { PaymentInfoRepository } from '../../../infrastructure/repository/services/payment-info.repository';
+import { ShippingInfoRepository } from '../../../infrastructure/repository/services/shipping-info.repository';
 import { UpdatePaymentInfoReqDto } from '../dto/req/update-payment-info.req.dto';
 import { UpdateShippingInfoReqDto } from '../dto/req/update-shipping-info.req.dto';
 

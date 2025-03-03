@@ -3,7 +3,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 
-import { RedisModule } from '../redis/redis.module';
+import { RedisModule } from '../../infrastructure/redis/redis.module';
 import { AuthController } from './controllers/auth.controller';
 import { JwtAccessGuard } from './guards/jwt.access.guard';
 import { JwtRefreshGuard } from './guards/jwt-refresh.guard';

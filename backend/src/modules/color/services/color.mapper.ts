@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { ColorEntity } from '../../../database/entities/color.entity';
+import { ColorEntity } from '../../../infrastructure/postgres/entities/color.entity';
 import { ListColorsQueryDto } from '../dto/req/list-colors.query.dto';
 import { ColorResDto } from '../dto/res/color.res.dto';
 import { ColorsListResDto } from '../dto/res/colors-list.res.dto';

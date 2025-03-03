@@ -8,17 +8,19 @@ import {
   MaterialID,
   SubCategoryFurnitureID,
 } from '../../../common/types/entity-ids.type';
-import { FurnitureEntity } from '../../../database/entities/furniture.entity';
+import { FurnitureEntity } from '../../../infrastructure/postgres/entities/furniture.entity';
+import { BrandRepository } from '../../../infrastructure/repository/services/brand.repository';
+import { CategoryFurnitureRepository } from '../../../infrastructure/repository/services/category-furniture.repository';
+import { ColorRepository } from '../../../infrastructure/repository/services/color.repository';
+import { FurnitureRepository } from '../../../infrastructure/repository/services/furniture.repository';
+// eslint-disable-next-line max-len
+import { FurnitureStatisticRepository } from '../../../infrastructure/repository/services/furniture-statistic.repository';
+import { MaterialRepository } from '../../../infrastructure/repository/services/material.repository';
+import { SizeRepository } from '../../../infrastructure/repository/services/size.repository';
+// eslint-disable-next-line max-len
+import { SubCategoryFurnitureRepository } from '../../../infrastructure/repository/services/subcategory-furniture.repository';
 import { FileTypeEnum } from '../../file-storage/enum/file-type.enum';
 import { FileStorageService } from '../../file-storage/services/file-storage.service';
-import { BrandRepository } from '../../repository/services/brand.repository';
-import { CategoryFurnitureRepository } from '../../repository/services/category-furniture.repository';
-import { ColorRepository } from '../../repository/services/color.repository';
-import { FurnitureRepository } from '../../repository/services/furniture.repository';
-import { FurnitureStatisticRepository } from '../../repository/services/furniture-statistic.repository';
-import { MaterialRepository } from '../../repository/services/material.repository';
-import { SizeRepository } from '../../repository/services/size.repository';
-import { SubCategoryFurnitureRepository } from '../../repository/services/subcategory-furniture.repository';
 import { SellerEnum } from '../../user/enum/seller.enum';
 import { AssignDiscountReqDto } from '../dto/req/assign-discount.req.dto';
 import { CreateFurnitureReqDto } from '../dto/req/create-furniture.req.dto';

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
-import { CategoryFurnitureEntity } from '../../../database/entities/category-furniture.entity';
-import { SubCategoryFurnitureEntity } from '../../../database/entities/subcategory-furniture.entity';
+import { CategoryFurnitureEntity } from '../../../infrastructure/postgres/entities/category-furniture.entity';
+import { SubCategoryFurnitureEntity } from '../../../infrastructure/postgres/entities/subcategory-furniture.entity';
 import { ListCategoriesFurnitureQueryDto } from '../dto/req/list-categories-furniture.query.dto';
 import { ListSubCategoriesFurnitureQueryDto } from '../dto/req/list-subcategories-furniture.query.dto';
 import { CategoriesFurnitureListResDto } from '../dto/res/categories-list.res.dto';

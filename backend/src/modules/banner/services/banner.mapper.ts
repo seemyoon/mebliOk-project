@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { BannerEntity } from '../../../database/entities/banner.entity';
+import { BannerEntity } from '../../../infrastructure/postgres/entities/banner.entity';
 import { ListBannersQueryDto } from '../dto/req/list-banners.query.dto';
 import { BannerResDto } from '../dto/res/banner.res.dto';
 import { BannersListResDto } from '../dto/res/banners-list.res.dto';

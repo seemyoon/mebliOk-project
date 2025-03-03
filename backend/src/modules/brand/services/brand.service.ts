@@ -5,8 +5,8 @@ import {
 } from '@nestjs/common';
 
 import { BrandID } from '../../../common/types/entity-ids.type';
-import { BrandEntity } from '../../../database/entities/brand.entity';
-import { BrandRepository } from '../../repository/services/brand.repository';
+import { BrandEntity } from '../../../infrastructure/postgres/entities/brand.entity';
+import { BrandRepository } from '../../../infrastructure/repository/services/brand.repository';
 import { BrandReqDto } from '../dto/req/brand.req.dto';
 import { ListBrandsQueryDto } from '../dto/req/list-brands.query.dto';
 import { UpdateBrandReqDto } from '../dto/req/update-brand.req.dto';

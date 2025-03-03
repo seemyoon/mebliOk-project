@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { BrandEntity } from '../../../database/entities/brand.entity';
+import { BrandEntity } from '../../../infrastructure/postgres/entities/brand.entity';
 import { ListBrandsQueryDto } from '../dto/req/list-brands.query.dto';
 import { BrandResDto } from '../dto/res/brand.res.dto';
 import { BrandsListResDto } from '../dto/res/brands-list.res.dto';

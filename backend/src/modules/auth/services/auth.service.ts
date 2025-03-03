@@ -1,8 +1,8 @@
 import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 
-import { UserEntity } from '../../../database/entities/users.entity';
-import { RefreshTokenRepository } from '../../repository/services/refresh-token.repository';
-import { UserRepository } from '../../repository/services/user.repository';
+import { UserEntity } from '../../../infrastructure/postgres/entities/users.entity';
+import { RefreshTokenRepository } from '../../../infrastructure/repository/services/refresh-token.repository';
+import { UserRepository } from '../../../infrastructure/repository/services/user.repository';
 import { UserEnum } from '../../user/enum/users.enum';
 import { UserMapper } from '../../user/services/user.mapper';
 import { ITokenPair } from '../interfaces/token-pair.interface';
