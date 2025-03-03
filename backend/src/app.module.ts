@@ -4,20 +4,22 @@ import { APP_FILTER } from '@nestjs/core';
 
 import { GlobalExceptionFilter } from './common/filters/global-exception.filter';
 import configuration from './configs/configuration';
+import { PostgresModule } from './infrastructure/postgres/postgres.module';
+import { RedisModule } from './infrastructure/redis/redis.module';
+import { RepositoryModule } from './infrastructure/repository/repository.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { BannerModule } from './modules/banner/banner.module';
 import { BrandModule } from './modules/brand/brand.module';
 import { CategoriesModule } from './modules/categories/categories.module';
 import { ColorModule } from './modules/color/color.module';
+import { CurrencyModule } from './modules/currency/currency.module';
 import { ExtraInfoModule } from './modules/extra-info/extra-info.module';
 import { FurnitureModule } from './modules/furniture/furniture.module';
 import { HealthModule } from './modules/health/health.module';
 import { LoggerModule } from './modules/logger/logger.module';
 import { MaterialModule } from './modules/material/material.module';
 import { OrdersModule } from './modules/orders/orders.module';
-import { PostgresModule } from './infrastructure/postgres/postgres.module';
-import { RedisModule } from './infrastructure/redis/redis.module';
-import { RepositoryModule } from './infrastructure/repository/repository.module';
+import { PriceModule } from './modules/price/price.module';
 import { StatisticModule } from './modules/statistic/statistic.module';
 import { UserModule } from './modules/user/user.module';
 
@@ -43,6 +45,8 @@ import { UserModule } from './modules/user/user.module';
     HealthModule,
     ExtraInfoModule,
     BannerModule,
+    CurrencyModule,
+    PriceModule,
   ],
   providers: [
     {
