@@ -17,7 +17,7 @@ import {
   SizeID,
   SubCategoryFurnitureID,
 } from '../../../common/types/entity-ids.type';
-import { CurrencyEnum } from '../../../modules/currency/enum/currency.enum';
+import { CurrencyEnum } from '../../../modules/furniture/enum/currency.enum';
 import { SellerEnum } from '../../../modules/user/enum/seller.enum';
 import { TableNameEnum } from '../enums/table-name.enum';
 import { CreateUpdateModel } from '../model/create-update.model';
@@ -53,14 +53,8 @@ export class FurnitureEntity extends CreateUpdateModel {
   @Column({ type: 'int' })
   price: number;
 
-  @Column('enum', { enum: CurrencyEnum })
+  @Column('enum', { enum: CurrencyEnum, default: CurrencyEnum.UAH })
   currency: CurrencyEnum;
-
-  @Column('int', { default: 0 })
-  priceInUAH: number;
-
-  @Column({ type: 'int', default: 0 })
-  currencyRate: number;
 
   @Column('text', { default: 0, nullable: true })
   weight?: string;

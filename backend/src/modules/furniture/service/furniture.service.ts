@@ -19,6 +19,7 @@ import { MaterialRepository } from '../../../infrastructure/repository/services/
 import { SizeRepository } from '../../../infrastructure/repository/services/size.repository';
 // eslint-disable-next-line max-len
 import { SubCategoryFurnitureRepository } from '../../../infrastructure/repository/services/subcategory-furniture.repository';
+import { CurrencyEnum } from '../enum/currency.enum';
 import { FileTypeEnum } from '../../file-storage/enum/file-type.enum';
 import { FileStorageService } from '../../file-storage/services/file-storage.service';
 import { SellerEnum } from '../../user/enum/seller.enum';
@@ -168,6 +169,7 @@ export class FurnitureService {
       category,
       subcategory,
       color,
+      currency: CurrencyEnum.UAH,
       size,
       price: dto.price,
       weight: dto?.weight,

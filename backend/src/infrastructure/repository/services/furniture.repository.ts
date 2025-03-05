@@ -3,6 +3,7 @@ import { DataSource, Repository } from 'typeorm';
 
 import { FurnitureID } from '../../../common/types/entity-ids.type';
 import { ListFurnitureQueryDto } from '../../../modules/furniture/dto/req/list-furniture-query.dto';
+import { ApiService } from '../../api/service/api.service';
 import { FurnitureEntity } from '../../postgres/entities/furniture.entity';
 import { BrandRepository } from './brand.repository';
 
@@ -11,6 +12,7 @@ export class FurnitureRepository extends Repository<FurnitureEntity> {
   constructor(
     private readonly dataSource: DataSource,
     private readonly brandRepository: BrandRepository,
+    private readonly apiService: ApiService,
   ) {
     super(FurnitureEntity, dataSource.manager);
   }
@@ -91,7 +93,19 @@ export class FurnitureRepository extends Repository<FurnitureEntity> {
       }
     }
 
-    return await qb.getManyAndCount();
+    const furnitureEntities = await qb.getMany();
+    const count = await qb.getCount();
+
+    if (query.currency) {
+      for (const entity of furnitureEntities) {
+        entity.price = await this.apiService.getCurrency(
+          entity.price.toString(),
+          query.currency,
+        );
+      }
+    }
+
+    return [furnitureEntities, count];
   }
 
   public async findByFurnitureId(

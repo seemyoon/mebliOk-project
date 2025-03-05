@@ -1,5 +1,6 @@
 import { Global, Module } from '@nestjs/common';
 
+import { ApiModule } from '../api/api.module';
 import { BannerRepository } from './services/banner.repository';
 import { BrandRepository } from './services/brand.repository';
 import { CalculateRateFurnitureRepository } from './services/calculate-rate-furniture.repository';
@@ -38,6 +39,7 @@ const repository = [
 
 @Global()
 @Module({
+  imports: [ApiModule],
   providers: [...repository],
   exports: [...repository],
 })

@@ -12,6 +12,7 @@ import {
 
 import { TransformHelper } from '../../../../common/helpers/transform.helper';
 import { BrandID } from '../../../../common/types/entity-ids.type';
+import { CurrencyEnum } from '../../enum/currency.enum';
 
 export class ListFurnitureQueryDto {
   @ApiPropertyOptional({ type: Number, minimum: 1, maximum: 100, default: 10 })
@@ -41,6 +42,11 @@ export class ListFurnitureQueryDto {
   @IsEnum(['price', 'popularity', 'novelty', 'name'])
   @IsString()
   sortBy?: 'price' | 'popularity' | 'novelty' | 'name';
+
+  @ApiPropertyOptional({ enum: ['USD', 'EUR', 'UAH'], default: 'UAH' })
+  @IsEnum(['USD', 'EUR', 'UAH'])
+  @IsString()
+  currency?: CurrencyEnum;
 
   @ApiPropertyOptional({ enum: ['asc', 'desc'] })
   @IsOptional()
