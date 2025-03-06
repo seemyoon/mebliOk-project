@@ -1,0 +1,59 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - ./backend/environments/dev.env
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    depends_on:
+      - mebliok-db
+      - mebliok-redis
+    restart: on-failure
+    command: sh -c 'yarn start'
+
+  mebliok-db:
+    image: postgres:16.1
+    ports:
+      - '${POSTGRES_PORT:-5432}:5432'
+    env_file:
+      - ./backend/environments/dev.env
+    volumes:
+      - ./mebliok-db-data:/var/lib/postgresql/data
+    restart: on-failure
+
+  mebliok-redis:
+    image: redis:7.2.3
+    ports:
+      - '${REDIS_PORT:-6379}:6379'
+    command: redis-server
+    env_file:
+      - ./backend/environments/dev.env
+    restart: unless-stopped
+
+  mebliok-s3:
+    image: quay.io/minio/minio:latest
+    env_file:
+      - ./backend/environments/dev.env
+    command: server /data --console-address ":9001"
+    restart: unless-stopped
+    ports:
+      - "8000:9000"
+      - "8001:9001"
+    volumes:
+      - ./mebliok-s3-data:/usr/src/app/s3
+
+  web:
+    image: nginx:alpine
+    ports:
+      - '80:80'
+    volumes:
+      - ./client:/usr/share/nginx/html
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    restart: on-failure
+
+volumes:
+  mebliok-db:
+  mebliok-s3:
