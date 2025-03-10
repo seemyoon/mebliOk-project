@@ -10,6 +10,7 @@ import { AppConfig } from './configs/config.type';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.enableCors(); //temporary
   app.use(cookieParser());
   const config = new DocumentBuilder()
     .setTitle('MebliOK')

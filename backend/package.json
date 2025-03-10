@@ -15,8 +15,8 @@
     "test:watch": "jest --watch",
     "start:db": "docker compose -f ../docker-compose.local.yml up --build",
     "typeorm": "typeorm-ts-node-commonjs --dataSource ./ormconfig.ts",
-    "migration:create": "typeorm migration:create src/infrastructure/postgres/migrations/$name",
-    "migration:generate": "cross-var yarn run typeorm -- migration:generate src/infrastructure/postgres/migrations/$name",
+    "migration:create": "typeorm migration:create ./src/infrastructure/postgres/migrations/$name",
+    "migration:generate": "cross-var yarn run typeorm -- migration:generate ./src/infrastructure/postgres/migrations/$name",
     "migration:revert": "yarn run typeorm -- migration:revert",
     "migration:run": "yarn run typeorm -- migration:run"
   },
