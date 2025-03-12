@@ -5,6 +5,10 @@ const urlBuilder = {
     base: baseUrl + '/extra-info',
     shippingInfo: (): string => urlBuilder.extraInfo.base + '/getShippingInfo',
   },
+  furniture: {
+    base: baseUrl + '/furniture',
+    getAllFurniture: (): string => urlBuilder.furniture.base + '/getAllFurniture?currency=UAH', //todo Pagination
+  },
 };
 
 const authUrlBuilder = {
@@ -19,6 +23,6 @@ const authUrlBuilder = {
     base: baseUrl + '/auth/google',
     login: (): string => authUrlBuilder.ouath.base + '/login',
     callback: (): string => authUrlBuilder.ouath.base + '/callback',
-  }
-}
+  },
+};
 export { baseUrl, urlBuilder, authUrlBuilder };

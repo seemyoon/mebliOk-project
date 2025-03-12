@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { FC, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { ISignUpUserData } from '../../../interfaces/ISignUpUserData';
 import { authService } from '../../../services/auth.service';
 import styles from './SignUpFormComponent.module.css';
 import { AxiosError } from 'axios';
 
-const SignUpFormComponent = () => {
+const SignUpFormComponent: FC = () => {
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
   const {
     formState: { errors },
