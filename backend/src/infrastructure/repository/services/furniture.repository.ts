@@ -2,8 +2,10 @@ import { ConflictException, Injectable } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 
 import { FurnitureID } from '../../../common/types/entity-ids.type';
-import { ListFurnitureQueryDto } from '../../../modules/furniture/dto/req/list-furniture-query.dto';
-import { ApiService } from '../../api/service/api.service';
+import {
+  ListFurnitureQueryDto,
+} from '../../../modules/furniture/dto/req/list-furniture-query.dto';
+import { CurrencyService } from '../../api/service/currency.service';
 import { FurnitureEntity } from '../../postgres/entities/furniture.entity';
 import { BrandRepository } from './brand.repository';
 
@@ -12,7 +14,7 @@ export class FurnitureRepository extends Repository<FurnitureEntity> {
   constructor(
     private readonly dataSource: DataSource,
     private readonly brandRepository: BrandRepository,
-    private readonly apiService: ApiService,
+    private readonly apiService: CurrencyService,
   ) {
     super(FurnitureEntity, dataSource.manager);
   }

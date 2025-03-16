@@ -20,7 +20,7 @@ module.exports = {
     '@typescript-eslint/interface-name-prefix': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
-    'max-len': ['error', { code: 130 }],
+    'max-len': ['error', { code: 140 }],
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/no-unused-vars': ['warn'],
     '@typescript-eslint/return-await': ['error', 'always'],

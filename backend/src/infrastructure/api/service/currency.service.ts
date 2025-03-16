@@ -6,7 +6,7 @@ import { API_URL_PRIVAT24 } from '../constants/common.constants';
 import { ICurrencyResponse } from '../models/currency.interface';
 
 @Injectable()
-export class ApiService {
+export class CurrencyService {
   private readonly logger = new Logger();
   private axiosCurrencyData: AxiosInstance = axios.create({
     baseURL: API_URL_PRIVAT24,

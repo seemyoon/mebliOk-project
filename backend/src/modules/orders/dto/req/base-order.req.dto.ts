@@ -15,16 +15,20 @@ import { QuantityFurnitureInOrderDto } from './quantity-furniture-in-order.dto';
 export class BaseOrderReqDto {
   @ApiProperty({
     example: [
-      { name: 'cherry', quantity: 2 },
-      { name: 'orange', quantity: 3 },
+      {
+        id: '284a5efa-54ea-4399-b77a-44062928a399',
+        quantity: 2,
+      },
+      {
+        id: 'c2f13926-4346-499a-b4b8-7944f53b3de3',
+        quantity: 1,
+      },
     ],
-    description: 'List of products with product IDs and quantities.',
-    type: [QuantityFurnitureInOrderDto],
   })
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => QuantityFurnitureInOrderDto)
-  furniture?: QuantityFurnitureInOrderDto[];
+  furniture: QuantityFurnitureInOrderDto[];
 
   @ApiProperty({ example: 'John Doe' })
   @IsString()

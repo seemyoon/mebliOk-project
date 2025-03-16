@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 
-import { ApiService } from './service/api.service';
+import { CurrencyService } from './service/currency.service';
 
 @Module({
-  providers: [ApiService],
-  exports: [ApiService],
+  providers: [CurrencyService],
+  exports: [CurrencyService],
 })
 export class ApiModule {}

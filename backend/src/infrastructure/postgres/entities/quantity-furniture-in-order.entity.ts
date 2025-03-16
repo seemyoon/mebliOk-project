@@ -3,6 +3,7 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -14,7 +15,7 @@ import { TableNameEnum } from '../enums/table-name.enum';
 import { FurnitureEntity } from './furniture.entity';
 import { OrderEntity } from './order.entity';
 
-@Entity(TableNameEnum.ORDER_FURNITURE)
+@Entity(TableNameEnum.ORDER_FURNITURE) // todo rename
 export class QuantityFurnitureInOrderEntity {
   @PrimaryGeneratedColumn('uuid')
   id: QuantityFurnitureInOrderEntityID;
@@ -29,10 +30,10 @@ export class QuantityFurnitureInOrderEntity {
 
   @Column()
   furniture_id: FurnitureID;
-  @ManyToOne(() => FurnitureEntity, (entity) => entity.quantityFurniture, {
+  @OneToOne(() => FurnitureEntity, (entity) => entity.quantityFurniture, {
     onDelete: 'CASCADE',
   })
-  @JoinColumn({ name: 'furniture_id' }) //todo. add changes to rep level
+  @JoinColumn({ name: 'furniture_id' })
   furniture?: FurnitureEntity;
 
   @Column('decimal')

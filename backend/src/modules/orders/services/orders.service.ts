@@ -5,13 +5,26 @@ import {
 } from '@nestjs/common';
 import { In } from 'typeorm';
 
-import { OrderEntity } from '../../../infrastructure/postgres/entities/order.entity';
-import { UserEntity } from '../../../infrastructure/postgres/entities/users.entity';
+import { FurnitureID } from '../../../common/types/entity-ids.type';
+import {
+  OrderEntity,
+} from '../../../infrastructure/postgres/entities/order.entity';
+import {
+  UserEntity,
+} from '../../../infrastructure/postgres/entities/users.entity';
+import {
+  FurnitureRepository,
+} from '../../../infrastructure/repository/services/furniture.repository';
+import {
+  OrderRepository,
+} from '../../../infrastructure/repository/services/order.repository';
+import {
+  QuantityFurnitureInOrderRepository,
+} from '../../../infrastructure/repository/services/quantity-furniture-in-order.repository';
+import {
+  UserRepository,
+} from '../../../infrastructure/repository/services/user.repository';
 import { IUserData } from '../../auth/interfaces/user-data.interface';
-import { FurnitureRepository } from '../../../infrastructure/repository/services/furniture.repository';
-import { OrderRepository } from '../../../infrastructure/repository/services/order.repository';
-import { QuantityFurnitureInOrderRepository } from '../../../infrastructure/repository/services/quantity-furniture-in-order.repository';
-import { UserRepository } from '../../../infrastructure/repository/services/user.repository';
 import { UserEnum } from '../../user/enum/users.enum';
 import { BaseOrderReqDto } from '../dto/req/base-order.req.dto';
 import { EditOrderReqDto } from '../dto/req/edit-order.req.dto';
@@ -46,29 +59,20 @@ export class OrdersService {
     return await this.orderRepository.findClientsOrders(orderID, query);
   }
 
-  public async createOrder(
-    userData: IUserData,
-    dto: BaseOrderReqDto,
-  ): Promise<OrderEntity> {
+  public async createOrder(dto: BaseOrderReqDto): Promise<OrderEntity> {
     let user: UserEntity | null = null;
-    if (userData) {
-      user = await this.userRepository.findUser(userData.userId);
-      if (!user) {
-        throw new NotFoundException('User not found');
-      }
-    } else if (dto.phoneNumber) {
+    if (dto.phoneNumber) {
       user = await this.userRepository.findOne({
-        where: [{ phoneNumber: dto.phoneNumber }, { email: dto?.email }],
+        where: [{ phoneNumber: dto.phoneNumber }],
       });
-
       if (!user) {
-        user = this.userRepository.create({
-          phoneNumber: dto.phoneNumber,
-          email: dto?.email,
-          name: dto?.user_name,
-          role: UserEnum.UNREGISTERED_CLIENT,
-        });
-        await this.userRepository.save(user);
+        await this.userRepository.save(
+          this.userRepository.create({
+            phoneNumber: dto.phoneNumber,
+            email: dto?.email,
+            role: UserEnum.UNREGISTERED_CLIENT,
+          }),
+        );
       }
     } else {
       throw new ConflictException(
@@ -79,14 +83,14 @@ export class OrdersService {
     const furnitureList = await Promise.all(
       dto.furniture.map(async (oneFurniture) => {
         const furniture = await this.furnitureRepository.findByFurnitureId(
-          oneFurniture.id,
+          oneFurniture.id as FurnitureID,
         );
         if (!furniture) {
           throw new NotFoundException(
             `Product with id ${furniture.id} not found`,
           );
         }
-        return { furniture, quantity: oneFurniture.quantity };
+        return { furniture_id: furniture.id, quantity: oneFurniture.quantity };
       }),
     );
 
@@ -94,11 +98,11 @@ export class OrdersService {
       this.orderRepository.create({ user }),
     );
 
-    const quantityFurnitureInOrder = furnitureList.map((furnitureItem) => {
+    const quantityFurnitureInOrder = furnitureList.map((oneFurniture) => {
       return this.quantityFurnitureInOrderRepository.create({
-        order_id: order.id,
-        furniture_id: furnitureItem.furniture.id,
-        quantity: furnitureItem.quantity,
+        order_id: order?.id,
+        furniture_id: oneFurniture?.furniture_id,
+        quantity: oneFurniture?.quantity,
       });
     });
 
