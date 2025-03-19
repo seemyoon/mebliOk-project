@@ -1,16 +1,10 @@
 import { Injectable } from '@nestjs/common';
 
-import {
-  OrderEntity,
-} from '../../../infrastructure/postgres/entities/order.entity';
-import {
-  QuantityFurnitureInOrderEntity,
-} from '../../../infrastructure/postgres/entities/quantity-furniture-in-order.entity';
+import { OrderEntity } from '../../../infrastructure/postgres/entities/order.entity';
+import { QuantityFurnitureInOrderEntity } from '../../../infrastructure/postgres/entities/quantity-furniture-in-order.entity';
 import { UserMapper } from '../../user/services/user.mapper';
 import { ListOrdersQueryDto } from '../dto/req/list-orders.query.dto';
-import {
-  QuantityFurnitureInOrderDto,
-} from '../dto/req/quantity-furniture-in-order.dto';
+import { QuantityFurnitureInOrderDto } from '../dto/req/quantity-furniture-in-order.dto';
 import { OrderResDto } from '../dto/res/order.res.dto';
 import { OrdersListResDto } from '../dto/res/orders-list.res.dto';
 
@@ -20,7 +14,7 @@ export class OrdersMapper {
     quantityFurnitureInOrder: QuantityFurnitureInOrderEntity,
   ): QuantityFurnitureInOrderDto {
     return {
-      id: quantityFurnitureInOrder.furniture_id,
+      id: quantityFurnitureInOrder.furniture?.id,
       quantity: quantityFurnitureInOrder?.quantity,
     };
   }
@@ -28,8 +22,8 @@ export class OrdersMapper {
   public static toResDto(order: OrderEntity): OrderResDto {
     return {
       id: order?.id,
-      quantityFurniture: order?.quantityFurniture?.map(this?.mapOrderFurniture),
-      isReady: order?.isReady,
+      quantityFurniture: order.quantityFurniture?.map(this.mapOrderFurniture),
+      isReady: order.isReady,
       user: order.user ? UserMapper.toResDto(order.user) : null,
       created: order?.createdAt,
       updated: order?.updatedAt,

@@ -17,7 +17,6 @@ import { ROLES } from '../../user/decorators/roles.decorator';
 import { UserEnum } from '../../user/enum/users.enum';
 import { RolesGuard } from '../../user/guard/roles.guard';
 import { BaseOrderReqDto } from '../dto/req/base-order.req.dto';
-import { EditOrderReqDto } from '../dto/req/edit-order.req.dto';
 import { ListOrdersQueryDto } from '../dto/req/list-orders.query.dto';
 import { OrderResDto } from '../dto/res/order.res.dto';
 import { OrdersListResDto } from '../dto/res/orders-list.res.dto';
@@ -76,18 +75,18 @@ export class OrdersController {
     return OrdersMapper.toResDto(await this.ordersService.createOrder(dto));
   }
 
-  @ApiBearerAuth()
-  @UseGuards(RolesGuard)
-  @ROLES(UserEnum.ADMIN, UserEnum.MANAGER)
-  @Post('/editClientOrder/:orderId')
-  public async editClientOrder(
-    @Body() dto: EditOrderReqDto,
-    @Param('orderId', ParseUUIDPipe) orderId: number,
-  ): Promise<OrderResDto> {
-    return OrdersMapper.toResDto(
-      await this.ordersService.editClientOrder(orderId, dto),
-    );
-  }
+  // @ApiBearerAuth()
+  // @UseGuards(RolesGuard)
+  // @ROLES(UserEnum.ADMIN, UserEnum.MANAGER)
+  // @Post('/editClientOrder/:orderId')
+  // public async editClientOrder(
+  //   @Body() dto: EditOrderReqDto,
+  //   @Param('orderId', ParseUUIDPipe) orderId: number,
+  // ): Promise<OrderResDto> {
+  //   return OrdersMapper.toResDto(
+  //     await this.ordersService.editClientOrder(orderId, dto),
+  //   );
+  // }
 
   @ApiBearerAuth()
   @UseGuards(RolesGuard)

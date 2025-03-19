@@ -55,10 +55,9 @@ export class OrderRepository extends Repository<OrderEntity> {
 
   public async findByOrderId(orderID: number): Promise<OrderEntity> {
     const qb = this.createQueryBuilder('order');
-    qb.leftJoinAndSelect(
-      'order.quantityFurniture',
-      'quantityFurniture',
-    ).leftJoinAndSelect('order.user', 'user');
+    qb.leftJoinAndSelect('order.quantityFurniture', 'quantityFurniture')
+      .leftJoinAndSelect('quantityFurniture.furniture', 'furniture')
+      .leftJoinAndSelect('order.user', 'user');
 
     qb.where('order.id = :orderID', { orderID });
     return await qb.getOne();

@@ -3,7 +3,6 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
-  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -28,9 +27,9 @@ export class QuantityFurnitureInOrderEntity {
   @JoinColumn({ name: 'order_id' })
   order?: OrderEntity;
 
-  @Column()
+  @Column({ type: 'uuid' })
   furniture_id: FurnitureID;
-  @OneToOne(() => FurnitureEntity, (entity) => entity.quantityFurniture, {
+  @ManyToOne(() => FurnitureEntity, (entity) => entity.quantityFurniture, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'furniture_id' })

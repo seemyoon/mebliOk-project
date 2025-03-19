@@ -6,7 +6,6 @@ import {
   IsString,
   Length,
   Matches,
-  ValidateNested,
 } from 'class-validator';
 
 import { TransformHelper } from '../../../../common/helpers/transform.helper';
@@ -26,8 +25,8 @@ export class BaseOrderReqDto {
     ],
   })
   @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => QuantityFurnitureInOrderDto)
+  // @ValidateNested({ each: true })
+  // @Type(() => QuantityFurnitureInOrderDto)
   furniture: QuantityFurnitureInOrderDto[];
 
   @ApiProperty({ example: 'John Doe' })
