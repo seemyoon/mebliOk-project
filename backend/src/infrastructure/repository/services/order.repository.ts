@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 
 import { IUserData } from '../../../modules/auth/interfaces/user-data.interface';
@@ -19,6 +19,11 @@ export class OrderRepository extends Repository<OrderEntity> {
       .leftJoinAndSelect('order.quantityFurniture', 'quantityFurniture')
       .leftJoinAndSelect('quantityFurniture.furniture', 'furniture');
 
+    if (query.ready !== undefined) {
+      qb.where('order.isReady = :isReady');
+      qb.setParameter('isReady', query.ready);
+    }
+
     qb.take(query.limit);
     qb.skip(query.offset);
 
@@ -32,21 +37,7 @@ export class OrderRepository extends Repository<OrderEntity> {
     const qb = this.createQueryBuilder('order');
     qb.leftJoinAndSelect('order.quantityFurniture', 'quantityFurniture')
       .leftJoinAndSelect('quantityFurniture.furniture', 'furniture')
-      .where('order.user_id = :userId', { userData: userData.userId })
-      .take(query.limit)
-      .skip(query.offset);
-
-    return await qb.getManyAndCount();
-  }
-
-  public async findClientsOrders(
-    orderId: number,
-    query: ListOrdersQueryDto,
-  ): Promise<[OrderEntity[], number]> {
-    const qb = this.createQueryBuilder('order');
-    qb.leftJoinAndSelect('order.quantityFurniture', 'quantityFurniture')
-      .leftJoinAndSelect('quantityFurniture.furniture', 'furniture')
-      .where('order.id = :orderId', { orderId })
+      .where('order.user_id = :userId', { userId: userData.userId })
       .take(query.limit)
       .skip(query.offset);
 
@@ -60,6 +51,25 @@ export class OrderRepository extends Repository<OrderEntity> {
       .leftJoinAndSelect('order.user', 'user');
 
     qb.where('order.id = :orderID', { orderID });
+    return await qb.getOne();
+  }
+
+  public async findMyOrder(
+    orderID: number,
+    userData: IUserData,
+  ): Promise<OrderEntity> {
+    const qb = this.createQueryBuilder('order');
+    qb.leftJoinAndSelect('order.quantityFurniture', 'quantityFurniture')
+      .leftJoinAndSelect('quantityFurniture.furniture', 'furniture')
+      .leftJoinAndSelect('order.user', 'user');
+
+    const order = await this.findByOrderId(orderID);
+    if (order.user_id === userData.userId) {
+      qb.where('order.user_id = :userId', { userId: userData.userId });
+      qb.where('order.id = :orderID', { orderID });
+    } else {
+      throw new NotFoundException('Order not found');
+    }
     return await qb.getOne();
   }
 }

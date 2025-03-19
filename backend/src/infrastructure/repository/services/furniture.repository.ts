@@ -2,9 +2,7 @@ import { ConflictException, Injectable } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 
 import { FurnitureID } from '../../../common/types/entity-ids.type';
-import {
-  ListFurnitureQueryDto,
-} from '../../../modules/furniture/dto/req/list-furniture-query.dto';
+import { ListFurnitureQueryDto } from '../../../modules/furniture/dto/req/list-furniture-query.dto';
 import { CurrencyService } from '../../api/service/currency.service';
 import { FurnitureEntity } from '../../postgres/entities/furniture.entity';
 import { BrandRepository } from './brand.repository';
@@ -120,7 +118,8 @@ export class FurnitureRepository extends Repository<FurnitureEntity> {
       .leftJoinAndSelect('furniture.category', 'category')
       .leftJoinAndSelect('furniture.material', 'material')
       .leftJoinAndSelect('furniture.color', 'color')
-      .leftJoinAndSelect('furniture.brand', 'brand');
+      .leftJoinAndSelect('furniture.brand', 'brand')
+      .leftJoinAndSelect('quantityFurniture.order', 'order');
 
     qb.where('furniture.id = :furnitureID', { furnitureID });
     return await qb.getOne();

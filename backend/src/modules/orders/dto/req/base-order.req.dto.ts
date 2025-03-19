@@ -25,8 +25,7 @@ export class BaseOrderReqDto {
     ],
   })
   @IsArray()
-  // @ValidateNested({ each: true })
-  // @Type(() => QuantityFurnitureInOrderDto)
+  @Type(() => QuantityFurnitureInOrderDto)
   furniture: QuantityFurnitureInOrderDto[];
 
   @ApiProperty({ example: 'John Doe' })

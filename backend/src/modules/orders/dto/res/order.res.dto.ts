@@ -4,7 +4,7 @@ import { BaseOrderResDto } from './base-order.res.dto';
 
 export class OrderResDto extends PickType(BaseOrderResDto, [
   'id',
-  'quantityFurniture',
+  'furniture',
   'user',
   'isReady',
   'created',

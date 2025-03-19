@@ -29,5 +29,5 @@ export class ListOrdersQueryDto {
 
   @IsOptional()
   @IsString()
-  inStock?: boolean;
+  ready?: boolean;
 }

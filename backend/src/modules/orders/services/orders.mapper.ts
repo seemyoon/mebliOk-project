@@ -14,7 +14,7 @@ export class OrdersMapper {
     quantityFurnitureInOrder: QuantityFurnitureInOrderEntity,
   ): QuantityFurnitureInOrderDto {
     return {
-      id: quantityFurnitureInOrder.furniture?.id,
+      id: quantityFurnitureInOrder.furniture.id,
       quantity: quantityFurnitureInOrder?.quantity,
     };
   }
@@ -22,7 +22,7 @@ export class OrdersMapper {
   public static toResDto(order: OrderEntity): OrderResDto {
     return {
       id: order?.id,
-      quantityFurniture: order.quantityFurniture?.map(this.mapOrderFurniture),
+      furniture: order.quantityFurniture.map(OrdersMapper.mapOrderFurniture),
       isReady: order.isReady,
       user: order.user ? UserMapper.toResDto(order.user) : null,
       created: order?.createdAt,
@@ -35,6 +35,6 @@ export class OrdersMapper {
     total: number,
     query: ListOrdersQueryDto,
   ): OrdersListResDto {
-    return { data: data.map(this.toResDto), total, ...query };
+    return { data: data.map(this?.toResDto), total, ...query };
   }
 }

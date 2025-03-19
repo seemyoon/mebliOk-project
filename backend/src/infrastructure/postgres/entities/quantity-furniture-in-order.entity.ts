@@ -14,7 +14,7 @@ import { TableNameEnum } from '../enums/table-name.enum';
 import { FurnitureEntity } from './furniture.entity';
 import { OrderEntity } from './order.entity';
 
-@Entity(TableNameEnum.ORDER_FURNITURE) // todo rename
+@Entity(TableNameEnum.QUANTITY_FURNITURE_IN_ORDER)
 export class QuantityFurnitureInOrderEntity {
   @PrimaryGeneratedColumn('uuid')
   id: QuantityFurnitureInOrderEntityID;
