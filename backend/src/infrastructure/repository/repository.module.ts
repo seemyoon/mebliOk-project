@@ -6,6 +6,7 @@ import { BrandRepository } from './services/brand.repository';
 import { CalculateRateFurnitureRepository } from './services/calculate-rate-furniture.repository';
 import { CategoryFurnitureRepository } from './services/category-furniture.repository';
 import { ColorRepository } from './services/color.repository';
+import { CustomerInfoRepository } from './services/customer-info.repository';
 import { FurnitureRepository } from './services/furniture.repository';
 import { FurnitureStatisticRepository } from './services/furniture-statistic.repository';
 import { MaterialRepository } from './services/material.repository';
@@ -19,6 +20,7 @@ import { SubCategoryFurnitureRepository } from './services/subcategory-furniture
 import { UserRepository } from './services/user.repository';
 
 const repository = [
+  CustomerInfoRepository,
   UserRepository,
   RefreshTokenRepository,
   ShippingInfoRepository,

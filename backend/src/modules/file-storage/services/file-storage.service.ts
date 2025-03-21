@@ -9,7 +9,6 @@ import {
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
-import { UserID } from '../../../common/types/entity-ids.type';
 import { AWSConfig, Config } from '../../../configs/config.type';
 import { LoggerService } from '../../logger/services/logger.service';
 import { FileTypeEnum } from '../enum/file-type.enum';

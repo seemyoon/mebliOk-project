@@ -27,7 +27,7 @@ export class BaseUserReqDto {
   @Matches(/^[^\s@]+@([^\s@.,]+\.)+[^\s@.,]{2,}$/)
   email?: string;
 
-  @ApiProperty({ example: '+380631353945' })
+  @ApiProperty({ example: '+380681353945' })
   @IsString()
   @IsPhoneNumber(null, { message: 'Phone number must be valid' })
   phoneNumber: string;
@@ -44,7 +44,6 @@ export class BaseUserReqDto {
 
   @IsOptional()
   @IsString()
-  @Length(0, 3000)
   avatar?: string;
 
   @ApiProperty({

@@ -7,6 +7,7 @@ export enum TableNameEnum {
   CATEGORY_FURNITURE = 'category_furniture',
   SUB_CATEGORY_FURNITURE = 'subcategory_furniture',
   BRAND = 'brand',
+  CUSTOMER_INFO = 'customer_info',
   FURNITURE_STATISTIC = 'furniture_statistic',
   CALCULATE_RATE_FURNITURE = 'calculate_rate_furniture',
   SHIPPING_INFO = 'shipping_info',

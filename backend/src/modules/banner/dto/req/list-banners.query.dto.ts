@@ -1,17 +1,8 @@
-import { Type } from 'class-transformer';
-import { IsInt, IsOptional, Max, Min } from 'class-validator';
+import { PickType } from '@nestjs/swagger';
 
-export class ListBannersQueryDto {
-  @Type(() => Number)
-  @IsInt()
-  @Max(100)
-  @Min(1)
-  @IsOptional()
-  limit?: number = 10;
+import { PaginationQueryDto } from '../../../../common/model/pagination.query.dto';
 
-  @Type(() => Number)
-  @Min(0)
-  @IsInt()
-  @IsOptional()
-  offset?: number = 0;
-}
+export class ListBannersQueryDto extends PickType(PaginationQueryDto, [
+  'offset',
+  'limit',
+]) {}

@@ -1,8 +1,8 @@
 import { PickType } from '@nestjs/swagger';
 
-import { ListCategoriesFurnitureQueryDto } from './list-categories-furniture.query.dto';
+import { PaginationQueryDto } from '../../../../common/model/pagination.query.dto';
 
 export class ListSubCategoriesFurnitureQueryDto extends PickType(
-  ListCategoriesFurnitureQueryDto,
+  PaginationQueryDto,
   ['search', 'offset', 'limit'],
 ) {}

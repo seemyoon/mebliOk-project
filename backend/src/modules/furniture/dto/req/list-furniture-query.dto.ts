@@ -1,42 +1,15 @@
-import { ApiPropertyOptional } from '@nestjs/swagger';
-import { Transform, Type } from 'class-transformer';
-import {
-  IsEnum,
-  IsInt,
-  IsOptional,
-  IsString,
-  IsUUID,
-  Max,
-  Min,
-} from 'class-validator';
+import { ApiPropertyOptional, PickType } from '@nestjs/swagger';
+import { IsEnum, IsOptional, IsString, IsUUID } from 'class-validator';
 
-import { TransformHelper } from '../../../../common/helpers/transform.helper';
+import { PaginationQueryDto } from '../../../../common/model/pagination.query.dto';
 import { BrandID } from '../../../../common/types/entity-ids.type';
 import { CurrencyEnum } from '../../enum/currency.enum';
 
-export class ListFurnitureQueryDto {
-  @ApiPropertyOptional({ type: Number, minimum: 1, maximum: 100, default: 10 })
-  @Type(() => Number)
-  @IsInt()
-  @Max(100)
-  @Min(1)
-  @IsOptional()
-  limit?: number = 10;
-
-  @ApiPropertyOptional({ type: Number, minimum: 0, default: 0 })
-  @Type(() => Number)
-  @Min(0)
-  @IsInt()
-  @IsOptional()
-  offset?: number = 0;
-
-  @ApiPropertyOptional({ type: String })
-  @Transform(TransformHelper.toTrim)
-  @Transform(TransformHelper.toLowerCase)
-  @IsOptional()
-  @IsString()
-  search?: string;
-
+export class ListFurnitureQueryDto extends PickType(PaginationQueryDto, [
+  'offset',
+  'search',
+  'limit',
+]) {
   @ApiPropertyOptional({ enum: ['price', 'popularity', 'novelty', 'name'] })
   @IsOptional()
   @IsEnum(['price', 'popularity', 'novelty', 'name'])

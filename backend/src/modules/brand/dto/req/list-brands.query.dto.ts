@@ -1,25 +1,9 @@
-import { Transform, Type } from 'class-transformer';
-import { IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
+import { PickType } from '@nestjs/swagger';
 
-import { TransformHelper } from '../../../../common/helpers/transform.helper';
+import { PaginationQueryDto } from '../../../../common/model/pagination.query.dto';
 
-export class ListBrandsQueryDto {
-  @Type(() => Number)
-  @IsInt()
-  @Max(100)
-  @Min(1)
-  @IsOptional()
-  limit?: number = 10;
-
-  @Type(() => Number)
-  @Min(0)
-  @IsInt()
-  @IsOptional()
-  offset?: number = 0;
-
-  @Transform(TransformHelper.toTrim)
-  @Transform(TransformHelper.toLowerCase)
-  @IsOptional()
-  @IsString()
-  search?: string;
-}
+export class ListBrandsQueryDto extends PickType(PaginationQueryDto, [
+  'search',
+  'limit',
+  'offset',
+]) {}

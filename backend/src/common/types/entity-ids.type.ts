@@ -22,3 +22,4 @@ export type CalculateRateFurnitureID = Opaque<
   string,
   'CalculateRateFurnitureID'
 >;
+export type CustomerInfoID = Opaque<string, 'CustomerInfoID'>;

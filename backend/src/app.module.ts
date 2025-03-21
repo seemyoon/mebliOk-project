@@ -2,24 +2,19 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { APP_FILTER } from '@nestjs/core';
 
-import {
-  GlobalExceptionFilter,
-} from './common/filters/global-exception.filter';
-import {
-  TypeORMQueryExceptionFilter,
-} from './common/filters/postgres-exception.filter';
+import { GlobalExceptionFilter } from './common/filters/global-exception.filter';
+import { TypeORMQueryExceptionFilter } from './common/filters/postgres-exception.filter';
 import configuration from './configs/configuration';
 import { ApiModule } from './infrastructure/api/api.module';
 import { PostgresModule } from './infrastructure/postgres/postgres.module';
 import { RedisModule } from './infrastructure/redis/redis.module';
-import {
-  RepositoryModule,
-} from './infrastructure/repository/repository.module';
+import { RepositoryModule } from './infrastructure/repository/repository.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { BannerModule } from './modules/banner/banner.module';
 import { BrandModule } from './modules/brand/brand.module';
 import { CategoriesModule } from './modules/categories/categories.module';
 import { ColorModule } from './modules/color/color.module';
+import { CustomerModule } from './modules/customer/customer.module';
 import { ExtraInfoModule } from './modules/extra-info/extra-info.module';
 import { FurnitureModule } from './modules/furniture/furniture.module';
 import { HealthModule } from './modules/health/health.module';
@@ -52,6 +47,7 @@ import { UserModule } from './modules/user/user.module';
     HealthModule,
     ExtraInfoModule,
     BannerModule,
+    CustomerModule,
   ],
   providers: [
     {

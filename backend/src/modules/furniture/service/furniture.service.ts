@@ -13,13 +13,10 @@ import { BrandRepository } from '../../../infrastructure/repository/services/bra
 import { CategoryFurnitureRepository } from '../../../infrastructure/repository/services/category-furniture.repository';
 import { ColorRepository } from '../../../infrastructure/repository/services/color.repository';
 import { FurnitureRepository } from '../../../infrastructure/repository/services/furniture.repository';
-// eslint-disable-next-line max-len
 import { FurnitureStatisticRepository } from '../../../infrastructure/repository/services/furniture-statistic.repository';
 import { MaterialRepository } from '../../../infrastructure/repository/services/material.repository';
 import { SizeRepository } from '../../../infrastructure/repository/services/size.repository';
-// eslint-disable-next-line max-len
 import { SubCategoryFurnitureRepository } from '../../../infrastructure/repository/services/subcategory-furniture.repository';
-import { CurrencyEnum } from '../enum/currency.enum';
 import { FileTypeEnum } from '../../file-storage/enum/file-type.enum';
 import { FileStorageService } from '../../file-storage/services/file-storage.service';
 import { SellerEnum } from '../../user/enum/seller.enum';
@@ -27,6 +24,7 @@ import { AssignDiscountReqDto } from '../dto/req/assign-discount.req.dto';
 import { CreateFurnitureReqDto } from '../dto/req/create-furniture.req.dto';
 import { ListFurnitureQueryDto } from '../dto/req/list-furniture-query.dto';
 import { UpdateFurnitureReqDto } from '../dto/req/update-furniture.req.dto';
+import { CurrencyEnum } from '../enum/currency.enum';
 
 @Injectable()
 export class FurnitureService {
