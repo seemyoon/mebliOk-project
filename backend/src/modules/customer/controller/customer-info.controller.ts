@@ -66,9 +66,10 @@ export class CustomerInfoController {
   @Patch('/editCustomerInfo/:CustomerInfoId')
   public async editCustomerInfo(
     @Body() dto: UpdateCustomerReqDto,
+    @Param('customerInfoId') customerInfoId: CustomerInfoID,
   ): Promise<CustomerInfoResDto> {
     return CustomerInfoMapper.toResDto(
-      await this.customerInfoService.editCustomerInfo(dto),
+      await this.customerInfoService.editCustomerInfo(dto, customerInfoId),
     );
   }
 }

@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 
 import { CustomerInfoID } from '../../../common/types/entity-ids.type';
 import { CustomerInfoEntity } from '../../../infrastructure/postgres/entities/customer-info.entity';
@@ -16,24 +20,47 @@ export class CustomerInfoService {
   public async getAllCustomersInfo(
     query: ListCustomersInfoQueryDto,
   ): Promise<[CustomerInfoEntity[], number]> {
-    return {} as [CustomerInfoEntity[], number];
+    return await this.customerInfoRepository.findAll(query);
   }
 
   public async addCustomerInfo(
     dto: CreateCustomerInfoReqDto,
   ): Promise<CustomerInfoEntity> {
-    return {} as CustomerInfoEntity;
+    const customerInfo = await this.customerInfoRepository.findOne({
+      where: [{ name: dto.name }, { phoneNumber: dto.phoneNumber }],
+    });
+    if (customerInfo)
+      throw new ConflictException('Customer info  is already exist');
+
+    return await this.customerInfoRepository.save(
+      this.customerInfoRepository.create({
+        name: dto.name,
+        phoneNumber: dto.phoneNumber,
+      }),
+    );
   }
 
   public async getCustomerInfo(
     customerInfoId: CustomerInfoID,
   ): Promise<CustomerInfoEntity> {
-    return {} as CustomerInfoEntity;
+    const customerInfo =
+      await this.customerInfoRepository.findByCustomerInfoId(customerInfoId);
+    if (!customerInfo) throw new NotFoundException('Customer info not found');
+
+    return customerInfo;
   }
 
   public async editCustomerInfo(
     dto: UpdateCustomerReqDto,
+    customerInfoId: CustomerInfoID,
   ): Promise<CustomerInfoEntity> {
-    return {} as CustomerInfoEntity;
+    const customerInfo =
+      await this.customerInfoRepository.findByCustomerInfoId(customerInfoId);
+    if (!customerInfo) throw new NotFoundException('Customer info not found');
+
+    customerInfo.phoneNumber = dto.phoneNumber;
+    customerInfo.name = dto.name;
+
+    return await this.customerInfoRepository.save(customerInfo);
   }
 }
