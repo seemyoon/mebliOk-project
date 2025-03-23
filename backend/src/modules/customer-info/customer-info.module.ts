@@ -7,4 +7,4 @@ import { CustomerInfoService } from './services/customer-info.service';
   controllers: [CustomerInfoController],
   providers: [CustomerInfoService],
 })
-export class CustomerModule {}
+export class CustomerInfoModule {}

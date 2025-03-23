@@ -14,6 +14,7 @@ import { CategoryFurnitureRepository } from '../../../infrastructure/repository/
 import { ColorRepository } from '../../../infrastructure/repository/services/color.repository';
 import { FurnitureRepository } from '../../../infrastructure/repository/services/furniture.repository';
 import { FurnitureStatisticRepository } from '../../../infrastructure/repository/services/furniture-statistic.repository';
+import { IsShowPriceRepository } from '../../../infrastructure/repository/services/is-show-price.repository';
 import { MaterialRepository } from '../../../infrastructure/repository/services/material.repository';
 import { SizeRepository } from '../../../infrastructure/repository/services/size.repository';
 import { SubCategoryFurnitureRepository } from '../../../infrastructure/repository/services/subcategory-furniture.repository';
@@ -38,6 +39,7 @@ export class FurnitureService {
     private readonly colorRepository: ColorRepository,
     private readonly sizeRepository: SizeRepository,
     private readonly furnitureStatisticRepository: FurnitureStatisticRepository,
+    private readonly isShowPriceRepository: IsShowPriceRepository,
   ) {}
 
   public async getAllFurniture(
@@ -71,6 +73,29 @@ export class FurnitureService {
       ...furniture,
       photos: [...(furniture.photos || []), filePath],
     });
+  }
+
+  public async pickShowPriceForAllFurnitureOrNot(): Promise<void> {
+    const count = await this.isShowPriceRepository.count();
+
+    if (count > 1)
+      throw new ConflictException('Info about showing price must be only one');
+
+    let infoAboutShowingPrice = await this.isShowPriceRepository.findOne({
+      where: {},
+    });
+
+    if (count === 0) {
+      infoAboutShowingPrice = await this.isShowPriceRepository.save(
+        this.isShowPriceRepository.create({
+          isShowPrice: false,
+        }),
+      );
+    }
+
+    infoAboutShowingPrice.isShowPrice = !infoAboutShowingPrice.isShowPrice;
+
+    await this.isShowPriceRepository.save(infoAboutShowingPrice);
   }
 
   public async getFurniture(

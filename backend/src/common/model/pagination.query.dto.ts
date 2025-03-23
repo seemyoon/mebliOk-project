@@ -5,7 +5,7 @@ import { IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
 import { TransformHelper } from '../helpers/transform.helper';
 
 export class PaginationQueryDto {
-  @ApiPropertyOptional({ type: Number, maximum: 1, minimum: 100, default: 10 })
+  @ApiPropertyOptional({ type: Number, minimum: 1, maximum: 100, default: 10 })
   @Type(() => Number)
   @Min(1)
   @IsInt()

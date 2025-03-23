@@ -18,6 +18,7 @@ import { ShippingInfoRepository } from './services/shipping-info.repository';
 import { SizeRepository } from './services/size.repository';
 import { SubCategoryFurnitureRepository } from './services/subcategory-furniture.repository';
 import { UserRepository } from './services/user.repository';
+import { IsShowPriceRepository } from './services/is-show-price.repository';
 
 const repository = [
   CustomerInfoRepository,
@@ -32,6 +33,7 @@ const repository = [
   MaterialRepository,
   SizeRepository,
   PaymentInfoRepository,
+  IsShowPriceRepository,
   QuantityFurnitureInOrderRepository,
   BrandRepository,
   CategoryFurnitureRepository,

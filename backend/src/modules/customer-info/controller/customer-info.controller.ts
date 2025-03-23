@@ -4,6 +4,7 @@ import {
   Get,
   Param,
   Patch,
+  Post,
   Query,
   UseGuards,
 } from '@nestjs/common';
@@ -37,20 +38,8 @@ export class CustomerInfoController {
     return CustomerInfoMapper.toResDtoList(entities, total, query);
   }
 
-  @ApiBearerAuth()
-  @UseGuards(RolesGuard)
-  @ROLES(UserEnum.ADMIN)
-  @Get('/addCustomerInfo')
-  public async addCustomerInfo(
-    @Body() dto: CreateCustomerInfoReqDto,
-  ): Promise<CustomerInfoResDto> {
-    return CustomerInfoMapper.toResDto(
-      await this.customerInfoService.addCustomerInfo(dto),
-    );
-  }
-
   @SkipAuth()
-  @Get('/getCustomerInfo/:customerInfoId')
+  @Get('getCustomerInfo/:customerInfoId')
   public async getCustomerInfo(
     @Param('customerInfoId') customerInfoId: CustomerInfoID,
   ): Promise<CustomerInfoResDto> {
@@ -63,13 +52,25 @@ export class CustomerInfoController {
   @UseGuards(RolesGuard)
   @ROLES(UserEnum.ADMIN)
   @ApiBearerAuth()
-  @Patch('/editCustomerInfo/:CustomerInfoId')
+  @Patch('/editCustomerInfo/:customerInfoId')
   public async editCustomerInfo(
     @Body() dto: UpdateCustomerReqDto,
     @Param('customerInfoId') customerInfoId: CustomerInfoID,
   ): Promise<CustomerInfoResDto> {
     return CustomerInfoMapper.toResDto(
       await this.customerInfoService.editCustomerInfo(dto, customerInfoId),
+    );
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(RolesGuard)
+  @ROLES(UserEnum.ADMIN)
+  @Post('addCustomerInfo')
+  public async addCustomerInfo(
+    @Body() dto: CreateCustomerInfoReqDto,
+  ): Promise<CustomerInfoResDto> {
+    return CustomerInfoMapper.toResDto(
+      await this.customerInfoService.addCustomerInfo(dto),
     );
   }
 }

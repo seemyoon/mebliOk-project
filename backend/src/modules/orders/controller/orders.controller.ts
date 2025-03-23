@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Param,
+  Patch,
   Post,
   Query,
   UseGuards,
@@ -79,7 +80,7 @@ export class OrdersController {
   @ApiBearerAuth()
   @UseGuards(RolesGuard)
   @ROLES(UserEnum.ADMIN, UserEnum.MANAGER)
-  @Post('/pickOrderIsDoneOrNot/:orderId')
+  @Patch('/pickOrderIsDoneOrNot/:orderId')
   public async pickOrderIsDoneOrNot(
     @Param('orderId') orderId: string,
   ): Promise<void> {

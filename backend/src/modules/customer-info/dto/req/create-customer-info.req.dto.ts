@@ -1,10 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform, Type } from 'class-transformer';
-import { IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsString } from 'class-validator';
 
 import { TransformHelper } from '../../../../common/helpers/transform.helper';
 
-export class UpdateCustomerReqDto {
+export class CreateCustomerInfoReqDto {
   @Type(() => String)
   @Transform(TransformHelper.toTrim)
   @IsString()
@@ -13,8 +13,7 @@ export class UpdateCustomerReqDto {
   })
   name: string;
 
-  @IsNumber()
-  @IsOptional()
+  @IsString()
   @ApiProperty({ example: '+380681353945' })
-  phoneNumber?: string;
+  phoneNumber: string;
 }

@@ -55,6 +55,14 @@ export class FurnitureController {
   @ApiBearerAuth()
   @UseGuards(RolesGuard)
   @ROLES(UserEnum.ADMIN, UserEnum.MANAGER)
+  @Patch('/pickShowPriceForFurnitureOrNot')
+  public async pickShowPriceForAllFurnitureOrNot(): Promise<void> {
+    await this.furnitureService.pickShowPriceForAllFurnitureOrNot();
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(RolesGuard)
+  @ROLES(UserEnum.ADMIN, UserEnum.MANAGER)
   @Post(
     'createFurniture/:categoryFurnitureID/:subCategoryFurnitureID/:brandID/:materialID/:colorID',
   )

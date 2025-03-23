@@ -14,7 +14,7 @@ import { BannerModule } from './modules/banner/banner.module';
 import { BrandModule } from './modules/brand/brand.module';
 import { CategoriesModule } from './modules/categories/categories.module';
 import { ColorModule } from './modules/color/color.module';
-import { CustomerModule } from './modules/customer/customer.module';
+import { CustomerInfoModule } from './modules/customer-info/customer-info.module';
 import { ExtraInfoModule } from './modules/extra-info/extra-info.module';
 import { FurnitureModule } from './modules/furniture/furniture.module';
 import { HealthModule } from './modules/health/health.module';
@@ -47,7 +47,7 @@ import { UserModule } from './modules/user/user.module';
     HealthModule,
     ExtraInfoModule,
     BannerModule,
-    CustomerModule,
+    CustomerInfoModule,
   ],
   providers: [
     {
