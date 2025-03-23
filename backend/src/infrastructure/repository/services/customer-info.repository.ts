@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 
+import { CustomerInfoID } from '../../../common/types/entity-ids.type';
 import { ListCustomersInfoQueryDto } from '../../../modules/customer/dto/req/list-customers-info-query.dto';
 import { CustomerInfoEntity } from '../../postgres/entities/customer-info.entity';
-import { CustomerInfoID } from '../../../common/types/entity-ids.type';
 
 @Injectable()
 export class CustomerInfoRepository extends Repository<CustomerInfoEntity> {
