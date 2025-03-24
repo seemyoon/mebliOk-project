@@ -1,6 +1,7 @@
 export enum TableNameEnum {
   REFRESH_TOKENS = 'refresh_tokens',
   IS_SHOW_PRICE = 'is_show_price',
+  DELIVERY = 'delivery',
   USERS = 'users',
   FURNITURE = 'furniture',
   ORDER = 'order',

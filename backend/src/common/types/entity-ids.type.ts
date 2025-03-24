@@ -6,6 +6,7 @@ export type QuantityFurnitureInOrderEntityID = Opaque<
   'QuantityFurnitureInOrderEntityID'
 >;
 export type FurnitureID = Opaque<string, 'FurnitureID'>;
+export type DeliveryID = Opaque<string, 'DeliveryID'>;
 export type SizeID = Opaque<string, 'SizeID'>;
 export type IsShowPriceID = Opaque<string, 'IsShowPriceID'>;
 export type BrandID = Opaque<string, 'BrandID'>;

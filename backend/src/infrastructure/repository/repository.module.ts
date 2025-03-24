@@ -7,8 +7,10 @@ import { CalculateRateFurnitureRepository } from './services/calculate-rate-furn
 import { CategoryFurnitureRepository } from './services/category-furniture.repository';
 import { ColorRepository } from './services/color.repository';
 import { CustomerInfoRepository } from './services/customer-info.repository';
+import { DeliveryRepository } from './services/delivery.repository';
 import { FurnitureRepository } from './services/furniture.repository';
 import { FurnitureStatisticRepository } from './services/furniture-statistic.repository';
+import { IsShowPriceRepository } from './services/is-show-price.repository';
 import { MaterialRepository } from './services/material.repository';
 import { OrderRepository } from './services/order.repository';
 import { PaymentInfoRepository } from './services/payment-info.repository';
@@ -18,7 +20,6 @@ import { ShippingInfoRepository } from './services/shipping-info.repository';
 import { SizeRepository } from './services/size.repository';
 import { SubCategoryFurnitureRepository } from './services/subcategory-furniture.repository';
 import { UserRepository } from './services/user.repository';
-import { IsShowPriceRepository } from './services/is-show-price.repository';
 
 const repository = [
   CustomerInfoRepository,
@@ -34,6 +35,7 @@ const repository = [
   SizeRepository,
   PaymentInfoRepository,
   IsShowPriceRepository,
+  DeliveryRepository,
   QuantityFurnitureInOrderRepository,
   BrandRepository,
   CategoryFurnitureRepository,

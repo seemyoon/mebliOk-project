@@ -57,7 +57,7 @@ export class OrdersController {
 
   @SkipAuth()
   @ApiOperation({
-    summary: 'In JSON you need to change data. Default: admin data',
+    summary: 'In JSON you need to change data. Default: admin data.',
   })
   @Post('/createOrder')
   public async createOrder(@Body() dto: BaseOrderReqDto): Promise<OrderResDto> {

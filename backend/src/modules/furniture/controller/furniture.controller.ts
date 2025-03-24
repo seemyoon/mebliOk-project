@@ -13,7 +13,12 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiBearerAuth, ApiConsumes, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiConsumes,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 
 import { ApiFile } from '../../../common/decorators/api-file.decorator';
 import {
@@ -55,6 +60,9 @@ export class FurnitureController {
   @ApiBearerAuth()
   @UseGuards(RolesGuard)
   @ROLES(UserEnum.ADMIN, UserEnum.MANAGER)
+  @ApiOperation({
+    summary: 'We can see it exactly in FE',
+  })
   @Patch('/pickShowPriceForFurnitureOrNot')
   public async pickShowPriceForAllFurnitureOrNot(): Promise<void> {
     await this.furnitureService.pickShowPriceForAllFurnitureOrNot();

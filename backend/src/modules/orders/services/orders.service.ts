@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
   NotFoundException,
@@ -6,8 +7,10 @@ import {
 import { In } from 'typeorm';
 
 import { FurnitureID } from '../../../common/types/entity-ids.type';
+import { FurnitureEntity } from '../../../infrastructure/postgres/entities/furniture.entity';
 import { OrderEntity } from '../../../infrastructure/postgres/entities/order.entity';
 import { UserEntity } from '../../../infrastructure/postgres/entities/users.entity';
+import { DeliveryRepository } from '../../../infrastructure/repository/services/delivery.repository';
 import { FurnitureRepository } from '../../../infrastructure/repository/services/furniture.repository';
 import { OrderRepository } from '../../../infrastructure/repository/services/order.repository';
 import { QuantityFurnitureInOrderRepository } from '../../../infrastructure/repository/services/quantity-furniture-in-order.repository';
@@ -17,6 +20,7 @@ import { UserEnum } from '../../user/enum/users.enum';
 import { BaseOrderReqDto } from '../dto/req/base-order.req.dto';
 import { EditOrderReqDto } from '../dto/req/edit-order.req.dto';
 import { ListOrdersQueryDto } from '../dto/req/list-orders.query.dto';
+import { ShippingMethodEnum } from '../enums/shipping-method.enum';
 
 @Injectable()
 export class OrdersService {
@@ -25,6 +29,7 @@ export class OrdersService {
     private readonly quantityFurnitureInOrderRepository: QuantityFurnitureInOrderRepository,
     private readonly furnitureRepository: FurnitureRepository,
     private readonly userRepository: UserRepository,
+    private readonly deliveryRepository: DeliveryRepository,
   ) {}
 
   public async getAllOrders(
@@ -42,12 +47,13 @@ export class OrdersService {
 
   public async createOrder(dto: BaseOrderReqDto): Promise<OrderEntity> {
     let user: UserEntity | null = null;
-    if (dto.phoneNumber) {
+    if (dto.phoneNumber || dto.email) {
       user = await this.userRepository.findOne({
-        where: [{ phoneNumber: dto.phoneNumber }],
+        where: [{ email: dto.email }, { phoneNumber: dto.phoneNumber }],
       });
+
       if (!user) {
-        await this.userRepository.save(
+        user = await this.userRepository.save(
           this.userRepository.create({
             phoneNumber: dto.phoneNumber,
             email: dto?.email,
@@ -61,23 +67,57 @@ export class OrdersService {
       );
     }
 
-    const furnitureList = await Promise.all(
-      dto.furniture.map(async (oneFurniture) => {
-        const furniture = await this.furnitureRepository.findByFurnitureId(
-          oneFurniture.id as FurnitureID,
-        );
-        if (!furniture) {
-          throw new NotFoundException(
-            `Product with id ${furniture.id} not found`,
-          );
-        }
-        return { furniture: furniture, quantity: oneFurniture.quantity };
-      }),
-    );
+    const furnitureList: {
+      furniture: FurnitureEntity;
+      quantity: number;
+    }[] = [];
 
-    const order = await this.orderRepository.save(
-      this.orderRepository.create({ user }),
-    );
+    for (const oneFurniture of dto.furniture) {
+      const furniture = await this.furnitureRepository.findByFurnitureId(
+        oneFurniture.id as FurnitureID,
+      );
+      if (!furniture) {
+        throw new NotFoundException(
+          `Product with id ${furniture.id} not found`,
+        );
+      }
+      furnitureList.push({ furniture, quantity: oneFurniture.quantity });
+    }
+
+    let order: OrderEntity;
+
+    if (dto.shippingMethod === ShippingMethodEnum.SELF_PICKUP) {
+      order = await this.orderRepository.save(
+        this.orderRepository.create({
+          user,
+          shippingMethod: dto?.shippingMethod,
+        }),
+      );
+    } else if (dto.shippingMethod === ShippingMethodEnum.DELIVERY) {
+      order = await this.orderRepository.save(
+        this.orderRepository.create({
+          user,
+          shippingMethod: dto?.shippingMethod,
+        }),
+      );
+
+      await this.deliveryRepository.save(
+        this.deliveryRepository.create({
+          order,
+          address: dto?.address,
+          deliveryPlace: dto?.deliveryPlace,
+          comment: dto?.comment,
+        }),
+      );
+    } else {
+      throw new BadRequestException(
+        `Invalid shipping method: ${dto.shippingMethod}`,
+      );
+    }
+
+    if (!order?.id) {
+      throw new BadRequestException('Order ID is required');
+    }
 
     await this.quantityFurnitureInOrderRepository.save(
       furnitureList.map((oneFurniture) =>
@@ -93,6 +133,7 @@ export class OrdersService {
   }
 
   public async editClientOrder(
+    //todo with type of ShippingMethodEnum
     orderId: number,
     dto: EditOrderReqDto,
   ): Promise<OrderEntity> {
@@ -104,18 +145,9 @@ export class OrdersService {
     if (dto.furniture?.length) {
       const furnitureList = await this.furnitureRepository.find({
         where: { id: In(dto.furniture.map((item) => item.id)) },
-        // This will only return existing furniture
       });
 
       if (furnitureList.length !== dto.furniture.length) {
-        // compare the number of objects found in furnitureList with the number passed to dto.furniture
-
-        // If we do this:
-        // if (furnitureList.length === 0) {
-        //   throw new NotFoundException('Furniture items not found');
-        // }
-        // for example, 3 items are passed, and there are only 2 in the db —
-        // the error will not work, and we will process the order with incorrect data.
         throw new NotFoundException('One or more furniture items not found');
       }
 

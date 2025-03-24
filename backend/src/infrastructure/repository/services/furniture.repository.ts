@@ -119,7 +119,8 @@ export class FurnitureRepository extends Repository<FurnitureEntity> {
       .leftJoinAndSelect('furniture.material', 'material')
       .leftJoinAndSelect('furniture.color', 'color')
       .leftJoinAndSelect('furniture.brand', 'brand')
-      .leftJoinAndSelect('quantityFurniture.order', 'order');
+      .leftJoinAndSelect('quantityFurniture.order', 'order')
+      .leftJoinAndSelect('order.deliveryType', 'deliveryType');
 
     qb.where('furniture.id = :furnitureID', { furnitureID });
     return await qb.getOne();
