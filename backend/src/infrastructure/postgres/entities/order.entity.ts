@@ -27,6 +27,12 @@ export class OrderEntity extends CreateUpdateModel {
   @Column('timestamp', { nullable: true })
   deleted?: Date;
 
+  @Column('text', { nullable: true })
+  orderEmail?: string;
+
+  @Column('text', { nullable: true })
+  orderPhoneNumber: string;
+
   @Column({ type: 'enum', enum: ShippingMethodEnum, nullable: true }) // todo. nullable: true is temporally
   shippingMethod?: ShippingMethodEnum;
 

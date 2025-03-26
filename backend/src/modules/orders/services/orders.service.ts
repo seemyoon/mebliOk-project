@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { In } from 'typeorm';
 
-import { FurnitureID } from '../../../common/types/entity-ids.type';
+import { FurnitureID, UserID } from '../../../common/types/entity-ids.type';
 import { FurnitureEntity } from '../../../infrastructure/postgres/entities/furniture.entity';
 import { OrderEntity } from '../../../infrastructure/postgres/entities/order.entity';
 import { UserEntity } from '../../../infrastructure/postgres/entities/users.entity';
@@ -32,6 +32,13 @@ export class OrdersService {
     private readonly deliveryRepository: DeliveryRepository,
   ) {}
 
+  public async getParticularClientOrders(
+    query: ListOrdersQueryDto,
+    userId: UserID,
+  ): Promise<[OrderEntity[], number]> {
+    return await this.orderRepository.findParticularClientOrders(query, userId);
+  }
+
   public async getAllOrders(
     query: ListOrdersQueryDto,
   ): Promise<[OrderEntity[], number]> {
@@ -47,16 +54,17 @@ export class OrdersService {
 
   public async createOrder(dto: BaseOrderReqDto): Promise<OrderEntity> {
     let user: UserEntity | null = null;
-    if (dto.phoneNumber || dto.email) {
+
+    if (dto.phoneNumber) {
       user = await this.userRepository.findOne({
-        where: [{ email: dto.email }, { phoneNumber: dto.phoneNumber }],
+        where: { phoneNumber: dto.phoneNumber },
       });
 
       if (!user) {
         user = await this.userRepository.save(
           this.userRepository.create({
             phoneNumber: dto.phoneNumber,
-            email: dto?.email,
+            email: dto?.email || null,
             role: UserEnum.UNREGISTERED_CLIENT,
           }),
         );
@@ -86,29 +94,25 @@ export class OrdersService {
 
     let order: OrderEntity;
 
-    if (dto.shippingMethod === ShippingMethodEnum.SELF_PICKUP) {
+    if (dto.shippingMethod) {
       order = await this.orderRepository.save(
         this.orderRepository.create({
           user,
           shippingMethod: dto?.shippingMethod,
+          orderEmail: dto.email || user?.email || null,
+          orderPhoneNumber: dto.phoneNumber || user.phoneNumber,
         }),
       );
-    } else if (dto.shippingMethod === ShippingMethodEnum.DELIVERY) {
-      order = await this.orderRepository.save(
-        this.orderRepository.create({
-          user,
-          shippingMethod: dto?.shippingMethod,
-        }),
-      );
-
-      await this.deliveryRepository.save(
-        this.deliveryRepository.create({
-          order,
-          address: dto?.address,
-          deliveryPlace: dto?.deliveryPlace,
-          comment: dto?.comment,
-        }),
-      );
+      if (dto.shippingMethod === ShippingMethodEnum.DELIVERY) {
+        await this.deliveryRepository.save(
+          this.deliveryRepository.create({
+            order,
+            address: dto?.address,
+            deliveryPlace: dto?.deliveryPlace,
+            comment: dto?.comment,
+          }),
+        );
+      }
     } else {
       throw new BadRequestException(
         `Invalid shipping method: ${dto.shippingMethod}`,

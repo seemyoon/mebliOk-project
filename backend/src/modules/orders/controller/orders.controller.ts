@@ -23,6 +23,7 @@ import { OrderResDto } from '../dto/res/order.res.dto';
 import { OrdersListResDto } from '../dto/res/orders-list.res.dto';
 import { OrdersMapper } from '../services/orders.mapper';
 import { OrdersService } from '../services/orders.service';
+import { UserID } from '../../../common/types/entity-ids.type';
 
 @ApiTags('Orders')
 @Controller('orders')
@@ -62,6 +63,19 @@ export class OrdersController {
   @Post('/createOrder')
   public async createOrder(@Body() dto: BaseOrderReqDto): Promise<OrderResDto> {
     return OrdersMapper.toResDto(await this.ordersService.createOrder(dto));
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(RolesGuard)
+  @ROLES(UserEnum.ADMIN, UserEnum.MANAGER)
+  @Get('/getParticularClientOrders/:userId')
+  public async getParticularClientOrders(
+    @Query() query: ListOrdersQueryDto,
+    @Param('userId') userId: UserID,
+  ): Promise<OrdersListResDto> {
+    const [entities, total] =
+      await this.ordersService.getParticularClientOrders(query, userId);
+    return OrdersMapper.toResDtoList(entities, total, query);
   }
 
   @ApiBearerAuth()

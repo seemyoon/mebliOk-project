@@ -24,6 +24,8 @@ export class OrdersMapper {
       id: order?.id,
       furniture: order.quantityFurniture.map(OrdersMapper.mapOrderFurniture),
       isReady: order.isReady,
+      orderPhoneNumber: order.orderPhoneNumber,
+      orderEmail: order.orderEmail,
       user: order.user ? UserMapper.toResDto(order.user) : null,
       created: order?.createdAt,
       updated: order?.updatedAt,

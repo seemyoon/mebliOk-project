@@ -22,9 +22,10 @@ import { IUserData } from '../../auth/interfaces/user-data.interface';
 import { ROLES } from '../decorators/roles.decorator';
 import { UserEnum } from '../enum/users.enum';
 import { RolesGuard } from '../guard/roles.guard';
+import { ChangeRoleReqDto } from '../models/req/change-role.req.dto';
 import { CreateUserReqUserDto } from '../models/req/create-user.req.dto.';
 import { ListUsersQueryDto } from '../models/req/list-users.query.dto';
-import { UpdateReqUserDto } from '../models/req/update-req-user.dto';
+import { UpdateMeReqUserDto } from '../models/req/update-me-req-user.dto';
 import { UserResDto } from '../models/res/user.res.dto';
 import { UsersListResDto } from '../models/res/users-list.res.dto';
 import { UserMapper } from '../services/user.mapper';
@@ -48,10 +49,12 @@ export class UserController {
   }
 
   @ApiBearerAuth()
+  @UseGuards(RolesGuard)
+  @ROLES(UserEnum.MANAGER, UserEnum.ADMIN)
   @Patch('editMe')
   public async editMe(
     @CurrentUser() userData: IUserData,
-    @Body() dto: UpdateReqUserDto,
+    @Body() dto: UpdateMeReqUserDto,
   ): Promise<UserResDto> {
     return UserMapper.toResDto(await this.userService.editMe(userData, dto));
   }
@@ -87,6 +90,17 @@ export class UserController {
     @UploadedFile() file: Express.Multer.File,
   ): Promise<void> {
     return await this.userService.uploadAvatar(userData, file);
+  }
+
+  @ApiBearerAuth()
+  @UseGuards()
+  @ROLES(UserEnum.ADMIN)
+  @Get('changeRole')
+  public async changeRole(
+    @Param('userId', ParseUUIDPipe) userId: UserID,
+    @Body() dto: ChangeRoleReqDto,
+  ) {
+    return UserMapper.toResDto(await this.userService.changeRole(userId, dto));
   }
 
   @ApiBearerAuth()

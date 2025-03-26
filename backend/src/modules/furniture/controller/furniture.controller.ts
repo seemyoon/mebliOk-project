@@ -250,7 +250,7 @@ export class FurnitureController {
   }
 
   @SkipAuth()
-  @Get(':favFurnitureId') // todo. check favFurniture
+  @Get(':favFurnitureId') // todo. check endpoint favFurniture
   public async getFavouriteFurniture(
     @Param('favFurnitureId', ParseUUIDPipe)
     favFurnitureId: FavouriteFurnitureID,

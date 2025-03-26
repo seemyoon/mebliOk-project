@@ -62,6 +62,7 @@ export class BaseOrderReqDto {
 
   @ApiProperty({ example: 'testuser@gmail.com' })
   @IsString()
+  @IsOptional()
   @Length(0, 300)
   @Matches(/^[^\s@]+@([^\s@.,]+\.)+[^\s@.,]{2,}$/)
   email?: string;

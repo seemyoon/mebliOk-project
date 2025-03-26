@@ -32,14 +32,15 @@ export class AuthService {
   public async signUp(dto: SignUpReqDto): Promise<AuthResDto> {
     let user: UserEntity | null = null;
 
-    if (dto.email) {
-      user = await this.userRepository.findOneBy({ email: dto.email });
-    }
-
-    if (!user && dto.phoneNumber && dto.email) {
-      user = await this.userRepository.findOne({
-        where: [{ email: dto.email }, { phoneNumber: dto.phoneNumber }],
+    if (dto.phoneNumber) {
+      user = await this.userRepository.findOneBy({
+        phoneNumber: dto.phoneNumber,
       });
+      // if (user.email !== dto?.email) {
+      //   user.email = dto.email;
+      //
+      //   await this.userRepository.save(user);
+      // }
     }
 
     if (user) {

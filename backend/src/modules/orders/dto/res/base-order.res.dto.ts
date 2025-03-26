@@ -3,6 +3,8 @@ import { QuantityFurnitureInOrderDto } from '../req/quantity-furniture-in-order.
 
 export class BaseOrderResDto {
   id: number;
+  orderPhoneNumber: string;
+  orderEmail: string;
   furniture: QuantityFurnitureInOrderDto[];
   isReady: boolean;
   user: UserResDto;
