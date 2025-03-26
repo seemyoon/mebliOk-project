@@ -4,6 +4,7 @@ export enum TableNameEnum {
   DELIVERY = 'delivery',
   USERS = 'users',
   FURNITURE = 'furniture',
+  FAVOURITE_FURNITURE = 'favourite_furniture',
   ORDER = 'order',
   QUANTITY_FURNITURE_IN_ORDER = 'quantity_furniture_in_order',
   CATEGORY_FURNITURE = 'category_furniture',

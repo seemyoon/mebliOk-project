@@ -24,6 +24,7 @@ import { CreateUpdateModel } from '../model/create-update.model';
 import { BrandEntity } from './brand.entity';
 import { CategoryFurnitureEntity } from './category-furniture.entity';
 import { ColorEntity } from './color.entity';
+import { FavouriteFurnitureEntity } from './favourite-furniture.entity';
 import { FurnitureStatisticEntity } from './furniture-statistic.entity';
 import { MaterialEntity } from './material.entity';
 import { QuantityFurnitureInOrderEntity } from './quantity-furniture-in-order.entity';
@@ -43,6 +44,9 @@ export class FurnitureEntity extends CreateUpdateModel {
 
   @Column({ type: 'text', nullable: true })
   description?: string;
+
+  @Column('boolean', { default: false })
+  isSale?: boolean;
 
   @Column({ type: 'text', nullable: true })
   body?: string;
@@ -119,6 +123,9 @@ export class FurnitureEntity extends CreateUpdateModel {
   })
   @JoinColumn({ name: 'subcategory_id' })
   subcategory?: SubCategoryFurnitureEntity;
+
+  @OneToOne(() => FavouriteFurnitureEntity, (entity) => entity.furniture)
+  favouriteFurniture?: FavouriteFurnitureEntity;
 
   @OneToMany(() => QuantityFurnitureInOrderEntity, (entity) => entity.furniture)
   quantityFurniture?: FurnitureEntity;

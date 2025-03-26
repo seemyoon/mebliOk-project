@@ -6,6 +6,7 @@ import { TableNameEnum } from '../enums/table-name.enum';
 import { CreateUpdateModel } from '../model/create-update.model';
 import { OrderEntity } from './order.entity';
 import { RefreshTokenEntity } from './refresh-token.entity';
+import { FavouriteFurnitureEntity } from './favourite-furniture.entity';
 
 @Entity(TableNameEnum.USERS)
 export class UserEntity extends CreateUpdateModel {
@@ -38,4 +39,7 @@ export class UserEntity extends CreateUpdateModel {
 
   @OneToMany(() => RefreshTokenEntity, (entity) => entity.user)
   refreshTokens?: RefreshTokenEntity[];
+
+  @OneToMany(() => FavouriteFurnitureEntity, (entity) => entity.user)
+  favouriteFurniture?: FavouriteFurnitureEntity[];
 }

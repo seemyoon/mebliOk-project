@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 
 import { UserEntity } from '../../../infrastructure/postgres/entities/users.entity';
 import { RefreshTokenRepository } from '../../../infrastructure/repository/services/refresh-token.repository';
@@ -32,9 +36,9 @@ export class AuthService {
       user = await this.userRepository.findOneBy({ email: dto.email });
     }
 
-    if (!user && dto.phoneNumber) {
-      user = await this.userRepository.findOneBy({
-        phoneNumber: dto.phoneNumber,
+    if (!user && dto.phoneNumber && dto.email) {
+      user = await this.userRepository.findOne({
+        where: [{ email: dto.email }, { phoneNumber: dto.phoneNumber }],
       });
     }
 

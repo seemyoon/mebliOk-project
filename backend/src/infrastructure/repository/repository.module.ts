@@ -8,6 +8,7 @@ import { CategoryFurnitureRepository } from './services/category-furniture.repos
 import { ColorRepository } from './services/color.repository';
 import { CustomerInfoRepository } from './services/customer-info.repository';
 import { DeliveryRepository } from './services/delivery.repository';
+import { FavouriteFurnitureRepository } from './services/favourite-furniture.repository';
 import { FurnitureRepository } from './services/furniture.repository';
 import { FurnitureStatisticRepository } from './services/furniture-statistic.repository';
 import { IsShowPriceRepository } from './services/is-show-price.repository';
@@ -27,6 +28,7 @@ const repository = [
   RefreshTokenRepository,
   ShippingInfoRepository,
   FurnitureRepository,
+  FavouriteFurnitureRepository,
   OrderRepository,
   CalculateRateFurnitureRepository,
   FurnitureStatisticRepository,

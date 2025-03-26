@@ -1,28 +1,37 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 
 import {
   BrandID,
   CategoryFurnitureID,
   ColorID,
+  FavouriteFurnitureID,
   FurnitureID,
   MaterialID,
   SubCategoryFurnitureID,
 } from '../../../common/types/entity-ids.type';
+import { FavouriteFurnitureEntity } from '../../../infrastructure/postgres/entities/favourite-furniture.entity';
 import { FurnitureEntity } from '../../../infrastructure/postgres/entities/furniture.entity';
 import { BrandRepository } from '../../../infrastructure/repository/services/brand.repository';
 import { CategoryFurnitureRepository } from '../../../infrastructure/repository/services/category-furniture.repository';
 import { ColorRepository } from '../../../infrastructure/repository/services/color.repository';
+import { FavouriteFurnitureRepository } from '../../../infrastructure/repository/services/favourite-furniture.repository';
 import { FurnitureRepository } from '../../../infrastructure/repository/services/furniture.repository';
 import { FurnitureStatisticRepository } from '../../../infrastructure/repository/services/furniture-statistic.repository';
 import { IsShowPriceRepository } from '../../../infrastructure/repository/services/is-show-price.repository';
 import { MaterialRepository } from '../../../infrastructure/repository/services/material.repository';
 import { SizeRepository } from '../../../infrastructure/repository/services/size.repository';
 import { SubCategoryFurnitureRepository } from '../../../infrastructure/repository/services/subcategory-furniture.repository';
+import { IUserData } from '../../auth/interfaces/user-data.interface';
 import { FileTypeEnum } from '../../file-storage/enum/file-type.enum';
 import { FileStorageService } from '../../file-storage/services/file-storage.service';
 import { SellerEnum } from '../../user/enum/seller.enum';
 import { AssignDiscountReqDto } from '../dto/req/assign-discount.req.dto';
 import { CreateFurnitureReqDto } from '../dto/req/create-furniture.req.dto';
+import { ListFavouriteFurnitureQueryDto } from '../dto/req/list-favourite-furniture-query.dto';
 import { ListFurnitureQueryDto } from '../dto/req/list-furniture-query.dto';
 import { UpdateFurnitureReqDto } from '../dto/req/update-furniture.req.dto';
 import { CurrencyEnum } from '../enum/currency.enum';
@@ -40,12 +49,32 @@ export class FurnitureService {
     private readonly sizeRepository: SizeRepository,
     private readonly furnitureStatisticRepository: FurnitureStatisticRepository,
     private readonly isShowPriceRepository: IsShowPriceRepository,
+    private readonly favouriteFurnitureRepository: FavouriteFurnitureRepository,
   ) {}
 
   public async getAllFurniture(
     query: ListFurnitureQueryDto,
   ): Promise<[FurnitureEntity[], number]> {
     return await this.furnitureRepository.findAll(query);
+  }
+
+  public async deleteFavoriteFurniture(
+    favoriteFurnitureId: FavouriteFurnitureID,
+  ): Promise<void> {
+    const favoriteFurniture =
+      await this.favouriteFurnitureRepository.findByFavoriteFurnitureID(
+        favoriteFurnitureId,
+      );
+    if (!favoriteFurniture) throw new NotFoundException('Furniture not found');
+
+    await this.favouriteFurnitureRepository.remove(favoriteFurniture);
+  }
+
+  public async getAllFavouriteFurniture(
+    query: ListFavouriteFurnitureQueryDto,
+    userData: IUserData,
+  ): Promise<[FavouriteFurnitureEntity[], number]> {
+    return await this.favouriteFurnitureRepository.findAll(query, userData);
   }
 
   public async deleteFurniture(furnitureID: FurnitureID): Promise<void> {
@@ -121,6 +150,34 @@ export class FurnitureService {
     await this.furnitureStatisticRepository.save(furnitureStat);
 
     return furniture;
+  }
+
+  public async addFavouriteFurniture(
+    furnitureID: FurnitureID,
+  ): Promise<FavouriteFurnitureEntity> {
+    const furniture =
+      await this.furnitureRepository.findByFurnitureId(furnitureID);
+    if (!furniture) {
+      throw new ConflictException('Furniture not found');
+    }
+    return await this.favouriteFurnitureRepository.save(
+      this.favouriteFurnitureRepository.create({
+        furniture,
+      }),
+    );
+  }
+
+  public async getFavouriteFurniture(
+    favouriteFurnitureId: FavouriteFurnitureID,
+  ): Promise<FavouriteFurnitureEntity> {
+    const favFurniture =
+      await this.favouriteFurnitureRepository.findByFavoriteFurnitureID(
+        favouriteFurnitureId,
+      );
+    if (!favFurniture) {
+      throw new ConflictException('Favourite furniture not found');
+    }
+    return favFurniture;
   }
 
   public async createFurniture(
@@ -322,6 +379,16 @@ export class FurnitureService {
       throw new ConflictException('Furniture not found');
     }
     furniture.in_stock = !furniture.in_stock;
+
+    await this.furnitureRepository.save(furniture);
+  }
+
+  public async activeSale(furnitureId: FurnitureID): Promise<void> {
+    const furniture =
+      await this.furnitureRepository.findByFurnitureId(furnitureId);
+    if (!furniture) throw new ConflictException('Furniture not found');
+
+    furniture.isSale = !furniture.isSale;
 
     await this.furnitureRepository.save(furniture);
   }

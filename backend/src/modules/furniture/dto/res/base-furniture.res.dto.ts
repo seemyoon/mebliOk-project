@@ -17,6 +17,7 @@ export class FurnitureBaseResDto {
   body?: string;
   weight: string;
   in_stock: boolean;
+  isSale: boolean;
   size: SizeResDto;
   category: CategoryFurnitureResDto;
   subcategory: SubCategoryFurnitureResDto;

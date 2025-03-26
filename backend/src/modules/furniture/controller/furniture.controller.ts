@@ -25,19 +25,24 @@ import {
   BrandID,
   CategoryFurnitureID,
   ColorID,
+  FavouriteFurnitureID,
   FurnitureID,
   MaterialID,
   SubCategoryFurnitureID,
 } from '../../../common/types/entity-ids.type';
+import { CurrentUser } from '../../auth/decorators/current-user.decorator';
 import { SkipAuth } from '../../auth/decorators/skip-auth.decorator';
+import { IUserData } from '../../auth/interfaces/user-data.interface';
 import { ROLES } from '../../user/decorators/roles.decorator';
 import { UserEnum } from '../../user/enum/users.enum';
 import { RolesGuard } from '../../user/guard/roles.guard';
 import { AssignDiscountReqDto } from '../dto/req/assign-discount.req.dto';
 import { CreateFurnitureReqDto } from '../dto/req/create-furniture.req.dto';
+import { ListFavouriteFurnitureQueryDto } from '../dto/req/list-favourite-furniture-query.dto';
 import { ListFurnitureQueryDto } from '../dto/req/list-furniture-query.dto';
 import { UpdateFurnitureReqDto } from '../dto/req/update-furniture.req.dto';
 import { FurnitureBaseResDto } from '../dto/res/base-furniture.res.dto';
+import { FurnitureFavouriteResDto } from '../dto/res/furniture-favourite.res.dto';
 import { FurnitureListResDto } from '../dto/res/furniture-list.res.dto';
 import { FurnitureMapper } from '../service/furniture.mapper';
 import { FurnitureService } from '../service/furniture.service';
@@ -55,6 +60,35 @@ export class FurnitureController {
     const [entities, total] =
       await this.furnitureService.getAllFurniture(query);
     return FurnitureMapper.toResDtoList(entities, total, query);
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(RolesGuard)
+  @ROLES(UserEnum.MANAGER, UserEnum.ADMIN, UserEnum.REGISTERED_CLIENT)
+  @Get('getAllFavouriteFurniture')
+  public async getAllFavouriteFurniture(
+    @Query() query: ListFavouriteFurnitureQueryDto,
+    @CurrentUser() userData: IUserData,
+  ) {
+    const [entities, total] =
+      await this.furnitureService.getAllFavouriteFurniture(query, userData);
+    return FurnitureMapper.toResFavouriteFurnitureDtoList(
+      entities,
+      total,
+      query,
+    );
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(RolesGuard)
+  @ROLES(UserEnum.MANAGER, UserEnum.ADMIN, UserEnum.REGISTERED_CLIENT)
+  @Post('addFavouriteFurniture')
+  public async FavouriteFurniture(
+    @Param('furnitureId', ParseUUIDPipe) furnitureId: FurnitureID,
+  ): Promise<FurnitureFavouriteResDto> {
+    return FurnitureMapper.toResOneFavouriteFurnitureDto(
+      await this.furnitureService.addFavouriteFurniture(furnitureId),
+    );
   }
 
   @ApiBearerAuth()
@@ -164,6 +198,16 @@ export class FurnitureController {
   @ApiBearerAuth()
   @UseGuards(RolesGuard)
   @ROLES(UserEnum.ADMIN, UserEnum.MANAGER)
+  @Patch(':furnitureId/activeSale')
+  public async activeSale(
+    @Param('furnitureId', ParseUUIDPipe) furnitureId: FurnitureID,
+  ): Promise<void> {
+    await this.furnitureService.activeSale(furnitureId);
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(RolesGuard)
+  @ROLES(UserEnum.ADMIN, UserEnum.MANAGER)
   @Patch(':furnitureId/assignDiscount')
   public async assignDiscount(
     @Param('furnitureId', ParseUUIDPipe) furnitureId: FurnitureID,
@@ -182,6 +226,19 @@ export class FurnitureController {
     return await this.furnitureService.deleteFurniture(furnitureId);
   }
 
+  @ApiBearerAuth()
+  @UseGuards(RolesGuard)
+  @ROLES(UserEnum.REGISTERED_CLIENT, UserEnum.ADMIN, UserEnum.MANAGER)
+  @Delete(':favouriteFurnitureId')
+  public async deleteFavouriteFurniture(
+    @Param('favouriteFurnitureId', ParseUUIDPipe)
+    favouriteFurnitureId: FavouriteFurnitureID,
+  ): Promise<void> {
+    return await this.furnitureService.deleteFavoriteFurniture(
+      favouriteFurnitureId,
+    );
+  }
+
   @SkipAuth()
   @Get(':furnitureId')
   public async getFurniture(
@@ -189,6 +246,17 @@ export class FurnitureController {
   ): Promise<FurnitureBaseResDto> {
     return FurnitureMapper.toResDto(
       await this.furnitureService.getFurniture(furnitureId),
+    );
+  }
+
+  @SkipAuth()
+  @Get(':favFurnitureId') // todo. check favFurniture
+  public async getFavouriteFurniture(
+    @Param('favFurnitureId', ParseUUIDPipe)
+    favFurnitureId: FavouriteFurnitureID,
+  ): Promise<FurnitureFavouriteResDto> {
+    return FurnitureMapper.toResOneFavouriteFurnitureDto(
+      await this.furnitureService.getFavouriteFurniture(favFurnitureId),
     );
   }
 }

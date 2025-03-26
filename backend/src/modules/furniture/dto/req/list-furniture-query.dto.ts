@@ -1,5 +1,11 @@
 import { ApiPropertyOptional, PickType } from '@nestjs/swagger';
-import { IsEnum, IsOptional, IsString, IsUUID } from 'class-validator';
+import {
+  IsBoolean,
+  IsEnum,
+  IsOptional,
+  IsString,
+  IsUUID,
+} from 'class-validator';
 
 import { PaginationQueryDto } from '../../../../common/model/pagination.query.dto';
 import { BrandID } from '../../../../common/types/entity-ids.type';
@@ -33,6 +39,11 @@ export class ListFurnitureQueryDto extends PickType(PaginationQueryDto, [
 
   @ApiPropertyOptional({ type: Boolean })
   @IsOptional()
-  @IsString()
+  @IsBoolean()
+  isSale?: boolean;
+
+  @ApiPropertyOptional({ type: Boolean })
+  @IsOptional()
+  @IsBoolean()
   inStock?: boolean;
 }
