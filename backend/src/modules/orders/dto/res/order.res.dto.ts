@@ -6,6 +6,8 @@ export class OrderResDto extends PickType(BaseOrderResDto, [
   'id',
   'orderPhoneNumber',
   'orderEmail',
+  'deliveryType',
+  'shippingMethod',
   'furniture',
   'user',
   'isReady',

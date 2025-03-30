@@ -1,9 +1,13 @@
 import {
   BadRequestException,
+  ConflictException,
   Injectable,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
+import { Request } from 'express';
 
+import { UserID } from '../../../common/types/entity-ids.type';
 import { UserEntity } from '../../../infrastructure/postgres/entities/users.entity';
 import { RefreshTokenRepository } from '../../../infrastructure/repository/services/refresh-token.repository';
 import { UserRepository } from '../../../infrastructure/repository/services/user.repository';
@@ -11,6 +15,7 @@ import { UserEnum } from '../../user/enum/users.enum';
 import { UserMapper } from '../../user/services/user.mapper';
 import { ITokenPair } from '../interfaces/token-pair.interface';
 import { IUserData } from '../interfaces/user-data.interface';
+import { ChangePasswordReqDto } from '../models/dto/req/change-password.req.dto';
 import { SignInReqDto } from '../models/dto/req/sign-in.req.dto';
 import { SignUpReqDto } from '../models/dto/req/sign-up.req.dto';
 import { AuthResDto } from '../models/dto/res/auth.res.dto';
@@ -22,7 +27,7 @@ import { TokenService } from './token.service';
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly authCacheService: AccessTokenService,
+    private readonly accessTokenService: AccessTokenService,
     private readonly tokenService: TokenService,
     private readonly userRepository: UserRepository,
     private readonly refreshTokenRepository: RefreshTokenRepository,
@@ -32,15 +37,19 @@ export class AuthService {
   public async signUp(dto: SignUpReqDto): Promise<AuthResDto> {
     let user: UserEntity | null = null;
 
+    const userEmail = await this.userRepository.findOneBy({
+      email: dto.email,
+    });
+
+    if (userEmail) {
+      throw new BadRequestException(
+        'User with this email or phone number already exists',
+      );
+    }
     if (dto.phoneNumber) {
       user = await this.userRepository.findOneBy({
         phoneNumber: dto.phoneNumber,
       });
-      // if (user.email !== dto?.email) {
-      //   user.email = dto.email;
-      //
-      //   await this.userRepository.save(user);
-      // }
     }
 
     if (user) {
@@ -72,15 +81,21 @@ export class AuthService {
 
     const tokens = await this.tokenService.generateTokens({
       userId: user.id,
+      deviceId: dto.deviceId,
     });
 
     await this.userRepository.save(user);
 
     await Promise.all([
-      this.authCacheService.saveToken(tokens.accessToken, user.id),
+      this.accessTokenService.saveToken(
+        tokens.accessToken,
+        user.id,
+        dto.deviceId,
+      ),
       this.refreshTokenRepository.save(
         this.refreshTokenRepository.create({
           user_id: user.id,
+          deviceId: dto.deviceId,
           refreshToken: tokens.refreshToken,
         }),
       ),
@@ -110,13 +125,19 @@ export class AuthService {
 
     const tokens = await this.tokenService.generateTokens({
       userId: user.id,
+      deviceId: dto.deviceId,
     });
 
     await Promise.all([
-      this.authCacheService.saveToken(tokens.accessToken, user.id),
+      this.accessTokenService.saveToken(
+        tokens.accessToken,
+        user.id,
+        dto.deviceId,
+      ),
       this.refreshTokenRepository.save(
         this.refreshTokenRepository.create({
           user_id: user.id,
+          deviceId: dto.deviceId,
           refreshToken: tokens.refreshToken,
         }),
       ),
@@ -128,25 +149,32 @@ export class AuthService {
 
   public async logOut(userData: IUserData): Promise<void> {
     await Promise.all([
-      this.authCacheService.deleteToken(userData.userId),
+      this.accessTokenService.deleteToken(userData.userId, userData.deviceID),
       this.refreshTokenRepository.delete({
         user_id: userData.userId,
+        deviceId: userData.deviceID,
       }),
     ]);
   }
 
   public async refreshToken(userData: IUserData): Promise<TokenPairResDto> {
     await Promise.all([
-      this.authCacheService.deleteToken(userData.userId),
+      this.accessTokenService.deleteToken(userData.userId, userData.deviceID),
       this.refreshTokenRepository.delete({
         user_id: userData.userId,
+        deviceId: userData.deviceID,
       }),
     ]);
     const tokens = await this.tokenService.generateTokens({
       userId: userData.userId,
+      deviceId: userData.deviceID,
     });
     await Promise.all([
-      this.authCacheService.saveToken(tokens.accessToken, userData.userId),
+      this.accessTokenService.saveToken(
+        tokens.accessToken,
+        userData.userId,
+        userData.deviceID,
+      ),
       this.refreshTokenRepository.save(
         this.refreshTokenRepository.create({
           user_id: userData.userId,
@@ -167,17 +195,100 @@ export class AuthService {
     return user;
   }
 
+  public async changePassword(
+    userData: IUserData,
+    dto: ChangePasswordReqDto,
+  ): Promise<void> {
+    const user = await this.userRepository.findOne({
+      where: { id: userData.userId },
+      select: ['id', 'password'],
+    });
+
+    await this.checkOldPassword(dto.oldPassword, user.password);
+
+    const isPrevious = await this.passwordService.comparePassword(
+      dto.password,
+      user.password,
+    ); // todo ability checking for latest passwords with crons
+
+    if (isPrevious)
+      throw new UnauthorizedException(
+        'You can not specify your latest password',
+      );
+
+    const hashedPassword = await this.passwordService.hashPassword(
+      dto.password,
+      10,
+    );
+
+    await this.returnChangedPasswordOrThrow(user.id, hashedPassword);
+
+    await this.logOut(userData);
+
+    const tokens = await this.tokenService.generateTokens({
+      userId: user.id,
+      deviceId: userData.deviceID,
+    });
+    await Promise.all([
+      this.accessTokenService.saveToken(
+        tokens.accessToken,
+        user.id,
+        userData.deviceID,
+      ),
+      this.refreshTokenRepository.save(
+        this.refreshTokenRepository.create({
+          user_id: user.id,
+          deviceId: userData.deviceID,
+          refreshToken: tokens.refreshToken,
+        }),
+      ),
+    ]);
+  }
+
+  public async googleCallback(request: Request): Promise<void> {
+    const deviceId = request.query.deviceId as string;
+    if (!deviceId) throw new BadRequestException('Device Id is required');
+
+    await this.signInViaGoogle(request.user as UserEntity); // todo. avoid it. when do frontend
+    // const { accessToken, refreshToken } = await this.signInViaGoogle(request);
+  }
+
+  private async returnChangedPasswordOrThrow(
+    userId: UserID,
+    password: string,
+  ): Promise<UserEntity> {
+    const user = await this.userRepository.findUser(userId);
+    if (!user) throw new NotFoundException('user not found');
+    if (password) user.password = password;
+
+    await this.userRepository.save(user);
+    return user;
+  }
+
+  private async checkOldPassword(
+    oldPasswordDto: string,
+    passwordDB: string,
+  ): Promise<void> {
+    const isPasswordValid = await this.passwordService.comparePassword(
+      oldPasswordDto,
+      passwordDB,
+    );
+    if (!isPasswordValid) throw new ConflictException('Password is incorrect');
+  }
+
   private async signInViaGoogle(user: UserEntity): Promise<ITokenPair> {
     const tokens = await this.tokenService.generateTokens({
       userId: user.id,
+      deviceId: 'asd', // todo. hardcore
     });
 
     await Promise.all([
-      this.authCacheService.saveToken(tokens.accessToken, user.id),
+      this.accessTokenService.saveToken(tokens.accessToken, user.id, 'asd'), // todo. hardcore
       this.refreshTokenRepository.save(
         this.refreshTokenRepository.create({
           user_id: user.id,
           refreshToken: tokens.refreshToken,
+          deviceId: 'asd', // todo. hardcore
         }),
       ),
     ]);

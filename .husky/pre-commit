@@ -1,3 +1,4 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 npx lint-staged
+# to do fix, because it doesn't work

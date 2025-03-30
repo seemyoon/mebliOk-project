@@ -40,6 +40,7 @@ export class OrderRepository extends Repository<OrderEntity> {
     const qb = this.createQueryBuilder('order');
     qb.leftJoinAndSelect('order.user', 'user')
       .leftJoinAndSelect('order.quantityFurniture', 'quantityFurniture')
+      .leftJoinAndSelect('order.deliveryType', 'deliveryType')
       .leftJoinAndSelect('quantityFurniture.furniture', 'furniture');
 
     if (query.ready !== undefined) {
@@ -59,6 +60,7 @@ export class OrderRepository extends Repository<OrderEntity> {
   ): Promise<[OrderEntity[], number]> {
     const qb = this.createQueryBuilder('order');
     qb.leftJoinAndSelect('order.quantityFurniture', 'quantityFurniture')
+      .leftJoinAndSelect('order.deliveryType', 'deliveryType')
       .leftJoinAndSelect('quantityFurniture.furniture', 'furniture')
       .where('order.user_id = :userId', { userId: userData.userId })
       .take(query.limit)
@@ -70,6 +72,7 @@ export class OrderRepository extends Repository<OrderEntity> {
   public async findByOrderId(orderID: number): Promise<OrderEntity> {
     const qb = this.createQueryBuilder('order');
     qb.leftJoinAndSelect('order.quantityFurniture', 'quantityFurniture')
+      .leftJoinAndSelect('order.deliveryType', 'deliveryType')
       .leftJoinAndSelect('quantityFurniture.furniture', 'furniture')
       .leftJoinAndSelect('order.user', 'user');
 
@@ -84,6 +87,7 @@ export class OrderRepository extends Repository<OrderEntity> {
     const qb = this.createQueryBuilder('order');
     qb.leftJoinAndSelect('order.quantityFurniture', 'quantityFurniture')
       .leftJoinAndSelect('quantityFurniture.furniture', 'furniture')
+      .leftJoinAndSelect('order.deliveryType', 'deliveryType')
       .leftJoinAndSelect('order.user', 'user');
 
     const order = await this.findByOrderId(orderID);

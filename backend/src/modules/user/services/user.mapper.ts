@@ -29,6 +29,7 @@ export class UserMapper {
   public static toIUserData(user: UserEntity): IUserData {
     return {
       userId: user.id,
+      deviceID: user.id,
       email: user.email,
       role: user.role,
     };

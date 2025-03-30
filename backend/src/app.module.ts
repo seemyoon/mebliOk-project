@@ -19,6 +19,7 @@ import { ExtraInfoModule } from './modules/extra-info/extra-info.module';
 import { FurnitureModule } from './modules/furniture/furniture.module';
 import { HealthModule } from './modules/health/health.module';
 import { LoggerModule } from './modules/logger/logger.module';
+import { MailModule } from './modules/mail/mail.module';
 import { MaterialModule } from './modules/material/material.module';
 import { OrdersModule } from './modules/orders/orders.module';
 import { StatisticModule } from './modules/statistic/statistic.module';
@@ -35,6 +36,7 @@ import { UserModule } from './modules/user/user.module';
     FurnitureModule,
     PostgresModule,
     ColorModule,
+    MailModule,
     MaterialModule,
     OrdersModule,
     BrandModule,

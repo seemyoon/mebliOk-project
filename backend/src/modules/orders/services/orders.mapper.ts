@@ -22,8 +22,10 @@ export class OrdersMapper {
   public static toResDto(order: OrderEntity): OrderResDto {
     return {
       id: order?.id,
+      shippingMethod: order?.shippingMethod,
       furniture: order.quantityFurniture.map(OrdersMapper.mapOrderFurniture),
       isReady: order.isReady,
+      deliveryType: order?.deliveryType,
       orderPhoneNumber: order.orderPhoneNumber,
       orderEmail: order.orderEmail,
       user: order.user ? UserMapper.toResDto(order.user) : null,

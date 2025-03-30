@@ -7,6 +7,7 @@ export type Config = {
   aws: AWSConfig;
   jwt: JwtConfig;
   googleAuth: GoogleAuthConfig;
+  mail: MailConfig;
 };
 
 export type AppConfig = {
@@ -47,4 +48,9 @@ export type GoogleAuthConfig = {
   google_client_id: string;
   google_client_secret: string;
   callback_url: string;
+};
+
+export type MailConfig = {
+  email: string;
+  password: string;
 };
