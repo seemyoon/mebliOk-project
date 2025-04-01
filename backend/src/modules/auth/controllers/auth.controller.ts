@@ -63,7 +63,15 @@ export class AuthController {
     await this.authService.changePassword(userData, dto);
   }
 
-  // todo. forgotPassword
+  @SkipAuth()
+  @ApiBearerAuth()
+  @Post('forgotPassword')
+  public async forgotPasswordSendEmail(
+    @CurrentUser() userData: IUserData,
+    @Body() dto: ForgotPasswordReqDto,
+  ): Promise<void> {
+    await this.authService.forgotPasswordSendEmail(userData, dto);
+  }
 
   @SkipAuth()
   @UseGuards(GoogleAuthGuard)
