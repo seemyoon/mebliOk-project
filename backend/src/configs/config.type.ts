@@ -8,6 +8,8 @@ export type Config = {
   jwt: JwtConfig;
   googleAuth: GoogleAuthConfig;
   mail: MailConfig;
+  actionToken: ActionTokenConfig;
+  appFrontUrl: AppFrontUrl;
 };
 
 export type AppConfig = {
@@ -42,6 +44,15 @@ export type JwtConfig = {
   accessExpireIn: number;
   refreshSecret: string;
   refreshExpireIn: number;
+};
+
+export type ActionTokenConfig = {
+  actionTokenSecret: string;
+  actionTokenExpireIn: number;
+};
+
+export type AppFrontUrl = {
+  appFrontUrl: string;
 };
 
 export type GoogleAuthConfig = {

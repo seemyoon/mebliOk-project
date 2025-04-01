@@ -1,0 +1,4 @@
+export enum ActionTokenTypeEnum {
+  FORGOT_PASSWORD = 'FORGOT_PASSWORD',
+  REGULAR_ACCESS = 'REGULAR_ACCESS',
+}

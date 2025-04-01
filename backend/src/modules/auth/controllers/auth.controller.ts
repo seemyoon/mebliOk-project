@@ -2,6 +2,9 @@ import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 
+import { ROLES } from '../../user/decorators/roles.decorator';
+import { UserEnum } from '../../user/enum/users.enum';
+import { RolesGuard } from '../../user/guard/roles.guard';
 import { CurrentUser } from '../decorators/current-user.decorator';
 import { SkipAuth } from '../decorators/skip-auth.decorator';
 import { GoogleAuthGuard } from '../guards/google-auth.guard';
@@ -13,9 +16,7 @@ import { SignUpReqDto } from '../models/dto/req/sign-up.req.dto';
 import { AuthResDto } from '../models/dto/res/auth.res.dto';
 import { TokenPairResDto } from '../models/dto/res/token-pair.res.dto';
 import { AuthService } from '../services/auth.service';
-import { ROLES } from '../../user/decorators/roles.decorator';
-import { UserEnum } from '../../user/enum/users.enum';
-import { RolesGuard } from '../../user/guard/roles.guard';
+import { ResetPasswordSendReqDto } from '../models/dto/req/reset-password-send.req.dto';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -64,13 +65,11 @@ export class AuthController {
   }
 
   @SkipAuth()
-  @ApiBearerAuth()
-  @Post('forgotPassword')
+  @Post('forgotPasswordSendEmail')
   public async forgotPasswordSendEmail(
-    @CurrentUser() userData: IUserData,
-    @Body() dto: ForgotPasswordReqDtoasdasdas,
+    @Body() dto: ResetPasswordSendReqDto,
   ): Promise<void> {
-    await this.authService.forgotPasswordSendmail(userData, dto);
+    await this.authService.forgotPasswordSendEmail(dto);
   }
 
   @SkipAuth()

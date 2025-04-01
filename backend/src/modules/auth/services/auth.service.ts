@@ -5,17 +5,21 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { Request } from 'express';
 
 import { UserID } from '../../../common/types/entity-ids.type';
+import { Config, MailConfig } from '../../../configs/config.type';
 import { UserEntity } from '../../../infrastructure/postgres/entities/users.entity';
 import { RefreshTokenRepository } from '../../../infrastructure/repository/services/refresh-token.repository';
 import { UserRepository } from '../../../infrastructure/repository/services/user.repository';
+import { MailService } from '../../mail/service/mail.service';
 import { UserEnum } from '../../user/enum/users.enum';
 import { UserMapper } from '../../user/services/user.mapper';
 import { ITokenPair } from '../interfaces/token-pair.interface';
 import { IUserData } from '../interfaces/user-data.interface';
 import { ChangePasswordReqDto } from '../models/dto/req/change-password.req.dto';
+import { ResetPasswordSendReqDto } from '../models/dto/req/reset-password-send.req.dto';
 import { SignInReqDto } from '../models/dto/req/sign-in.req.dto';
 import { SignUpReqDto } from '../models/dto/req/sign-up.req.dto';
 import { AuthResDto } from '../models/dto/res/auth.res.dto';
@@ -23,16 +27,23 @@ import { TokenPairResDto } from '../models/dto/res/token-pair.res.dto';
 import { AccessTokenService } from './access-token.service';
 import { PasswordService } from './password.service';
 import { TokenService } from './token.service';
+import { EmailTypeEnum } from '../../mail/enum/email.enum';
 
 @Injectable()
 export class AuthService {
+  private readonly mailConfig: MailConfig;
+
   constructor(
     private readonly accessTokenService: AccessTokenService,
     private readonly tokenService: TokenService,
     private readonly userRepository: UserRepository,
     private readonly refreshTokenRepository: RefreshTokenRepository,
     private readonly passwordService: PasswordService,
-  ) {}
+    private readonly mailService: MailService,
+    private readonly configService: ConfigService<Config>,
+  ) {
+    this.mailConfig = configService.get<MailConfig>('mail');
+  }
 
   public async signUp(dto: SignUpReqDto): Promise<AuthResDto> {
     let user: UserEntity | null = null;
@@ -243,6 +254,32 @@ export class AuthService {
         }),
       ),
     ]);
+  }
+
+  public async forgotPasswordSendEmail(
+    dto: ResetPasswordSendReqDto,
+  ): Promise<void> {
+    const user = await this.userRepository.findOne({
+      where: { email: dto.email },
+    });
+    if (!user) throw new NotFoundException('User not found');
+
+    const token = await this.tokenService.generateActionTokens({
+      userId: user.id,
+      deviceId: dto.deviceId,
+    });
+
+    await this.accessTokenService.saveToken(token, user.id, dto.deviceId);
+
+    await this.mailService.sendEmail(
+      this.mailConfig.email,
+      EmailTypeEnum.FORGOT_PASSWORD,
+      {
+        name: user.name,
+        email: user.email,
+        actionToken: token,
+      },
+    );
   }
 
   public async googleCallback(request: Request): Promise<void> {

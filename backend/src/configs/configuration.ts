@@ -29,9 +29,18 @@ export default (): Config => ({
     ACL: process.env.AWS_S3_ACL as ObjectCannedACL,
     endpoint: process.env.AWS_S3_ENDPOINT,
   },
+  appFrontUrl: {
+    appFrontUrl: process.env.APP_FRONT_URL,
+  },
   mail: {
     email: process.env.SMTP_EMAIL,
     password: process.env.SMTP_PASSWORD,
+  },
+  actionToken: {
+    actionTokenSecret: process.env.ACTION_FORGOT_PASSWORD_SECRET,
+    actionTokenExpireIn: parseInt(
+      process.env.ACTION_FORGOT_PASSWORD_EXPIRATION,
+    ),
   },
   jwt: {
     accessSecret: process.env.ACCESS_SECRET,

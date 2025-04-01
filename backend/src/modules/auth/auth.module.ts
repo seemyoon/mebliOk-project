@@ -4,6 +4,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 
 import { RedisModule } from '../../infrastructure/redis/redis.module';
+import { MailModule } from '../mail/mail.module';
 import { AuthController } from './controllers/auth.controller';
 import { JwtAccessGuard } from './guards/jwt.access.guard';
 import { JwtRefreshGuard } from './guards/jwt-refresh.guard';
@@ -14,7 +15,7 @@ import { TokenService } from './services/token.service';
 import { GoogleStrategy } from './strategies/google.strategy';
 
 @Module({
-  imports: [RedisModule, JwtModule, PassportModule],
+  imports: [RedisModule, JwtModule, PassportModule, MailModule],
   controllers: [AuthController],
   providers: [
     {

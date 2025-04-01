@@ -3,12 +3,7 @@
   "version": "1.0.0",
   "description": "Furniture web application",
   "scripts": {
-    "prepare": "husky",
     "docker:up": "docker compose -f docker-compose.dev.yml up --build",
     "docker:down": "docker compose -f docker-compose.dev.yml down"
-  },
-  "devDependencies": {
-    "husky": "^9.1.7",
-    "lint-staged": "^15.4.3"
   }
 }

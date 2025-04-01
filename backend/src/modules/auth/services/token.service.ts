@@ -2,7 +2,11 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 
-import { Config, JwtConfig } from '../../../configs/config.type';
+import {
+  ActionTokenConfig,
+  Config,
+  JwtConfig,
+} from '../../../configs/config.type';
 import { JwtPayload } from '../interfaces/jwt-payload.interface';
 import { ITokenPair } from '../interfaces/token-pair.interface';
 import { TokenType } from '../models/enums/token-type.enum';
@@ -10,12 +14,22 @@ import { TokenType } from '../models/enums/token-type.enum';
 @Injectable()
 export class TokenService {
   private readonly jwtConfig: JwtConfig;
+  private readonly actionTokenConfig: ActionTokenConfig;
 
   constructor(
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService<Config>,
   ) {
     this.jwtConfig = configService.get<JwtConfig>('jwt');
+    this.actionTokenConfig =
+      configService.get<ActionTokenConfig>('actionToken');
+  }
+
+  public async generateActionTokens(payload: JwtPayload): Promise<string> {
+    return await this.jwtService.signAsync(payload, {
+      secret: this.actionTokenConfig.actionTokenSecret,
+      expiresIn: this.actionTokenConfig.actionTokenExpireIn,
+    });
   }
 
   public async generateTokens(payload: JwtPayload): Promise<ITokenPair> {
