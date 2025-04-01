@@ -68,7 +68,7 @@ export class AuthController {
   @Post('forgotPassword')
   public async forgotPasswordSendEmail(
     @CurrentUser() userData: IUserData,
-    @Body() dto: ForgotPasswordReqDto,
+    @Body() dto: ForgotPasswordReqDtoasdasdas,
   ): Promise<void> {
     await this.authService.forgotPasswordSendmail(userData, dto);
   }
