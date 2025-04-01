@@ -70,7 +70,7 @@ export class AuthController {
     @CurrentUser() userData: IUserData,
     @Body() dto: ForgotPasswordReqDto,
   ): Promise<void> {
-    await this.authService.forgotPasswordSendфывmail(userData, dto);
+    await this.authService.forgotPasswordSendmail(userData, dto);
   }
 
   @SkipAuth()
