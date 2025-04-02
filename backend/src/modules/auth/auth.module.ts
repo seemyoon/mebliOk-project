@@ -13,22 +13,28 @@ import { AuthService } from './services/auth.service';
 import { PasswordService } from './services/password.service';
 import { TokenService } from './services/token.service';
 import { GoogleStrategy } from './strategies/google.strategy';
+import { JwtAccessStrategy } from './strategies/jwt-access.strategy';
+import { JwtRefreshStrategy } from './strategies/jwt-refresh.strategy';
+
+const AppGuardProvider = {
+  provide: APP_GUARD,
+  useClass: JwtAccessGuard,
+};
+
+const strategies = [GoogleStrategy, JwtAccessStrategy, JwtRefreshStrategy];
 
 @Module({
   imports: [RedisModule, JwtModule, PassportModule, MailModule],
   controllers: [AuthController],
   providers: [
-    {
-      provide: APP_GUARD,
-      useClass: JwtAccessGuard,
-    },
-    JwtRefreshGuard,
     AuthService,
-    GoogleStrategy,
-    AccessTokenService,
     TokenService,
+    JwtRefreshGuard,
     PasswordService,
+    AccessTokenService,
+    AppGuardProvider,
+    ...strategies,
   ],
-  exports: [],
+  exports: [PassportModule],
 })
 export class AuthModule {}

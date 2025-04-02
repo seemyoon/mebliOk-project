@@ -26,12 +26,12 @@ export class UserMapper {
     return { data: data.map(this.toResDto), total, ...query };
   }
 
-  public static toIUserData(user: UserEntity): IUserData {
+  public static toIUserData(user: UserEntity, deviceID: string): IUserData {
     return {
       userId: user.id,
-      deviceID: user.id,
       email: user.email,
       role: user.role,
+      deviceID,
     };
   }
 }

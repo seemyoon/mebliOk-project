@@ -1,60 +1,22 @@
-import {
-  CanActivate,
-  ExecutionContext,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { IsNull } from 'typeorm';
+import { AuthGuard } from '@nestjs/passport';
 
-import { UserRepository } from '../../../infrastructure/repository/services/user.repository';
-import { UserMapper } from '../../user/services/user.mapper';
 import { SKIP_AUTH } from '../decorators/skip-auth.decorator';
-import { TokenType } from '../models/enums/token-type.enum';
-import { AccessTokenService } from '../services/access-token.service';
-import { TokenService } from '../services/token.service';
 
 @Injectable()
-export class JwtAccessGuard implements CanActivate {
-  constructor(
-    private readonly reflector: Reflector,
-    private readonly tokenService: TokenService,
-    private readonly authCacheService: AccessTokenService,
-    private readonly userRepository: UserRepository,
-  ) {}
+export class JwtAccessGuard extends AuthGuard('jwt-access') {
+  constructor(private readonly reflector: Reflector) {
+    super();
+  }
 
-  async canActivate(context: ExecutionContext): Promise<boolean> {
+  canActivate(context: ExecutionContext) {
     const skipAuth = this.reflector.getAllAndOverride<boolean>(SKIP_AUTH, [
       context.getHandler(),
       context.getClass(),
     ]);
     if (skipAuth) return true;
-    const req = context.switchToHttp().getRequest();
-    const accessToken = req.get('Authorization')?.split('Bearer ')[1];
 
-    if (!accessToken) throw new UnauthorizedException();
-
-    const payload = await this.tokenService.verifyAuthTokens(
-      accessToken,
-      TokenType.ACCESS,
-    );
-
-    if (!payload) throw new UnauthorizedException();
-
-    const isAccessTokenExist = await this.authCacheService.isAccessTokenExist(
-      payload.userId,
-      payload.deviceId,
-      accessToken,
-    );
-    if (!isAccessTokenExist) throw new UnauthorizedException();
-
-    const user = await this.userRepository.findOneBy({
-      id: payload.userId,
-      deleted: IsNull(),
-    });
-    if (!user) throw new UnauthorizedException();
-
-    req.res.locals.user = UserMapper.toIUserData(user);
-    return true;
+    return super.canActivate(context);
   }
 }

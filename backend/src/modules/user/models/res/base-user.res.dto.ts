@@ -15,4 +15,5 @@ export class BaseUserResDto {
   created: Date;
   avatar?: string;
   updated?: Date;
+  deviceId: string;
 }

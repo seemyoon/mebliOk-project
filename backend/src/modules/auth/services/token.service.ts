@@ -44,10 +44,7 @@ export class TokenService {
     return { accessToken, refreshToken };
   }
 
-  public async verifyAuthTokens(
-    token: string,
-    type: TokenType,
-  ): Promise<JwtPayload> {
+  public async validate(token: string, type: TokenType): Promise<JwtPayload> {
     try {
       return await this.jwtService.verifyAsync(token, {
         secret: this.getSecret(type),

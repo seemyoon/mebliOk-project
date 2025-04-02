@@ -169,6 +169,8 @@ export class AuthService {
   }
 
   public async refreshToken(userData: IUserData): Promise<TokenPairResDto> {
+    if (!userData) throw new NotFoundException('user not found');
+
     await Promise.all([
       this.accessTokenService.deleteToken(userData.userId, userData.deviceID),
       this.refreshTokenRepository.delete({

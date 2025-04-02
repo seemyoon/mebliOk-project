@@ -11,12 +11,12 @@ import { GoogleAuthGuard } from '../guards/google-auth.guard';
 import { JwtRefreshGuard } from '../guards/jwt-refresh.guard';
 import { IUserData } from '../interfaces/user-data.interface';
 import { ChangePasswordReqDto } from '../models/dto/req/change-password.req.dto';
+import { ResetPasswordSendReqDto } from '../models/dto/req/reset-password-send.req.dto';
 import { SignInReqDto } from '../models/dto/req/sign-in.req.dto';
 import { SignUpReqDto } from '../models/dto/req/sign-up.req.dto';
 import { AuthResDto } from '../models/dto/res/auth.res.dto';
 import { TokenPairResDto } from '../models/dto/res/token-pair.res.dto';
 import { AuthService } from '../services/auth.service';
-import { ResetPasswordSendReqDto } from '../models/dto/req/reset-password-send.req.dto';
 
 @ApiTags('Auth')
 @Controller('auth')
