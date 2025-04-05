@@ -24,7 +24,12 @@ const AppGuardProvider = {
 const strategies = [GoogleStrategy, JwtAccessStrategy, JwtRefreshStrategy];
 
 @Module({
-  imports: [RedisModule, JwtModule, PassportModule, MailModule],
+  imports: [
+    RedisModule,
+    JwtModule,
+    PassportModule.register({ defaultStrategy: 'jwt-access' }),
+    MailModule,
+  ],
   controllers: [AuthController],
   providers: [
     AuthService,

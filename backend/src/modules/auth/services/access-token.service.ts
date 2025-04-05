@@ -24,7 +24,7 @@ export class AccessTokenService {
 
   public async saveToken(
     token: string,
-    userId: UserID,
+    userId: string,
     deviceId: string,
   ): Promise<void> {
     const key = `ACCESS_TOKEN:${userId}:${deviceId}`;
@@ -47,7 +47,7 @@ export class AccessTokenService {
   }
 
   public async isAccessTokenExist(
-    userId: UserID,
+    userId: string,
     deviceId: string,
     token: string,
   ): Promise<any> {

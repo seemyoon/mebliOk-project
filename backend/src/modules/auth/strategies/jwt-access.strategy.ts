@@ -45,7 +45,7 @@ export class JwtAccessStrategy extends PassportStrategy(
     );
 
     if (!isValid) throw new UnauthorizedException('invalid token');
-
+    console.log(payload.userId);
     const isAccessTokenExist = await this.accessTokenService.isAccessTokenExist(
       payload.userId,
       payload.deviceId,

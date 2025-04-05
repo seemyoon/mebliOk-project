@@ -17,7 +17,7 @@ services:
   mebliok-db:
     image: postgres:16.1
     ports:
-      - '${POSTGRES_PORT:-5432}:5432'
+      - '${POSTGRES_PORT:-5433}:5432'
     env_file:
       - ./backend/environments/dev.env
     volumes:

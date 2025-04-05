@@ -1,8 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 
 import { CategoryFurnitureID } from '../../../common/types/entity-ids.type';
-// eslint-disable-next-line max-len
 import { ListCategoriesFurnitureQueryDto } from '../../../modules/categories/dto/req/list-categories-furniture.query.dto';
 import { CategoryFurnitureEntity } from '../../postgres/entities/category-furniture.entity';
 
@@ -11,6 +10,7 @@ export class CategoryFurnitureRepository extends Repository<CategoryFurnitureEnt
   constructor(private readonly dataSource: DataSource) {
     super(CategoryFurnitureEntity, dataSource.manager);
   }
+
   public async findAll(
     query: ListCategoriesFurnitureQueryDto,
   ): Promise<[CategoryFurnitureEntity[], number]> {
@@ -38,6 +38,7 @@ export class CategoryFurnitureRepository extends Repository<CategoryFurnitureEnt
     qb.leftJoinAndSelect('category.furniture', 'furniture');
 
     qb.where('category.id = :categoryFurnitureId', { categoryFurnitureId });
+    throw new NotFoundException(`id: ${categoryFurnitureId} not found`);
     return await qb.getOne();
   }
 }

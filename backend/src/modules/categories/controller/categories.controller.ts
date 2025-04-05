@@ -29,8 +29,8 @@ import { CategoriesFurnitureListResDto } from '../dto/res/categories-list.res.dt
 import { CategoryFurnitureResDto } from '../dto/res/category-furniture.res.dto';
 import { SubCategoriesFurnitureListResDto } from '../dto/res/subcategories-list.res.dto';
 import { SubCategoryFurnitureResDto } from '../dto/res/subcategory-furniture.res.dto';
-import { CategoriesService } from '../services/categories.service';
 import { CategoriesMapper } from '../services/categories.mapper.service';
+import { CategoriesService } from '../services/categories.service';
 
 @ApiTags('Categories')
 @Controller('categories')

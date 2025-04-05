@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 
+import { UserID } from '../../../common/types/entity-ids.type';
 import { CurrentUser } from '../../auth/decorators/current-user.decorator';
 import { SkipAuth } from '../../auth/decorators/skip-auth.decorator';
 import { IUserData } from '../../auth/interfaces/user-data.interface';
@@ -23,7 +24,6 @@ import { OrderResDto } from '../dto/res/order.res.dto';
 import { OrdersListResDto } from '../dto/res/orders-list.res.dto';
 import { OrdersMapper } from '../services/orders.mapper';
 import { OrdersService } from '../services/orders.service';
-import { UserID } from '../../../common/types/entity-ids.type';
 
 @ApiTags('Orders')
 @Controller('orders')

@@ -133,7 +133,7 @@ export class FurnitureService {
     const furniture =
       await this.furnitureRepository.findByFurnitureId(furnitureID);
     if (!furniture) {
-      throw new ConflictException('Furniture not found');
+      throw new NotFoundException('Furniture not found');
     }
     let furnitureStat = await this.furnitureStatisticRepository.findOne({
       where: { furniture_id: furnitureID },

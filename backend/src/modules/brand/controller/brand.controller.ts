@@ -41,7 +41,6 @@ export class BrandController {
   @ApiBearerAuth()
   @UseGuards(RolesGuard)
   @ROLES(UserEnum.ADMIN, UserEnum.MANAGER)
-  @ApiBearerAuth()
   @Post('createBrand')
   public async createBrand(@Body() dto: BrandReqDto): Promise<BrandResDto> {
     return BrandMapper.toResDto(await this.brandService.createBrand(dto));
@@ -50,7 +49,6 @@ export class BrandController {
   @ApiBearerAuth()
   @UseGuards(RolesGuard)
   @ROLES(UserEnum.ADMIN, UserEnum.MANAGER)
-  @ApiBearerAuth()
   @Patch(':brandId')
   public async editBrand(
     @Param('brandId', ParseUUIDPipe) brandId: BrandID,
