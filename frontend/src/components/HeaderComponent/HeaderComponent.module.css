@@ -1,5 +1,5 @@
 .header {
-    background-color: #ffeb3b;
+    background-color: #ffee00;
     padding: 14px 40px;
     display: flex;
     justify-content: center;
@@ -24,7 +24,7 @@
 
 .link:hover {
     color: #0d47a1;
-    transform: scale(1.05);
+    transform: scale(1.01);
 }
 
 .link:active {

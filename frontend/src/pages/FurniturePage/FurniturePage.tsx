@@ -19,7 +19,7 @@ const FurniturePage = () => {
         <CarouselComponent />
       </div>
       
-      <div className={styles.contaiterItems}>
+      <div className={styles.containerItems}>
         {furnitureResult?.map((item) => (
           <div key={item.id} className={styles.furnitureItem}>
             <h2>{item.name}</h2>
