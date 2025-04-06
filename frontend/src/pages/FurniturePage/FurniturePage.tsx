@@ -1,6 +1,8 @@
 import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../redux/store/store';
 import { furnitureActions } from '../../redux/slices/furnitureSlice';
+import CarouselComponent
+  from '../../components/CarouselComponent/СarouselComponent';
 
 const FurniturePage = () => {
   
@@ -14,6 +16,7 @@ const FurniturePage = () => {
   return (
     <div>
       <h2>Furniture</h2>
+      <CarouselComponent/>
       {furnitureResult?.map((item) => (
         <div key={item.id}>
           <h3>{item.body}</h3>

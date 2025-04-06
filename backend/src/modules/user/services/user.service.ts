@@ -11,8 +11,8 @@ import { RefreshTokenRepository } from '../../../infrastructure/repository/servi
 import { UserRepository } from '../../../infrastructure/repository/services/user.repository';
 import { IUserData } from '../../auth/interfaces/user-data.interface';
 import { PasswordService } from '../../auth/services/password.service';
-import { FileTypeEnum } from '../../file-storage/enum/file-type.enum';
-import { FileStorageService } from '../../file-storage/services/file-storage.service';
+import { FileTypeEnum } from '../../../infrastructure/file-storage/enum/file-type.enum';
+import { FileStorageService } from '../../../infrastructure/file-storage/services/file-storage.service';
 import { UserEnum } from '../enum/users.enum';
 import { ChangeRoleReqDto } from '../models/req/change-role.req.dto';
 import { CreateUserReqUserDto } from '../models/req/create-user.req.dto.';

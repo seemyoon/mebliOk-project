@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 
 import { AuthModule } from '../auth/auth.module';
-import { FileStorageModule } from '../file-storage/file-storage.module';
+import { FileStorageModule } from '../../infrastructure/file-storage/file-storage.module';
 import { FurnitureController } from './controller/furniture.controller';
 import { FurnitureService } from './service/furniture.service';
 

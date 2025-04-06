@@ -10,7 +10,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
 import { AWSConfig, Config } from '../../../configs/config.type';
-import { LoggerService } from '../../logger/services/logger.service';
+import { LoggerService } from '../../../modules/logger/services/logger.service';
 import { FileTypeEnum } from '../enum/file-type.enum';
 
 @Injectable()
@@ -72,6 +72,24 @@ export class FileStorageService {
       this.loggerService.error(error);
     }
   }
+
+  // public async getPresignedUrl(
+  //   filePath: string,
+  //   expiresInSeconds: number = 36000000,
+  // ): Promise<string> {
+  //   try {
+  //     const command = new GetObjectCommand({
+  //       Bucket: this.awsConfig.bucket_name,
+  //       Key: filePath,
+  //     });
+  //
+  //     return await getSignedUrl(this.s3Client, command, {
+  //       expiresIn: expiresInSeconds,
+  //     });
+  //   } catch (error) {
+  //     throw new Error(error);
+  //   }
+  // }
 
   private buildPath(
     fileType: FileTypeEnum,

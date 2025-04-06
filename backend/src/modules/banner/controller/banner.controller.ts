@@ -10,20 +10,20 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth, ApiConsumes, ApiTags } from '@nestjs/swagger';
 
+import { ApiFile } from '../../../common/decorators/api-file.decorator';
+import { BannerID } from '../../../common/types/entity-ids.type';
 import { SkipAuth } from '../../auth/decorators/skip-auth.decorator';
 import { ROLES } from '../../user/decorators/roles.decorator';
 import { UserEnum } from '../../user/enum/users.enum';
 import { RolesGuard } from '../../user/guard/roles.guard';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiFile } from '../../../common/decorators/api-file.decorator';
-import { BannerID } from '../../../common/types/entity-ids.type';
-import { BannerMapper } from '../services/banner.mapper';
-import { BannersListResDto } from '../dto/res/banners-list.res.dto';
 import { ListBannersQueryDto } from '../dto/req/list-banners.query.dto';
-import { BannerService } from '../services/banner.service';
 import { BannerResDto } from '../dto/res/banner.res.dto';
+import { BannersListResDto } from '../dto/res/banners-list.res.dto';
+import { BannerMapper } from '../services/banner.mapper';
+import { BannerService } from '../services/banner.service';
 
 @ApiTags('Banners')
 @Controller('banner')

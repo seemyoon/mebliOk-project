@@ -26,8 +26,8 @@ import { MaterialRepository } from '../../../infrastructure/repository/services/
 import { SizeRepository } from '../../../infrastructure/repository/services/size.repository';
 import { SubCategoryFurnitureRepository } from '../../../infrastructure/repository/services/subcategory-furniture.repository';
 import { IUserData } from '../../auth/interfaces/user-data.interface';
-import { FileTypeEnum } from '../../file-storage/enum/file-type.enum';
-import { FileStorageService } from '../../file-storage/services/file-storage.service';
+import { FileTypeEnum } from '../../../infrastructure/file-storage/enum/file-type.enum';
+import { FileStorageService } from '../../../infrastructure/file-storage/services/file-storage.service';
 import { SellerEnum } from '../../user/enum/seller.enum';
 import { AssignDiscountReqDto } from '../dto/req/assign-discount.req.dto';
 import { CreateFurnitureReqDto } from '../dto/req/create-furniture.req.dto';

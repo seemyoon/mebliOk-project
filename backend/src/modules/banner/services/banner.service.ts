@@ -2,8 +2,8 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 
 import { BannerID } from '../../../common/types/entity-ids.type';
 import { BannerEntity } from '../../../infrastructure/postgres/entities/banner.entity';
-import { FileTypeEnum } from '../../file-storage/enum/file-type.enum';
-import { FileStorageService } from '../../file-storage/services/file-storage.service';
+import { FileTypeEnum } from '../../../infrastructure/file-storage/enum/file-type.enum';
+import { FileStorageService } from '../../../infrastructure/file-storage/services/file-storage.service';
 import { BannerRepository } from '../../../infrastructure/repository/services/banner.repository';
 import { ListBannersQueryDto } from '../dto/req/list-banners.query.dto';
 
