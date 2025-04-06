@@ -22,7 +22,6 @@ export class CurrencyService {
       );
 
       for (const item of data) {
-        console.log(`Storing currency: ${item.ccy}, Sale rate: ${item.sale}`);
         switch (currency) {
           case CurrencyEnum.USD:
             if (item.ccy === 'USD') {

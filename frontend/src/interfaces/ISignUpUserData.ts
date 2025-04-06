@@ -3,4 +3,5 @@ export interface ISignUpUserData {
   phoneNumber: string,
   password: string,
   name: string,
+  deviceId: string
 }

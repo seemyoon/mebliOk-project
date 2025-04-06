@@ -1,8 +1,12 @@
+import SignInFormComponent
+  from '../../components/FormComponent/SignInFormComponent/SignInFormComponent';
+import styles from './SignIn.module.css';
+
 const SignInPage = () => {
   return (
-    <div>
-      
-      </div>
+    <div className={styles.pageContainer}>
+      <SignInFormComponent />
+    </div>
   );
 };
 

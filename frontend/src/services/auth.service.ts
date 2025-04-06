@@ -4,6 +4,7 @@ import { retrieveLocalStorage } from '../helpers/retrieveLocalStorage';
 import { ITokenObtainPair } from '../interfaces/ITokenObtainPair';
 import { ISignUpUserData } from '../interfaces/ISignUpUserData';
 import { IAuthResponseData } from '../interfaces/IAuthResponseData';
+import { ISignInUserData } from '../interfaces/ISignInUserData';
 
 const axiosInstance = axios.create({
   baseURL: baseUrl,
@@ -24,13 +25,13 @@ const authService = {
     return !!response.data.user || false;
   },
   
-  signIn: async (data: ITokenObtainPair): Promise<void> => {
-    const response = await axiosInstance.post<IAuthResponseData>('auth/sing-in', data);
+  signIn: async (signInUserData: ISignInUserData): Promise<void> => {
+    const response = await axiosInstance.post<IAuthResponseData>('/auth/sing-in', signInUserData);
     localStorage.setItem('tokenPair', JSON.stringify(response.data.tokens));
   },
   refreshToken: async (): Promise<void> => {
     const refreshToken = retrieveLocalStorage<ITokenObtainPair>('tokenPair').refreshToken;
-    const response = await axiosInstance.post<ITokenObtainPair>('auth/refresh', { refresh: refreshToken });
+    const response = await axiosInstance.post<ITokenObtainPair>('/auth/refresh', { refresh: refreshToken });
     localStorage.setItem('tokenPair', JSON.stringify(response.data));
   },
   logOut: async (): Promise<void> => {
