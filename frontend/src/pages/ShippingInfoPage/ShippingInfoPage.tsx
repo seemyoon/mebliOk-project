@@ -1,27 +1,24 @@
-import { useEffect, useState } from 'react';
-import { IShoppingInfo } from '../../interfaces/IShoppingInfo';
-import { apiService } from '../../services/api.service';
+import { useAppDispatch, useAppSelector } from '../../redux/store/store';
+import { useEffect } from 'react';
+import { shippingInfoActions } from '../../redux/slices/shippingInfoSlice';
+import styles from './ShippingInfoPage.module.css';
+
+const path = 'temp/shipping-info/1.jpg'
 
 const ShippingInfoPage = () => {
-  const [state, setState] = useState<IShoppingInfo>({
-    id: '',
-    title: '',
-    photos: [],
-    description: '',
-    body: '',
-    createdAt: '',
-    updatedAt: '',
-  });
+  
+  const dispatch = useAppDispatch();
+  const { shippingInfo } = useAppSelector(state => state.shippingInfoState);
+  
   useEffect(() => {
-    const getShippingInfo = async () => {
-      const response = await apiService.getShippingInfo();
-      setState(response)
-    };
-    getShippingInfo()
-  }, []);
+    dispatch(shippingInfoActions.loadShippingInfo())
+  }, [dispatch])
   return (
-    <div>
-      <h2>{state.title}</h2>
+    <div className={styles.shippingContainer}>
+      <h2 className={styles.shippingTitle}>{shippingInfo?.title }</h2>
+      <p className={styles.shippingBody}>{shippingInfo?.body}</p>
+      <img src={path} alt='photo-dilevery' />
+      <p className={styles.shippingDescription}>{shippingInfo?.description}</p>
     </div>
   );
 };

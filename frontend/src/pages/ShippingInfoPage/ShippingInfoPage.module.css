@@ -1,0 +1,29 @@
+.shippingContainer {
+    max-width: 800px;
+    margin: 40px auto;
+}
+
+.shippingTitle {
+    font-size: 32px;
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 16px;
+}
+
+.shippingBody {
+    font-size: 16px;
+    margin-bottom: 12px;
+    text-align: right;
+    font-style: italic;
+}
+
+.shippingDescription {
+    font-size: 18px;
+}
+
+.shippingContainer img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}

@@ -5,11 +5,12 @@ const HeaderComponent = () => {
   return (
     <header className={styles.header}>
       <nav className={styles.nav}>
-        <Link className={styles.link} to="/">Home</Link>
-        <Link className={styles.link} to="/catalog">Catalog</Link>
-        <Link className={styles.link} to="/shipping-info">Shipping Info</Link>
-        <Link className={styles.link} to="/auth/sign-up">Sign Up</Link>
-        <Link className={styles.link} to="/auth/sign-in">Sign In</Link>
+        <Link className={styles.link} to="/">Головна</Link>
+        <Link className={styles.link} to="/catalog">Каталоги</Link>
+        <Link className={styles.link} to="/shipping-info">Доставка</Link>
+        <Link className={styles.link} to="/auth/sign-up">Зареєструватися</Link>
+        <Link className={styles.link} to="/auth/sign-in">Війти</Link>
+        <Link className={styles.link} to="/about-us">Про нас</Link>
       </nav>
     </header>
   );

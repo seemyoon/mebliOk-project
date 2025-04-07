@@ -1,4 +1,4 @@
-export interface IShoppingInfo {
+export interface IShippingInfo {
   id: string,
   title: string,
   photos: [] | string[]

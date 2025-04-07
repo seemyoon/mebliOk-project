@@ -6,6 +6,7 @@ import CatalogPage from '../pages/CatalogPage/CatalogPage';
 import SignInPage from '../pages/SignInPage/SignInPage';
 import SignUpPage from '../pages/SignUpPage/SignUpPage';
 import FurnitureIdPage from '../pages/FurnitureIdPage/FurnitureIdPage';
+import AboutUsPage from '../pages/AboutUsPage/AboutUsPage';
 
 const routes: RouteObject[] = [{
   path: '/',
@@ -17,6 +18,7 @@ const routes: RouteObject[] = [{
     { path: '/shipping-info', element: <ShippingInfoPage /> },
     { path: '/auth/sign-in', element: <SignInPage /> },
     { path: '/auth/sign-up', element: <SignUpPage /> },
+    { path: '/about-us', element: <AboutUsPage /> },
   ],
 }];
 

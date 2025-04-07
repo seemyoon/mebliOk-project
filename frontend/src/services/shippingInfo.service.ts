@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { baseUrl, urlBuilder } from '../constants/url';
-import { IShoppingInfo } from '../interfaces/IShoppingInfo';
+import { IShippingInfo } from '../interfaces/IShippingInfo';
 
 const axiosInstance = axios.create({
   baseURL: baseUrl,
@@ -12,11 +12,11 @@ axiosInstance.interceptors.request.use(request => {
   return request;
 });
 
-const apiService = {
-  getShippingInfo: async (): Promise<IShoppingInfo> => {
-    const res = await axiosInstance.get<IShoppingInfo>(urlBuilder.extraInfo.shippingInfo());
+const shippingInfoService = {
+  getShippingInfo: async (): Promise<IShippingInfo> => {
+    const res = await axiosInstance.get<IShippingInfo>(urlBuilder.extraInfo.shippingInfo());
     return res.data;
   },
 };
 
-export { apiService };
+export { shippingInfoService };

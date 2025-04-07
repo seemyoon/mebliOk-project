@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { IFurniture } from '../../interfaces/IFurniture';
-import { loadFurnitureList } from '../reducers/furnitureSlicee.extra.reducers';
+import { loadFurnitureList } from '../reducers/furnitureSlice.extra.reducers';
 
 type FurnitureResultType = {
   furnitureResult: IFurniture[]
