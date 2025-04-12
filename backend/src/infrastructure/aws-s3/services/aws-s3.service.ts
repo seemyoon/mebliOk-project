@@ -14,7 +14,7 @@ import { LoggerService } from '../../../modules/logger/services/logger.service';
 import { FileTypeEnum } from '../enum/file-type.enum';
 
 @Injectable()
-export class FileStorageService {
+export class AwsS3Service {
   private readonly awsConfig: AWSConfig;
   private readonly s3Client: S3Client;
 
@@ -34,18 +34,31 @@ export class FileStorageService {
     });
   }
 
+  // public async readFile(filePath: string): Promise<Readable> {
+  //   const { Body } = await this.s3Client.send(
+  //     // We send a command to S3 via the s3Client client and wait for a response.
+  //     // The response will contain the file body (if the file exists).
+  //     new GetObjectCommand({
+  //       // A GetObjectCommand is created to retrieve a file from AWS S3.
+  //       Bucket: this.awsConfig.bucket_name,
+  //       Key: filePath,
+  //     }),
+  //   );
+  //   return Body as Readable;
+  // }
+
   public async uploadFile(
     file: Express.Multer.File,
     fileType: FileTypeEnum,
-    userId: string,
+    itemId: string,
   ): Promise<string | undefined> {
     if (!file) {
       this.loggerService.error('File is not provided');
       return;
     }
     try {
-      const filePath = this.buildPath(fileType, userId, file.originalname);
-      await this.s3Client.send(
+      const filePath = this.buildPath(fileType, itemId, file.originalname);
+      const so = await this.s3Client.send(
         new PutObjectCommand({
           Bucket: this.awsConfig.bucket_name,
           Key: filePath,
@@ -54,6 +67,7 @@ export class FileStorageService {
           ACL: this.awsConfig.ACL,
         }),
       );
+      console.log(so.$metadata);
       return filePath;
     } catch (error) {
       this.loggerService.error(error);
@@ -72,24 +86,6 @@ export class FileStorageService {
       this.loggerService.error(error);
     }
   }
-
-  // public async getPresignedUrl(
-  //   filePath: string,
-  //   expiresInSeconds: number = 36000000,
-  // ): Promise<string> {
-  //   try {
-  //     const command = new GetObjectCommand({
-  //       Bucket: this.awsConfig.bucket_name,
-  //       Key: filePath,
-  //     });
-  //
-  //     return await getSignedUrl(this.s3Client, command, {
-  //       expiresIn: expiresInSeconds,
-  //     });
-  //   } catch (error) {
-  //     throw new Error(error);
-  //   }
-  // }
 
   private buildPath(
     fileType: FileTypeEnum,

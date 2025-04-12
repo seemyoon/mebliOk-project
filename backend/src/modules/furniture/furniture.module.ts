@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
 
 import { AuthModule } from '../auth/auth.module';
-import { FileStorageModule } from '../../infrastructure/file-storage/file-storage.module';
+import { AwsS3Module } from '../../infrastructure/aws-s3/aws-s3.module';
 import { FurnitureController } from './controller/furniture.controller';
 import { FurnitureService } from './service/furniture.service';
 
 @Module({
-  imports: [AuthModule, FileStorageModule],
+  imports: [AuthModule, AwsS3Module],
   controllers: [FurnitureController],
   providers: [FurnitureService],
 })

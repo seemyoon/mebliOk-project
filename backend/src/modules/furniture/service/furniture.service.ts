@@ -13,6 +13,8 @@ import {
   MaterialID,
   SubCategoryFurnitureID,
 } from '../../../common/types/entity-ids.type';
+import { FileTypeEnum } from '../../../infrastructure/aws-s3/enum/file-type.enum';
+import { AwsS3Service } from '../../../infrastructure/aws-s3/services/aws-s3.service';
 import { FavouriteFurnitureEntity } from '../../../infrastructure/postgres/entities/favourite-furniture.entity';
 import { FurnitureEntity } from '../../../infrastructure/postgres/entities/furniture.entity';
 import { BrandRepository } from '../../../infrastructure/repository/services/brand.repository';
@@ -26,8 +28,6 @@ import { MaterialRepository } from '../../../infrastructure/repository/services/
 import { SizeRepository } from '../../../infrastructure/repository/services/size.repository';
 import { SubCategoryFurnitureRepository } from '../../../infrastructure/repository/services/subcategory-furniture.repository';
 import { IUserData } from '../../auth/interfaces/user-data.interface';
-import { FileTypeEnum } from '../../../infrastructure/file-storage/enum/file-type.enum';
-import { FileStorageService } from '../../../infrastructure/file-storage/services/file-storage.service';
 import { SellerEnum } from '../../user/enum/seller.enum';
 import { AssignDiscountReqDto } from '../dto/req/assign-discount.req.dto';
 import { CreateFurnitureReqDto } from '../dto/req/create-furniture.req.dto';
@@ -40,7 +40,7 @@ import { CurrencyEnum } from '../enum/currency.enum';
 export class FurnitureService {
   constructor(
     private readonly furnitureRepository: FurnitureRepository,
-    private readonly fileStorageService: FileStorageService,
+    private readonly fileStorageService: AwsS3Service,
     private readonly brandRepository: BrandRepository,
     private readonly categoryFurnitureRepository: CategoryFurnitureRepository,
     private readonly subCategoryFurnitureRepository: SubCategoryFurnitureRepository,

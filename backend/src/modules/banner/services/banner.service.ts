@@ -2,8 +2,8 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 
 import { BannerID } from '../../../common/types/entity-ids.type';
 import { BannerEntity } from '../../../infrastructure/postgres/entities/banner.entity';
-import { FileTypeEnum } from '../../../infrastructure/file-storage/enum/file-type.enum';
-import { FileStorageService } from '../../../infrastructure/file-storage/services/file-storage.service';
+import { FileTypeEnum } from '../../../infrastructure/aws-s3/enum/file-type.enum';
+import { AwsS3Service } from '../../../infrastructure/aws-s3/services/aws-s3.service';
 import { BannerRepository } from '../../../infrastructure/repository/services/banner.repository';
 import { ListBannersQueryDto } from '../dto/req/list-banners.query.dto';
 
@@ -11,7 +11,7 @@ import { ListBannersQueryDto } from '../dto/req/list-banners.query.dto';
 export class BannerService {
   constructor(
     private readonly bannerRepository: BannerRepository,
-    private readonly fileStorageService: FileStorageService,
+    private readonly fileStorageService: AwsS3Service,
   ) {}
 
   public async getBanners(

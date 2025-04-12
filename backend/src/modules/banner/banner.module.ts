@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 
-import { FileStorageModule } from '../../infrastructure/file-storage/file-storage.module';
+import { AwsS3Module } from '../../infrastructure/aws-s3/aws-s3.module';
 import { BannerController } from './controller/banner.controller';
 import { BannerService } from './services/banner.service';
 
 @Module({
-  imports: [FileStorageModule],
+  imports: [AwsS3Module],
   controllers: [BannerController],
   providers: [BannerService],
 })

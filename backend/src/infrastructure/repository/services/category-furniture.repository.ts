@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 
 import { CategoryFurnitureID } from '../../../common/types/entity-ids.type';
@@ -38,7 +38,6 @@ export class CategoryFurnitureRepository extends Repository<CategoryFurnitureEnt
     qb.leftJoinAndSelect('category.furniture', 'furniture');
 
     qb.where('category.id = :categoryFurnitureId', { categoryFurnitureId });
-    throw new NotFoundException(`id: ${categoryFurnitureId} not found`);
     return await qb.getOne();
   }
 }

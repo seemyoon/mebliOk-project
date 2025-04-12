@@ -13,7 +13,7 @@ const routes: RouteObject[] = [{
   element: <HomeMainLayout />,
   children: [
     { index: true, element: <FurniturePage /> },
-    {path: '/:id', element: <FurnitureIdPage />},
+    { path: '/:id', element: <FurnitureIdPage /> },
     { path: '/catalog', element: <CatalogPage /> },
     { path: '/shipping-info', element: <ShippingInfoPage /> },
     { path: '/auth/sign-in', element: <SignInPage /> },
