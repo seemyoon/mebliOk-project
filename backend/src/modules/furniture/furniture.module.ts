@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 
+import { AwsS3Module } from '../../infrastructure/aws/aws-s3.module';
 import { AuthModule } from '../auth/auth.module';
-import { AwsS3Module } from '../../infrastructure/aws-s3/aws-s3.module';
 import { FurnitureController } from './controller/furniture.controller';
 import { FurnitureService } from './service/furniture.service';
 

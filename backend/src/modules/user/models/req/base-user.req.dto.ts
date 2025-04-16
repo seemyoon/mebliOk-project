@@ -14,20 +14,20 @@ import { TransformHelper } from '../../../../common/helpers/transform.helper';
 import { UserEnum } from '../../enum/users.enum';
 
 export class BaseUserReqDto {
-  @ApiProperty({ example: 'John Doe' })
+  @ApiProperty({ example: 'Oleksandr' })
   @IsString()
   @Length(3, 50)
   @Transform(TransformHelper.toTrim)
   @Type(() => String)
   name?: string;
 
-  @ApiProperty({ example: 'testuser@gmail.com' })
+  @ApiProperty({ example: 'alejandrosdeveloper@gmail.com' })
   @IsString()
   @Length(0, 300)
   @Matches(/^[^\s@]+@([^\s@.,]+\.)+[^\s@.,]{2,}$/)
   email: string;
 
-  @ApiProperty({ example: '+380681353945' })
+  @ApiProperty({ example: '+380688899945' })
   @IsString()
   @IsPhoneNumber(null, { message: 'Phone number must be valid' })
   phoneNumber: string;

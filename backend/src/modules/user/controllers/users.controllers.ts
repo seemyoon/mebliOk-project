@@ -37,12 +37,16 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @ApiBearerAuth()
+  @UseGuards(RolesGuard)
+  @ROLES(UserEnum.MANAGER, UserEnum.ADMIN, UserEnum.REGISTERED_CLIENT)
   @Get('getMe')
   public async getMe(@CurrentUser() userData: IUserData): Promise<UserResDto> {
     return UserMapper.toResDto(await this.userService.getMe(userData));
   }
 
   @ApiBearerAuth()
+  @UseGuards(RolesGuard)
+  @ROLES(UserEnum.MANAGER, UserEnum.ADMIN, UserEnum.REGISTERED_CLIENT)
   @Delete('deleteMe')
   public async deleteMe(@CurrentUser() userData: IUserData): Promise<void> {
     await this.userService.deleteMe(userData);
@@ -50,7 +54,7 @@ export class UserController {
 
   @ApiBearerAuth()
   @UseGuards(RolesGuard)
-  @ROLES(UserEnum.MANAGER, UserEnum.ADMIN)
+  @ROLES(UserEnum.MANAGER, UserEnum.ADMIN, UserEnum.REGISTERED_CLIENT)
   @Patch('editMe')
   public async editMe(
     @CurrentUser() userData: IUserData,

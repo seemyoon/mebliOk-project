@@ -15,6 +15,7 @@ import { TokenService } from './services/token.service';
 import { GoogleStrategy } from './strategies/google.strategy';
 import { JwtAccessStrategy } from './strategies/jwt-access.strategy';
 import { JwtRefreshStrategy } from './strategies/jwt-refresh.strategy';
+import { UserModule } from '../user/user.module';
 
 const AppGuardProvider = {
   provide: APP_GUARD,
@@ -24,20 +25,15 @@ const AppGuardProvider = {
 const strategies = [GoogleStrategy, JwtAccessStrategy, JwtRefreshStrategy];
 
 @Module({
-  imports: [
-    RedisModule,
-    JwtModule,
-    PassportModule.register({ defaultStrategy: 'jwt-access' }),
-    MailModule,
-  ],
+  imports: [RedisModule, UserModule, JwtModule, PassportModule, MailModule],
   controllers: [AuthController],
   providers: [
+    AppGuardProvider,
     AuthService,
+    AccessTokenService,
     TokenService,
     JwtRefreshGuard,
     PasswordService,
-    AccessTokenService,
-    AppGuardProvider,
     ...strategies,
   ],
   exports: [PassportModule],

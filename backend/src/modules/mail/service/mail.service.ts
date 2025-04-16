@@ -4,15 +4,19 @@ import { MailerService } from '@nestjs-modules/mailer';
 
 import { emailConstants } from '../../../common/constants/email.constants';
 import { EmailTypeToPayloadType } from '../../../common/types/email-type-to-payload.type';
-import { Config } from '../../../configs/config.type';
+import { AppFrontUrl, Config } from '../../../configs/config.type';
 import { EmailTypeEnum } from '../enum/email.enum';
 
 @Injectable()
 export class MailService {
+  private readonly appFrontUrl: AppFrontUrl;
+
   constructor(
     private readonly mailerService: MailerService,
     private readonly configService: ConfigService<Config>,
-  ) {}
+  ) {
+    this.appFrontUrl = configService.get<AppFrontUrl>('appFrontUrl');
+  }
 
   public async sendEmail<T extends EmailTypeEnum>(
     to: string,
@@ -21,7 +25,7 @@ export class MailService {
   ): Promise<void> {
     // const mailConfig = this.configService.get('mail');
     const { subject, template } = emailConstants[type];
-    context['frontUrl'] = this.configService.get('appFrontUrl');
+    context['frontUrl'] = this.appFrontUrl.appFrontUrl;
 
     await this.mailerService.sendMail({
       // to: [email, mailConfig.email], we set mailConfig.email, if:

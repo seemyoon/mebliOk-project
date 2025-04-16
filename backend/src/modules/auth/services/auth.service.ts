@@ -13,6 +13,7 @@ import { Config, MailConfig } from '../../../configs/config.type';
 import { UserEntity } from '../../../infrastructure/postgres/entities/users.entity';
 import { RefreshTokenRepository } from '../../../infrastructure/repository/services/refresh-token.repository';
 import { UserRepository } from '../../../infrastructure/repository/services/user.repository';
+import { EmailTypeEnum } from '../../mail/enum/email.enum';
 import { MailService } from '../../mail/service/mail.service';
 import { UserEnum } from '../../user/enum/users.enum';
 import { UserMapper } from '../../user/services/user.mapper';
@@ -24,10 +25,10 @@ import { SignInReqDto } from '../models/dto/req/sign-in.req.dto';
 import { SignUpReqDto } from '../models/dto/req/sign-up.req.dto';
 import { AuthResDto } from '../models/dto/res/auth.res.dto';
 import { TokenPairResDto } from '../models/dto/res/token-pair.res.dto';
+import { ActionTokenTypeEnum } from '../models/enums/action-token-type.enum';
 import { AccessTokenService } from './access-token.service';
 import { PasswordService } from './password.service';
 import { TokenService } from './token.service';
-import { EmailTypeEnum } from '../../mail/enum/email.enum';
 
 @Injectable()
 export class AuthService {
@@ -112,10 +113,25 @@ export class AuthService {
       ),
     ]);
 
+    const actionToken = await this.tokenService.generateActionTokens(
+      {
+        userId: user.id,
+        deviceId: dto.deviceId,
+      },
+      ActionTokenTypeEnum.VERIFY_EMAIL,
+    );
+
+    await this.mailService.sendEmail(
+      this.mailConfig.email, // todo user email (temporary)
+      EmailTypeEnum.WELCOME,
+      { name: user.name, actionToken },
+    );
+
     return { user: UserMapper.toResDto(user), tokens };
   }
 
   public async signIn(dto: SignInReqDto): Promise<AuthResDto> {
+    // todo signIn by phone-number or email
     const user = await this.userRepository.findOne({
       where: { email: dto.email },
       select: ['id', 'password', 'deleted'],
@@ -266,15 +282,17 @@ export class AuthService {
     });
     if (!user) throw new NotFoundException('User not found');
 
-    const token = await this.tokenService.generateActionTokens({
-      userId: user.id,
-      deviceId: dto.deviceId,
-    });
-
+    const token = await this.tokenService.generateActionTokens(
+      {
+        userId: user.id,
+        deviceId: dto.deviceId,
+      },
+      ActionTokenTypeEnum.FORGOT_PASSWORD,
+    );
     await this.accessTokenService.saveToken(token, user.id, dto.deviceId);
 
     await this.mailService.sendEmail(
-      this.mailConfig.email,
+      user.email,
       EmailTypeEnum.FORGOT_PASSWORD,
       {
         name: user.name,

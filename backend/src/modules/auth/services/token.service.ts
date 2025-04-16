@@ -10,6 +10,7 @@ import {
 import { JwtPayload } from '../interfaces/jwt-payload.interface';
 import { ITokenPair } from '../interfaces/token-pair.interface';
 import { TokenType } from '../models/enums/token-type.enum';
+import { ActionTokenTypeEnum } from '../models/enums/action-token-type.enum';
 
 @Injectable()
 export class TokenService {
@@ -25,10 +26,29 @@ export class TokenService {
       configService.get<ActionTokenConfig>('actionToken');
   }
 
-  public async generateActionTokens(payload: JwtPayload): Promise<string> {
+  public async generateActionTokens(
+    payload: JwtPayload,
+    tokenType: ActionTokenTypeEnum,
+  ): Promise<string> {
+    let secret: string;
+    let expiresIn: number;
+
+    switch (tokenType) {
+      case ActionTokenTypeEnum.FORGOT_PASSWORD:
+        secret = this.actionTokenConfig.actionTokenForgotPasswordSecret;
+        expiresIn = this.actionTokenConfig.actionTokenForgotPasswordExpireIn;
+        break;
+      case ActionTokenTypeEnum.VERIFY_EMAIL:
+        secret = this.actionTokenConfig.actionTokenVerifyEmailSecret;
+        expiresIn = this.actionTokenConfig.actionTokenVerifyEmailExpireIn;
+        break;
+      default:
+        throw new UnauthorizedException('Invalid token');
+    }
+
     return await this.jwtService.signAsync(payload, {
-      secret: this.actionTokenConfig.actionTokenSecret,
-      expiresIn: this.actionTokenConfig.actionTokenExpireIn,
+      secret,
+      expiresIn,
     });
   }
 

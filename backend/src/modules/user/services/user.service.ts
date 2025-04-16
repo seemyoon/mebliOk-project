@@ -11,8 +11,8 @@ import { RefreshTokenRepository } from '../../../infrastructure/repository/servi
 import { UserRepository } from '../../../infrastructure/repository/services/user.repository';
 import { IUserData } from '../../auth/interfaces/user-data.interface';
 import { PasswordService } from '../../auth/services/password.service';
-import { FileTypeEnum } from '../../../infrastructure/aws-s3/enum/file-type.enum';
-import { AwsS3Service } from '../../../infrastructure/aws-s3/services/aws-s3.service';
+import { FileTypeEnum } from '../../../infrastructure/aws/enum/file-type.enum';
+import { AwsS3Service } from '../../../infrastructure/aws/services/aws-s3.service';
 import { UserEnum } from '../enum/users.enum';
 import { ChangeRoleReqDto } from '../models/req/change-role.req.dto';
 import { CreateUserReqUserDto } from '../models/req/create-user.req.dto.';

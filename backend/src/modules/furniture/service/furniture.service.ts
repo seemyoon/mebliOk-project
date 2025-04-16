@@ -13,8 +13,8 @@ import {
   MaterialID,
   SubCategoryFurnitureID,
 } from '../../../common/types/entity-ids.type';
-import { FileTypeEnum } from '../../../infrastructure/aws-s3/enum/file-type.enum';
-import { AwsS3Service } from '../../../infrastructure/aws-s3/services/aws-s3.service';
+import { FileTypeEnum } from '../../../infrastructure/aws/enum/file-type.enum';
+import { AwsS3Service } from '../../../infrastructure/aws/services/aws-s3.service';
 import { FavouriteFurnitureEntity } from '../../../infrastructure/postgres/entities/favourite-furniture.entity';
 import { FurnitureEntity } from '../../../infrastructure/postgres/entities/furniture.entity';
 import { BrandRepository } from '../../../infrastructure/repository/services/brand.repository';

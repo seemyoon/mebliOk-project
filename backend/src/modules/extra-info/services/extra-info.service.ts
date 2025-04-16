@@ -4,8 +4,8 @@ import { PaymentInfoEntity } from '../../../infrastructure/postgres/entities/pay
 import { ShippingInfoEntity } from '../../../infrastructure/postgres/entities/shipping-info.entity';
 import { PaymentInfoRepository } from '../../../infrastructure/repository/services/payment-info.repository';
 import { ShippingInfoRepository } from '../../../infrastructure/repository/services/shipping-info.repository';
-import { FileTypeEnum } from '../../../infrastructure/aws-s3/enum/file-type.enum';
-import { AwsS3Service } from '../../../infrastructure/aws-s3/services/aws-s3.service';
+import { FileTypeEnum } from '../../../infrastructure/aws/enum/file-type.enum';
+import { AwsS3Service } from '../../../infrastructure/aws/services/aws-s3.service';
 import { UpdatePaymentInfoReqDto } from '../dto/req/update-payment-info.req.dto';
 import { UpdateShippingInfoReqDto } from '../dto/req/update-shipping-info.req.dto';
 

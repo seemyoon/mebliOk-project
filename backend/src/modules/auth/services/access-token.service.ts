@@ -8,6 +8,7 @@ import {
   JwtConfig,
 } from '../../../configs/config.type';
 import { RedisService } from '../../../infrastructure/redis/services/redis.service';
+import { ActionTokenTypeEnum } from '../models/enums/action-token-type.enum';
 
 @Injectable()
 export class AccessTokenService {
@@ -34,16 +35,29 @@ export class AccessTokenService {
     await this.redisService.expire(key, this.jwtConfig.accessExpireIn);
   }
 
-  public async saveResetToken(
+  public async saveActionToken(
     token: string,
     userId: UserID,
     deviceId: string,
+    actionTokenType: ActionTokenTypeEnum,
   ): Promise<void> {
-    const key = `RESET_TOKEN:${userId}:${deviceId}`;
-
-    await this.redisService.deleteByKey(key);
-    await this.redisService.addOneToSet(key, token);
-    await this.redisService.expire(key, this.actionToken.actionTokenExpireIn);
+    if (actionTokenType === ActionTokenTypeEnum.FORGOT_PASSWORD) {
+      const key = `ACTION_TOKEN_FORGOT_PASSWORD:${userId}:${deviceId}`;
+      await this.redisService.deleteByKey(key);
+      await this.redisService.addOneToSet(key, token);
+      await this.redisService.expire(
+        key,
+        this.actionToken.actionTokenForgotPasswordExpireIn,
+      );
+    } else if (actionTokenType === ActionTokenTypeEnum.VERIFY_EMAIL) {
+      const key = `ACTION_TOKEN_VERIFY_EMAIL:${userId}:${deviceId}`;
+      await this.redisService.deleteByKey(key);
+      await this.redisService.addOneToSet(key, token);
+      await this.redisService.expire(
+        key,
+        this.actionToken.actionTokenForgotPasswordExpireIn,
+      );
+    }
   }
 
   public async isAccessTokenExist(

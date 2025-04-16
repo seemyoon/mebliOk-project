@@ -1,16 +1,16 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport"
-        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Document</title>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
 </head>
 <body>
 
-<table
-  style="width: 100%; padding: 4px 35px; background-color: #db9292; box-sizing: border-box">
+<!--{{>header}}-->
+<table style="width: 100%; padding: 4px 35px; background-color: #db9292; box-sizing: border-box">
   <tr>
     <td style="font-size: 20px; text-align: left;">
       <b>LOGO</b>
@@ -23,27 +23,31 @@
   </tr>
 </table>
 
+<!--{{{body}}}-->
 <table style="width: 100%; padding: 45px 35px; box-sizing: border-box">
   <tr>
     <td style="font-size: 18px; text-align: center;">
-      Do not worry, your password is under control!
+      {{name}}, Welcome on our platform!
     </td>
   </tr>
   <tr>
     <td style="text-align: center;">
       <p style="margin: 17px 0 0;">
-        You need to restore password, please click on the button
+        You need submit your email, please click on button
       </p>
-      {{frontUrl}}
-      {{actionToken}}
-      <a href="{{frontUrl}}/password/restore?token={{actionToken}}"> RESTORE
-      PASSWORD </a>
+      <a href="{{frontUrl}}/activate?token={{actionToken}}">VERIFY</a>
+    </td>
+  </tr>
+  <tr>
+    <td style="text-align: center;">
+      <button>SUBMIT</button>
     </td>
   </tr>
 </table>
 
-<table
-  style="width: 100%; padding: 10px 35px; background-color: #db9292; box-sizing: border-box">
+
+<!--{{>footer}}-->
+<table style="width: 100%; padding: 10px 35px; background-color: #db9292; box-sizing: border-box">
   <tr>
     <td style="font-size: 14px; text-align: center;">
       MyCorp - Copyright © 2023
