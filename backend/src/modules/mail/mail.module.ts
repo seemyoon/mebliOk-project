@@ -15,9 +15,7 @@ import { MailService } from './service/mail.service';
       inject: [ConfigService],
       useFactory: async (configService: ConfigService<Config>) => {
         const config = configService.get('mail');
-        const templatesPath = path.join(process.cwd(), 'src', 'templates');
 
-        console.log(path.join(templatesPath, 'partials'));
         const transport = {
           service: 'gmail',
           auth: {

@@ -37,14 +37,8 @@ export default (): Config => ({
     password: process.env.SMTP_PASSWORD,
   },
   actionToken: {
-    actionTokenForgotPasswordSecret: process.env.ACTION_FORGOT_PASSWORD_SECRET,
-    actionTokenForgotPasswordExpireIn: parseInt(
-      process.env.ACTION_FORGOT_PASSWORD_EXPIRATION,
-    ),
-    actionTokenVerifyEmailSecret: process.env.ACTION_VERIFY_EMAIL_SECRET,
-    actionTokenVerifyEmailExpireIn: parseInt(
-      process.env.ACTION_VERIFY_EMAIL_EXPIRATION,
-    ),
+    actionTokenSecret: process.env.ACTION_ACCESS_SECRET,
+    actionTokenExpiration: parseInt(process.env.ACTION_ACCESS_EXPIRATION),
   },
   jwt: {
     accessSecret: process.env.ACCESS_SECRET,

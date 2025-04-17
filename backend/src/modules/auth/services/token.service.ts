@@ -10,7 +10,6 @@ import {
 import { JwtPayload } from '../interfaces/jwt-payload.interface';
 import { ITokenPair } from '../interfaces/token-pair.interface';
 import { TokenType } from '../models/enums/token-type.enum';
-import { ActionTokenTypeEnum } from '../models/enums/action-token-type.enum';
 
 @Injectable()
 export class TokenService {
@@ -26,29 +25,10 @@ export class TokenService {
       configService.get<ActionTokenConfig>('actionToken');
   }
 
-  public async generateActionTokens(
-    payload: JwtPayload,
-    tokenType: ActionTokenTypeEnum,
-  ): Promise<string> {
-    let secret: string;
-    let expiresIn: number;
-
-    switch (tokenType) {
-      case ActionTokenTypeEnum.FORGOT_PASSWORD:
-        secret = this.actionTokenConfig.actionTokenForgotPasswordSecret;
-        expiresIn = this.actionTokenConfig.actionTokenForgotPasswordExpireIn;
-        break;
-      case ActionTokenTypeEnum.VERIFY_EMAIL:
-        secret = this.actionTokenConfig.actionTokenVerifyEmailSecret;
-        expiresIn = this.actionTokenConfig.actionTokenVerifyEmailExpireIn;
-        break;
-      default:
-        throw new UnauthorizedException('Invalid token');
-    }
-
+  public async generateActionToken(payload: JwtPayload): Promise<string> {
     return await this.jwtService.signAsync(payload, {
-      secret,
-      expiresIn,
+      secret: this.actionTokenConfig.actionTokenSecret,
+      expiresIn: this.actionTokenConfig.actionTokenExpiration,
     });
   }
 
@@ -75,17 +55,15 @@ export class TokenService {
   }
 
   public getSecret(type: TokenType): string {
-    let secret: string;
     switch (type) {
       case TokenType.ACCESS:
-        secret = this.jwtConfig.accessSecret;
-        break;
+        return this.jwtConfig.accessSecret;
       case TokenType.REFRESH:
-        secret = this.jwtConfig.refreshSecret;
-        break;
+        return this.jwtConfig.refreshSecret;
+      case TokenType.ACTION:
+        return this.actionTokenConfig.actionTokenSecret;
       default:
         throw new Error('Unknown token type');
     }
-    return secret;
   }
 }

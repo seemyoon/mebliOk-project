@@ -8,10 +8,9 @@ import {
   JwtConfig,
 } from '../../../configs/config.type';
 import { RedisService } from '../../../infrastructure/redis/services/redis.service';
-import { ActionTokenTypeEnum } from '../models/enums/action-token-type.enum';
 
 @Injectable()
-export class AccessTokenService {
+export class AuthCacheService {
   private jwtConfig: JwtConfig;
   private actionToken: ActionTokenConfig;
 
@@ -39,32 +38,28 @@ export class AccessTokenService {
     token: string,
     userId: UserID,
     deviceId: string,
-    actionTokenType: ActionTokenTypeEnum,
   ): Promise<void> {
-    if (actionTokenType === ActionTokenTypeEnum.FORGOT_PASSWORD) {
-      const key = `ACTION_TOKEN_FORGOT_PASSWORD:${userId}:${deviceId}`;
-      await this.redisService.deleteByKey(key);
-      await this.redisService.addOneToSet(key, token);
-      await this.redisService.expire(
-        key,
-        this.actionToken.actionTokenForgotPasswordExpireIn,
-      );
-    } else if (actionTokenType === ActionTokenTypeEnum.VERIFY_EMAIL) {
-      const key = `ACTION_TOKEN_VERIFY_EMAIL:${userId}:${deviceId}`;
-      await this.redisService.deleteByKey(key);
-      await this.redisService.addOneToSet(key, token);
-      await this.redisService.expire(
-        key,
-        this.actionToken.actionTokenForgotPasswordExpireIn,
-      );
-    }
+    const key = `ACTION_TOKEN:${userId}:${deviceId}`;
+    await this.redisService.deleteByKey(key);
+    await this.redisService.addOneToSet(key, token);
+    await this.redisService.expire(key, this.actionToken.actionTokenExpiration);
+  }
+
+  public async isActionTokenExist(
+    userId: string,
+    deviceId: string,
+    token: string,
+  ): Promise<boolean> {
+    const key = `ACTION_TOKEN:${userId}:${deviceId}`;
+    const set = await this.redisService.sMembers(key);
+    return set.includes(token);
   }
 
   public async isAccessTokenExist(
     userId: string,
     deviceId: string,
     token: string,
-  ): Promise<any> {
+  ): Promise<boolean> {
     const key = `ACCESS_TOKEN:${userId}:${deviceId}`;
     const set = await this.redisService.sMembers(key);
     return set.includes(token);

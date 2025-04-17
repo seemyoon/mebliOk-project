@@ -9,8 +9,9 @@ import { UserRepository } from '../../../infrastructure/repository/services/user
 import { UserMapper } from '../../user/services/user.mapper';
 import { JwtPayload } from '../interfaces/jwt-payload.interface';
 import { TokenType } from '../models/enums/token-type.enum';
-import { AccessTokenService } from '../services/access-token.service';
+import { AuthCacheService } from '../services/auth-cache.service';
 import { TokenService } from '../services/token.service';
+import { IUserData } from '../interfaces/user-data.interface';
 
 @Injectable()
 export class JwtAccessStrategy extends PassportStrategy(
@@ -21,7 +22,7 @@ export class JwtAccessStrategy extends PassportStrategy(
     private readonly userRepository: UserRepository,
     private readonly configService: ConfigService<Config>,
     private readonly tokenService: TokenService,
-    private readonly accessTokenService: AccessTokenService,
+    private readonly authCacheService: AuthCacheService,
   ) {
     const jwtConfig = configService.get<JwtConfig>('jwt');
 
@@ -33,30 +34,26 @@ export class JwtAccessStrategy extends PassportStrategy(
     });
   }
 
-  public async validate(req: Request, payload: JwtPayload) {
+  public async validate(req: Request, payload: JwtPayload): Promise<IUserData> {
     const accessToken = ExtractJwt.fromAuthHeaderAsBearerToken()(req);
     if (!accessToken) {
-      throw new UnauthorizedException('token is lost');
+      throw new UnauthorizedException('Token is lost');
     }
 
-    const isValid = await this.tokenService.validate(
-      accessToken,
-      TokenType.ACCESS,
-    );
+    await this.tokenService.validate(accessToken, TokenType.ACCESS);
 
-    if (!isValid) throw new UnauthorizedException('invalid token');
-    const isAccessTokenExist = await this.accessTokenService.isAccessTokenExist(
+    const isAccessTokenExist = await this.authCacheService.isAccessTokenExist(
       payload.userId,
       payload.deviceId,
       accessToken,
     );
 
     if (!isAccessTokenExist)
-      throw new UnauthorizedException('token is missing');
+      throw new UnauthorizedException('Token is missing');
 
     const user = await this.userRepository.findUser(payload.userId);
 
-    if (!user) throw new UnauthorizedException('invalid token');
+    if (!user) throw new UnauthorizedException('Invalid token');
 
     return UserMapper.toIUserData(user, payload.deviceId);
   }

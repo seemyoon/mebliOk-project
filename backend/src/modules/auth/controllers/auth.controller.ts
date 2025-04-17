@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Patch,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 
@@ -11,12 +19,14 @@ import { GoogleAuthGuard } from '../guards/google-auth.guard';
 import { JwtRefreshGuard } from '../guards/jwt-refresh.guard';
 import { IUserData } from '../interfaces/user-data.interface';
 import { ChangePasswordReqDto } from '../models/dto/req/change-password.req.dto';
+import { ResetPasswordChangeReqDto } from '../models/dto/req/reset-password-change.req.dto';
 import { ResetPasswordSendReqDto } from '../models/dto/req/reset-password-send.req.dto';
 import { SignInReqDto } from '../models/dto/req/sign-in.req.dto';
 import { SignUpReqDto } from '../models/dto/req/sign-up.req.dto';
 import { AuthResDto } from '../models/dto/res/auth.res.dto';
 import { TokenPairResDto } from '../models/dto/res/token-pair.res.dto';
 import { AuthService } from '../services/auth.service';
+import { ActionTokenGuard } from '../guards/action-token.guard';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -73,6 +83,17 @@ export class AuthController {
   }
 
   @SkipAuth()
+  @ApiBearerAuth()
+  @UseGuards(ActionTokenGuard)
+  @Patch('forgotPasswordChange')
+  public async forgotPasswordChange(
+    @Body() dto: ResetPasswordChangeReqDto,
+    @CurrentUser() userData: IUserData,
+  ): Promise<void> {
+    await this.authService.forgotPasswordChange(dto, userData);
+  }
+
+  @SkipAuth()
   @UseGuards(GoogleAuthGuard)
   @Get('google/login')
   public async googleLogin(): Promise<void> {}
@@ -84,3 +105,8 @@ export class AuthController {
     await this.authService.googleCallback(request);
   }
 }
+
+// Client sends Authorization: Bearer ...
+// JwtAccessGuard runs jwt-access strategy
+// Strategy extracts token, verifies it and puts payload in req.user
+// Decorator @CurrentUser() extracts req.user and returns to controller

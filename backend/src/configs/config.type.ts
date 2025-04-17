@@ -47,10 +47,8 @@ export type JwtConfig = {
 };
 
 export type ActionTokenConfig = {
-  actionTokenForgotPasswordSecret: string;
-  actionTokenForgotPasswordExpireIn: number;
-  actionTokenVerifyEmailSecret: string;
-  actionTokenVerifyEmailExpireIn: number;
+  actionTokenSecret: string;
+  actionTokenExpiration: number;
 };
 
 export type AppFrontUrl = {

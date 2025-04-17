@@ -20,13 +20,13 @@ import { UserMapper } from '../../user/services/user.mapper';
 import { ITokenPair } from '../interfaces/token-pair.interface';
 import { IUserData } from '../interfaces/user-data.interface';
 import { ChangePasswordReqDto } from '../models/dto/req/change-password.req.dto';
+import { ResetPasswordChangeReqDto } from '../models/dto/req/reset-password-change.req.dto';
 import { ResetPasswordSendReqDto } from '../models/dto/req/reset-password-send.req.dto';
 import { SignInReqDto } from '../models/dto/req/sign-in.req.dto';
 import { SignUpReqDto } from '../models/dto/req/sign-up.req.dto';
 import { AuthResDto } from '../models/dto/res/auth.res.dto';
 import { TokenPairResDto } from '../models/dto/res/token-pair.res.dto';
-import { ActionTokenTypeEnum } from '../models/enums/action-token-type.enum';
-import { AccessTokenService } from './access-token.service';
+import { AuthCacheService } from './auth-cache.service';
 import { PasswordService } from './password.service';
 import { TokenService } from './token.service';
 
@@ -35,7 +35,7 @@ export class AuthService {
   private readonly mailConfig: MailConfig;
 
   constructor(
-    private readonly accessTokenService: AccessTokenService,
+    private readonly authCacheService: AuthCacheService,
     private readonly tokenService: TokenService,
     private readonly userRepository: UserRepository,
     private readonly refreshTokenRepository: RefreshTokenRepository,
@@ -99,7 +99,7 @@ export class AuthService {
     await this.userRepository.save(user);
 
     await Promise.all([
-      this.accessTokenService.saveToken(
+      this.authCacheService.saveToken(
         tokens.accessToken,
         user.id,
         dto.deviceId,
@@ -113,19 +113,18 @@ export class AuthService {
       ),
     ]);
 
-    const actionToken = await this.tokenService.generateActionTokens(
-      {
-        userId: user.id,
-        deviceId: dto.deviceId,
-      },
-      ActionTokenTypeEnum.VERIFY_EMAIL,
-    );
-
-    await this.mailService.sendEmail(
-      this.mailConfig.email, // todo user email (temporary)
-      EmailTypeEnum.WELCOME,
-      { name: user.name, actionToken },
-    );
+    // const actionToken = await this.tokenService.generateActionTokens(
+    //   {
+    //     userId: user.id,
+    //     deviceId: dto.deviceId,
+    //   },
+    // );
+    //
+    // await this.mailService.sendEmail(
+    //   this.mailConfig.email, // todo user email (temporary)
+    //   EmailTypeEnum.WELCOME,
+    //   { name: user.name, actionToken },
+    // );
 
     return { user: UserMapper.toResDto(user), tokens };
   }
@@ -137,7 +136,7 @@ export class AuthService {
       select: ['id', 'password', 'deleted'],
     });
     if (!user) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('User not found');
     }
     if (user.deleted) {
       await this.userRepository.update({ id: user.id }, { deleted: null });
@@ -156,7 +155,7 @@ export class AuthService {
     });
 
     await Promise.all([
-      this.accessTokenService.saveToken(
+      this.authCacheService.saveToken(
         tokens.accessToken,
         user.id,
         dto.deviceId,
@@ -176,7 +175,7 @@ export class AuthService {
 
   public async logOut(userData: IUserData): Promise<void> {
     await Promise.all([
-      this.accessTokenService.deleteToken(userData.userId, userData.deviceID),
+      this.authCacheService.deleteToken(userData.userId, userData.deviceID),
       this.refreshTokenRepository.delete({
         user_id: userData.userId,
         deviceId: userData.deviceID,
@@ -188,7 +187,7 @@ export class AuthService {
     if (!userData) throw new NotFoundException('user not found');
 
     await Promise.all([
-      this.accessTokenService.deleteToken(userData.userId, userData.deviceID),
+      this.authCacheService.deleteToken(userData.userId, userData.deviceID),
       this.refreshTokenRepository.delete({
         user_id: userData.userId,
         deviceId: userData.deviceID,
@@ -199,7 +198,7 @@ export class AuthService {
       deviceId: userData.deviceID,
     });
     await Promise.all([
-      this.accessTokenService.saveToken(
+      this.authCacheService.saveToken(
         tokens.accessToken,
         userData.userId,
         userData.deviceID,
@@ -259,7 +258,7 @@ export class AuthService {
       deviceId: userData.deviceID,
     });
     await Promise.all([
-      this.accessTokenService.saveToken(
+      this.authCacheService.saveToken(
         tokens.accessToken,
         user.id,
         userData.deviceID,
@@ -282,14 +281,11 @@ export class AuthService {
     });
     if (!user) throw new NotFoundException('User not found');
 
-    const token = await this.tokenService.generateActionTokens(
-      {
-        userId: user.id,
-        deviceId: dto.deviceId,
-      },
-      ActionTokenTypeEnum.FORGOT_PASSWORD,
-    );
-    await this.accessTokenService.saveToken(token, user.id, dto.deviceId);
+    const token = await this.tokenService.generateActionToken({
+      userId: user.id,
+      deviceId: dto.deviceId,
+    });
+    await this.authCacheService.saveActionToken(token, user.id, dto.deviceId);
 
     await this.mailService.sendEmail(
       user.email,
@@ -300,6 +296,31 @@ export class AuthService {
         actionToken: token,
       },
     );
+  }
+
+  public async forgotPasswordChange(
+    dto: ResetPasswordChangeReqDto,
+    userData: IUserData,
+  ): Promise<void> {
+    const user = await this.userRepository.findOne({
+      where: { id: userData.userId },
+      select: ['id', 'password'],
+    });
+
+    if (!user) throw new NotFoundException('User not found');
+
+    const isPrevious = await this.passwordService.comparePassword(
+      dto.password,
+      user.password,
+    );
+
+    if (isPrevious) throw new ConflictException('Password already used');
+
+    const password = await this.passwordService.hashPassword(dto.password, 10);
+
+    await this.userRepository.save({ ...user, password });
+
+    await this.logOut(userData);
   }
 
   public async googleCallback(request: Request): Promise<void> {
@@ -340,7 +361,7 @@ export class AuthService {
     });
 
     await Promise.all([
-      this.accessTokenService.saveToken(tokens.accessToken, user.id, 'asd'), // todo. hardcore
+      this.authCacheService.saveToken(tokens.accessToken, user.id, 'asd'), // todo. hardcore
       this.refreshTokenRepository.save(
         this.refreshTokenRepository.create({
           user_id: user.id,
