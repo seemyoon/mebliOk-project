@@ -20,7 +20,7 @@ export class UserEntity extends CreateUpdateModel {
   name?: string;
 
   @Column('text', { unique: true, nullable: true })
-  phoneNumber: string;
+  phoneNumber?: string;
 
   @Column('text', { nullable: true })
   avatar?: string;

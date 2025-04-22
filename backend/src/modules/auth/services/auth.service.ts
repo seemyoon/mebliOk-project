@@ -6,9 +6,9 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Request } from 'express';
 
 import { UserID } from '../../../common/types/entity-ids.type';
+import { IsEmail } from '../../../common/utils';
 import { Config, MailConfig } from '../../../configs/config.type';
 import { UserEntity } from '../../../infrastructure/postgres/entities/users.entity';
 import { RefreshTokenRepository } from '../../../infrastructure/repository/services/refresh-token.repository';
@@ -17,7 +17,6 @@ import { EmailTypeEnum } from '../../mail/enum/email.enum';
 import { MailService } from '../../mail/service/mail.service';
 import { UserEnum } from '../../user/enum/users.enum';
 import { UserMapper } from '../../user/services/user.mapper';
-import { ITokenPair } from '../interfaces/token-pair.interface';
 import { IUserData } from '../interfaces/user-data.interface';
 import { ChangePasswordReqDto } from '../models/dto/req/change-password.req.dto';
 import { ResetPasswordChangeReqDto } from '../models/dto/req/reset-password-change.req.dto';
@@ -49,23 +48,26 @@ export class AuthService {
   public async signUp(dto: SignUpReqDto): Promise<AuthResDto> {
     let user: UserEntity | null = null;
 
-    const userEmail = await this.userRepository.findOneBy({
-      email: dto.email,
-    });
-
-    if (userEmail) {
-      throw new BadRequestException(
-        'User with this email or phone number already exists',
-      );
-    }
-    if (dto.phoneNumber) {
-      user = await this.userRepository.findOneBy({
-        phoneNumber: dto.phoneNumber,
+    if (dto.phoneNumber && dto.email) {
+      user = await this.userRepository.findOne({
+        where: [{ email: dto.email }, { phoneNumber: dto.phoneNumber }],
+        select: [
+          'id',
+          'name',
+          'deleted',
+          'role',
+          'email',
+          'avatar',
+          'phoneNumber',
+        ],
       });
     }
 
     if (user) {
-      if (user.role === UserEnum.UNREGISTERED_CLIENT) {
+      if (
+        user.role === UserEnum.UNREGISTERED_CLIENT ||
+        user.role === UserEnum.OAUTHREGISTERED_CLIENT
+      ) {
         user.password = await this.passwordService.hashPassword(
           dto.password,
           10,
@@ -130,14 +132,25 @@ export class AuthService {
   }
 
   public async signIn(dto: SignInReqDto): Promise<AuthResDto> {
-    // todo signIn by phone-number or email
+    const where = IsEmail(dto.login)
+      ? { email: dto.login }
+      : { phoneNumber: dto.login };
+
     const user = await this.userRepository.findOne({
-      where: { email: dto.email },
-      select: ['id', 'password', 'deleted'],
+      where,
+      select: ['id', 'password', 'deleted', 'role'],
     });
     if (!user) {
       throw new UnauthorizedException('User not found');
     }
+
+    if (
+      user.role === UserEnum.OAUTHREGISTERED_CLIENT ||
+      user.role === UserEnum.UNREGISTERED_CLIENT
+    ) {
+      throw new ConflictException('You need to sign up at first');
+    }
+
     if (user.deleted) {
       await this.userRepository.update({ id: user.id }, { deleted: null });
     }
@@ -211,16 +224,6 @@ export class AuthService {
       ),
     ]);
     return tokens;
-  }
-
-  public async createGoogleUser(email: string): Promise<UserEntity> {
-    let user = await this.userRepository.findOne({
-      where: { email: email },
-    });
-
-    user = user ?? (await this.createUserViaGoogle(email));
-
-    return user;
   }
 
   public async changePassword(
@@ -323,12 +326,28 @@ export class AuthService {
     await this.logOut(userData);
   }
 
-  public async googleCallback(request: Request): Promise<void> {
-    const deviceId = request.query.deviceId as string;
-    if (!deviceId) throw new BadRequestException('Device Id is required');
+  public async googleLogin(userData: IUserData): Promise<TokenPairResDto> {
+    const tokens = await this.tokenService.generateTokens({
+      userId: userData.userId,
+      deviceId: userData.deviceID,
+    });
 
-    await this.signInViaGoogle(request.user as UserEntity); // todo. avoid it. when do frontend
-    // const { accessToken, refreshToken } = await this.signInViaGoogle(request);
+    await Promise.all([
+      this.authCacheService.saveToken(
+        tokens.accessToken,
+        userData.userId,
+        userData.deviceID,
+      ),
+      this.refreshTokenRepository.save(
+        this.refreshTokenRepository.create({
+          user_id: userData.userId,
+          refreshToken: tokens.refreshToken,
+          deviceId: userData.deviceID,
+        }),
+      ),
+    ]);
+
+    return tokens;
   }
 
   private async returnChangedPasswordOrThrow(
@@ -352,38 +371,5 @@ export class AuthService {
       passwordDB,
     );
     if (!isPasswordValid) throw new ConflictException('Password is incorrect');
-  }
-
-  private async signInViaGoogle(user: UserEntity): Promise<ITokenPair> {
-    const tokens = await this.tokenService.generateTokens({
-      userId: user.id,
-      deviceId: 'asd', // todo. hardcore
-    });
-
-    await Promise.all([
-      this.authCacheService.saveToken(tokens.accessToken, user.id, 'asd'), // todo. hardcore
-      this.refreshTokenRepository.save(
-        this.refreshTokenRepository.create({
-          user_id: user.id,
-          refreshToken: tokens.refreshToken,
-          deviceId: 'asd', // todo. hardcore
-        }),
-      ),
-    ]);
-
-    return tokens;
-  }
-
-  private async createUserViaGoogle(email: string): Promise<UserEntity> {
-    const quantityPersons = await this.userRepository.findAndCount();
-    return await this.userRepository.save(
-      this.userRepository.create({
-        email,
-        role:
-          quantityPersons[1] === 0
-            ? UserEnum.ADMIN
-            : UserEnum.REGISTERED_CLIENT,
-      }),
-    );
   }
 }

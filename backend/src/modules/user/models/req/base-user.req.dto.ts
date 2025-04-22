@@ -4,7 +4,6 @@ import {
   IsEnum,
   IsNotIn,
   IsOptional,
-  IsPhoneNumber,
   IsString,
   Length,
   Matches,
@@ -29,7 +28,7 @@ export class BaseUserReqDto {
 
   @ApiProperty({ example: '+380688899945' })
   @IsString()
-  @IsPhoneNumber(null, { message: 'Phone number must be valid' })
+  @Matches(/^\+?\d{10,15}$/)
   phoneNumber: string;
 
   @ApiProperty({ example: '123qweQWE' })

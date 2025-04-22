@@ -1,20 +1,12 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Patch,
-  Post,
-  Req,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Get, Patch, Post, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Request } from 'express';
 
 import { ROLES } from '../../user/decorators/roles.decorator';
 import { UserEnum } from '../../user/enum/users.enum';
 import { RolesGuard } from '../../user/guard/roles.guard';
 import { CurrentUser } from '../decorators/current-user.decorator';
 import { SkipAuth } from '../decorators/skip-auth.decorator';
+import { ActionTokenGuard } from '../guards/action-token.guard';
 import { GoogleAuthGuard } from '../guards/google-auth.guard';
 import { JwtRefreshGuard } from '../guards/jwt-refresh.guard';
 import { IUserData } from '../interfaces/user-data.interface';
@@ -26,7 +18,6 @@ import { SignUpReqDto } from '../models/dto/req/sign-up.req.dto';
 import { AuthResDto } from '../models/dto/res/auth.res.dto';
 import { TokenPairResDto } from '../models/dto/res/token-pair.res.dto';
 import { AuthService } from '../services/auth.service';
-import { ActionTokenGuard } from '../guards/action-token.guard';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -101,8 +92,10 @@ export class AuthController {
   @SkipAuth()
   @UseGuards(GoogleAuthGuard)
   @Get('google/callback')
-  async googleCallback(@Req() request: Request): Promise<void> {
-    await this.authService.googleCallback(request);
+  public async googleCallback(
+    @CurrentUser() userData: IUserData,
+  ): Promise<TokenPairResDto> {
+    return await this.authService.googleLogin(userData);
   }
 }
 

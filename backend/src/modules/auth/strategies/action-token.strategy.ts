@@ -1,17 +1,17 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
-import { ExtractJwt, Strategy } from 'passport-jwt';
 import { Request } from 'express';
+import { ExtractJwt, Strategy } from 'passport-jwt';
 
 import { ActionTokenConfig } from '../../../configs/config.type';
+import { UserRepository } from '../../../infrastructure/repository/services/user.repository';
+import { UserMapper } from '../../user/services/user.mapper';
 import { JwtPayload } from '../interfaces/jwt-payload.interface';
 import { IUserData } from '../interfaces/user-data.interface';
-import { UserMapper } from '../../user/services/user.mapper';
-import { TokenService } from '../services/token.service';
 import { TokenType } from '../models/enums/token-type.enum';
 import { AuthCacheService } from '../services/auth-cache.service';
-import { UserRepository } from '../../../infrastructure/repository/services/user.repository';
+import { TokenService } from '../services/token.service';
 
 @Injectable()
 export class ActionTokenStrategy extends PassportStrategy(

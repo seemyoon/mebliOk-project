@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class AddBaseEntities1744914079066 implements MigrationInterface {
-    name = 'AddBaseEntities1744914079066'
+export class AddBaseEntities1745340299072 implements MigrationInterface {
+    name = 'AddBaseEntities1745340299072'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`CREATE TABLE "brand" ("createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "id" uuid NOT NULL DEFAULT uuid_generate_v4(), "brand_name" text NOT NULL, CONSTRAINT "PK_a5d20765ddd942eb5de4eee2d7f" PRIMARY KEY ("id"))`);
@@ -24,8 +24,8 @@ export class AddBaseEntities1744914079066 implements MigrationInterface {
         await queryRunner.query(`CREATE TABLE "subcategory_furniture" ("createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "id" uuid NOT NULL DEFAULT uuid_generate_v4(), "title" text NOT NULL, "deleted" TIMESTAMP, "category_id" uuid NOT NULL, CONSTRAINT "PK_aa56ea0c7a5838fc061a42e641b" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "shipping_info" ("createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "id" uuid NOT NULL DEFAULT uuid_generate_v4(), "title" text NOT NULL, "photos" json, "description" text, "body" text, CONSTRAINT "PK_f81527a1b48d655ce69b6962a0e" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "payment_info" ("createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "id" uuid NOT NULL DEFAULT uuid_generate_v4(), "title" text NOT NULL, "description" text, CONSTRAINT "PK_b2ba4f3b3f40c6a37e54fb8b252" PRIMARY KEY ("id"))`);
-        await queryRunner.query(`CREATE TABLE "is_show_price" ("createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "id" uuid NOT NULL DEFAULT uuid_generate_v4(), "isShowPrice" boolean NOT NULL DEFAULT true, CONSTRAINT "PK_ed687f182052b611669e2f4d68c" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "customer_info" ("createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "id" uuid NOT NULL DEFAULT uuid_generate_v4(), "name" text, "phoneNumber" text, "avatar" text, CONSTRAINT "UQ_9877ead65e48a32c072614863a8" UNIQUE ("phoneNumber"), CONSTRAINT "PK_0db6d2761bf28d6233c20a16c61" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TABLE "is_show_price" ("createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "id" uuid NOT NULL DEFAULT uuid_generate_v4(), "isShowPrice" boolean NOT NULL DEFAULT true, CONSTRAINT "PK_ed687f182052b611669e2f4d68c" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "calculate_rate_furniture" ("createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "id" uuid NOT NULL DEFAULT uuid_generate_v4(), "order_criterion" integer NOT NULL DEFAULT '70', "view_criterion" integer NOT NULL DEFAULT '30', CONSTRAINT "PK_c9e58eeea5250cab8713f76feac" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "banner" ("createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "id" uuid NOT NULL DEFAULT uuid_generate_v4(), "photo" text, CONSTRAINT "PK_6d9e2570b3d85ba37b681cd4256" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "furniture_color" ("furniture_id" uuid NOT NULL, "color_id" uuid NOT NULL, CONSTRAINT "PK_3f636dac98d1f7eb16fac8bd211" PRIMARY KEY ("furniture_id", "color_id"))`);
@@ -81,8 +81,8 @@ export class AddBaseEntities1744914079066 implements MigrationInterface {
         await queryRunner.query(`DROP TABLE "furniture_color"`);
         await queryRunner.query(`DROP TABLE "banner"`);
         await queryRunner.query(`DROP TABLE "calculate_rate_furniture"`);
-        await queryRunner.query(`DROP TABLE "customer_info"`);
         await queryRunner.query(`DROP TABLE "is_show_price"`);
+        await queryRunner.query(`DROP TABLE "customer_info"`);
         await queryRunner.query(`DROP TABLE "payment_info"`);
         await queryRunner.query(`DROP TABLE "shipping_info"`);
         await queryRunner.query(`DROP TABLE "subcategory_furniture"`);
