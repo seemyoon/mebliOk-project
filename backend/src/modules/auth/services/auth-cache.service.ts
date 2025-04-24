@@ -65,6 +65,14 @@ export class AuthCacheService {
     return set.includes(token);
   }
 
+  public async deleteAllAccessTokens(): Promise<void> {
+    const pattern = `ACCESS_TOKEN:*`;
+    const keys = await this.redisService.keys(pattern);
+    for (const key of keys) {
+      await this.redisService.deleteByKey(key);
+    }
+  }
+
   public async deleteToken(userId: string, deviceId: string): Promise<void> {
     const key = `ACCESS_TOKEN:${userId}:${deviceId}`;
     await this.redisService.deleteByKey(key);

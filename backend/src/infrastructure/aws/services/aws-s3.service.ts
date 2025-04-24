@@ -34,19 +34,6 @@ export class AwsS3Service {
     });
   }
 
-  // public async readFile(filePath: string): Promise<Readable> {
-  //   const { Body } = await this.s3Client.send(
-  //     // We send a command to S3 via the s3Client client and wait for a response.
-  //     // The response will contain the file body (if the file exists).
-  //     new GetObjectCommand({
-  //       // A GetObjectCommand is created to retrieve a file from AWS S3.
-  //       Bucket: this.awsConfig.bucket_name,
-  //       Key: filePath,
-  //     }),
-  //   );
-  //   return Body as Readable;
-  // }
-
   public async uploadFile(
     file: Express.Multer.File,
     fileType: FileTypeEnum,
@@ -58,7 +45,7 @@ export class AwsS3Service {
     }
     try {
       const filePath = this.buildPath(fileType, itemId, file.originalname);
-      const so = await this.s3Client.send(
+      await this.s3Client.send(
         new PutObjectCommand({
           Bucket: this.awsConfig.bucket_name,
           Key: filePath,
@@ -67,7 +54,6 @@ export class AwsS3Service {
           ACL: this.awsConfig.ACL,
         }),
       );
-      console.log(so.$metadata);
       return filePath;
     } catch (error) {
       this.loggerService.error(error);

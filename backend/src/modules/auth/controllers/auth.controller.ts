@@ -65,12 +65,30 @@ export class AuthController {
     await this.authService.changePassword(userData, dto);
   }
 
+  @ApiBearerAuth()
+  @UseGuards(RolesGuard)
+  @ROLES(UserEnum.MANAGER, UserEnum.ADMIN, UserEnum.REGISTERED_CLIENT)
+  @Post('verifiedSentEmail')
+  public async verifiedSentEmail(@CurrentUser() userData: IUserData) {
+    await this.authService.verifiedSentEmail(userData);
+  }
+
   @SkipAuth()
-  @Post('forgotPasswordSendEmail')
-  public async forgotPasswordSendEmail(
+  @ApiBearerAuth()
+  @UseGuards(ActionTokenGuard)
+  @Patch('verifiedEmail')
+  public async verifiedEmail(
+    @CurrentUser() userData: IUserData,
+  ): Promise<void> {
+    await this.authService.verifiedEmail(userData);
+  }
+
+  @SkipAuth()
+  @Post('forgotPasswordSentEmail')
+  public async forgotPasswordSentEmail(
     @Body() dto: ResetPasswordSendReqDto,
   ): Promise<void> {
-    await this.authService.forgotPasswordSendEmail(dto);
+    await this.authService.forgotPasswordSentEmail(dto);
   }
 
   @SkipAuth()

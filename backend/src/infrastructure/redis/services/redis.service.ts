@@ -25,6 +25,10 @@ export class RedisService {
     return await this.redisClient.del(key);
   }
 
+  public async keys(pattern: string): Promise<string[]> {
+    return await this.redisClient.keys(pattern);
+  }
+
   public async sMembers(key: string): Promise<string[]> {
     return await this.redisClient.smembers(key);
   }

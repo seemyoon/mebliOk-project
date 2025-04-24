@@ -25,6 +25,9 @@ export class UserEntity extends CreateUpdateModel {
   @Column('text', { nullable: true })
   avatar?: string;
 
+  @Column('boolean')
+  isVerified: boolean;
+
   @Column('text', { select: false, nullable: true })
   password?: string;
 

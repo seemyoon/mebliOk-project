@@ -44,6 +44,6 @@ const strategies = [
     PasswordService,
     ...strategies,
   ],
-  exports: [PassportModule],
+  exports: [PassportModule, AuthCacheService],
 })
 export class AuthModule {}

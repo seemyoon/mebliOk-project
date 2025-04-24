@@ -115,18 +115,16 @@ export class AuthService {
       ),
     ]);
 
-    // const actionToken = await this.tokenService.generateActionTokens(
-    //   {
-    //     userId: user.id,
-    //     deviceId: dto.deviceId,
-    //   },
-    // );
-    //
-    // await this.mailService.sendEmail(
-    //   this.mailConfig.email, // todo user email (temporary)
-    //   EmailTypeEnum.WELCOME,
-    //   { name: user.name, actionToken },
-    // );
+    const actionToken = await this.tokenService.generateActionToken({
+      userId: user.id,
+      deviceId: dto.deviceId,
+    });
+
+    await this.mailService.sendEmail(
+      this.mailConfig.email, // todo user email (this.mailConfig.email is temporary)
+      EmailTypeEnum.WELCOME,
+      { name: user.name, actionToken },
+    );
 
     return { user: UserMapper.toResDto(user), tokens };
   }
@@ -138,11 +136,10 @@ export class AuthService {
 
     const user = await this.userRepository.findOne({
       where,
-      select: ['id', 'password', 'deleted', 'role'],
+      select: ['id', 'password', 'deleted', 'role', 'isVerified'],
     });
-    if (!user) {
-      throw new UnauthorizedException('User not found');
-    }
+
+    if (!user) throw new UnauthorizedException('User not found');
 
     if (
       user.role === UserEnum.OAUTHREGISTERED_CLIENT ||
@@ -151,16 +148,18 @@ export class AuthService {
       throw new ConflictException('You need to sign up at first');
     }
 
-    if (user.deleted) {
+    if (user.deleted)
       await this.userRepository.update({ id: user.id }, { deleted: null });
-    }
+
     const isPasswordValid = await this.passwordService.comparePassword(
       dto.password,
       user.password,
     );
-    if (!isPasswordValid) {
+    if (!isPasswordValid)
       throw new UnauthorizedException('Password is incorrect');
-    }
+
+    if (!user.isVerified)
+      throw new UnauthorizedException('You need to verify your email');
 
     const tokens = await this.tokenService.generateTokens({
       userId: user.id,
@@ -276,7 +275,38 @@ export class AuthService {
     ]);
   }
 
-  public async forgotPasswordSendEmail(
+  public async verifiedEmail(userData: IUserData): Promise<void> {
+    const user = await this.userRepository.findUser(userData.userId);
+
+    user.isVerified = true;
+
+    await this.userRepository.save(user);
+  }
+
+  public async verifiedSentEmail(userData: IUserData): Promise<void> {
+    const user = await this.userRepository.findUser(userData.userId);
+
+    if (user.isVerified)
+      throw new ConflictException('User is already verified');
+
+    const token = await this.tokenService.generateActionToken({
+      userId: user.id,
+      deviceId: userData.deviceID,
+    });
+
+    await this.authCacheService.saveActionToken(
+      token,
+      user.id,
+      userData.deviceID,
+    );
+
+    await this.mailService.sendEmail(user.email, EmailTypeEnum.VERIFY_EMAIL, {
+      name: user.name,
+      actionToken: token,
+    });
+  }
+
+  public async forgotPasswordSentEmail(
     dto: ResetPasswordSendReqDto,
   ): Promise<void> {
     const user = await this.userRepository.findOne({

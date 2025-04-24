@@ -5,11 +5,11 @@
   <meta name="viewport"
         content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Welcome Email</title>
+  <title>Verify Your Email</title>
 </head>
 <body style="margin: 0; font-family: Arial, sans-serif; background-color: #ffffff; color: #333;">
 
-<!--{{>header}}-->
+<!-- Header -->
 <table style="width: 100%; padding: 12px 35px; background-color: #ffe066; box-sizing: border-box;">
   <tr>
     <td style="font-size: 22px; text-align: left; color: #1a1a1a;">
@@ -21,37 +21,31 @@
   </tr>
 </table>
 
-<!--{{{body}}}-->
+<!-- Main Body -->
 <table style="width: 100%; padding: 45px 35px; box-sizing: border-box;">
   <tr>
     <td style="font-size: 20px; text-align: center; color: #1a1a1a;">
-      {{name}}, Welcome on our platform!
+      Hello {{name}}!
     </td>
   </tr>
   <tr>
-    <td style="text-align: center;">
-      <p style="margin: 20px 0 15px;">You need to submit your email, please click the button below</p>
+    <td style="text-align: center; padding-top: 20px;">
+      <p>Please verify your email address to complete your registration.</p>
       <a href="{{frontUrl}}/activate?token={{actionToken}}"
-      style="display: inline-block; background-color: #4d91ff; color: white; padding: 10px 25px; border-radius: 5px; text-decoration: none; font-weight: bold;">
-      VERIFY
+      style="display: inline-block; background-color: #4d91ff; color: white; padding: 12px 30px; border-radius: 5px; text-decoration: none; font-weight: bold; margin-top: 15px;">
+      VERIFY EMAIL
       </a>
     </td>
   </tr>
-</table>
-
-<!-- Optional button if needed -->
-<table style="width: 100%; padding: 10px 35px; box-sizing: border-box;">
   <tr>
-    <td style="text-align: center;">
-      <a href="{{frontUrl}}/submit"
-         style="display: inline-block; background-color: #ffe066; color: #1a1a1a; padding: 8px 20px; border-radius: 5px; text-decoration: none; font-weight: bold;">
-        SUBMIT
-      </a>
+    <td style="text-align: center; padding-top: 25px; font-size: 14px; color: #555;">
+      If the button doesn’t work, copy and paste the following link into your browser:<br>
+      <span style="color: #4d91ff;">{{frontUrl}}/activate?token={{actionToken}}</span>
     </td>
   </tr>
 </table>
 
-<!--{{>footer}}-->
+<!-- Footer -->
 <table style="width: 100%; padding: 15px 35px; background-color: #ffe066; box-sizing: border-box;">
   <tr>
     <td style="font-size: 14px; text-align: center; color: #1a1a1a;">
@@ -60,7 +54,7 @@
   </tr>
   <tr>
     <td style="font-size: 11px; text-align: center;">
-      <a href="#" style="color: #4d91ff; text-decoration: underline;">click here</a>
+      <a href="#" style="color: #4d91ff; text-decoration: underline;">Unsubscribe</a>
     </td>
   </tr>
 </table>

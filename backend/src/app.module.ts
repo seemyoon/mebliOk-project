@@ -24,6 +24,8 @@ import { MaterialModule } from './modules/material/material.module';
 import { OrdersModule } from './modules/orders/orders.module';
 import { StatisticModule } from './modules/statistic/statistic.module';
 import { UserModule } from './modules/user/user.module';
+import { CronModule } from './modules/cron/cron.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -31,6 +33,8 @@ import { UserModule } from './modules/user/user.module';
       load: [configuration],
       isGlobal: true,
     }),
+    ScheduleModule.forRoot(),
+    CronModule,
     LoggerModule,
     RedisModule,
     FurnitureModule,
