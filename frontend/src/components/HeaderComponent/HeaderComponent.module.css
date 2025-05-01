@@ -1,32 +1,102 @@
 .header {
-    background-color: #ffee00;
-    padding: 14px 40px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 30px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    padding: 1rem 2rem;
+    border-bottom: 1px solid #eee;
 }
 
 .nav {
     display: flex;
     align-items: center;
-    gap: 40px;
+    gap: 2rem;
+}
+
+.logo {
+    width: 48px;
+    height: auto;
+}
+
+.navGroup {
+    display: flex;
+    gap: 1.5rem;
 }
 
 .link {
-    color: #1e88e5;
     text-decoration: none;
-    font-size: 18px;
+    color: #333;
     font-weight: 500;
-    transition: color 0.3s ease, transform 0.2s ease;
+    transition: color 0.3s;
 }
 
 .link:hover {
-    color: #0d47a1;
-    transform: scale(1.01);
+    color: #007bff;
 }
 
-.link:active {
-    color: #1565c0;
+.searchWrapper {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.controlsGroup {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+    margin-left: auto;
+}
+
+.controlButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+}
+
+.controlIcon {
+    width: 24px;
+    height: 24px;
+    transition: filter 0.3s ease;
+}
+
+.controlButton:hover .controlIcon {
+    fill: #007bff
+}
+
+.avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #eee;
+    transition: border-color 0.3s ease;
+}
+
+.avatar:hover {
+    border-color: #007bff;
+}
+
+@media (max-width: 768px) {
+    .nav {
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .navGroup {
+        gap: 1rem;
+    }
+
+    .controlIcon {
+        width: 20px;
+        height: 20px;
+    }
+
+    .avatar {
+        width: 28px;
+        height: 28px;
+    }
+
+    .logo {
+        width: 40px;
+    }
 }

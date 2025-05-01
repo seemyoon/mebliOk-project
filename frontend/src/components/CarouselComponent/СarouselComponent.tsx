@@ -12,9 +12,13 @@ const photos = [
 const settings = {
   dots: true,
   infinite: true,
-  speed: 500,
+  speed: 800,
   slidesToShow: 1,
   slidesToScroll: 1,
+  autoplaySpeed: 4000,
+  arrows: true,
+  pauseOnHover: true,
+  cssEase: 'ease-in-out',
   // autoplay: true
 };
 

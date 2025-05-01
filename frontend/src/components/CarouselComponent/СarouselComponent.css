@@ -1,18 +1,40 @@
 .sliderContainer {
-    max-width: 100%;
+    width: 100%;
+    max-width: 1200px;
     margin: 0 auto;
     padding: 20px 0;
 }
 
 .slide img {
-    margin: auto;
-    border-radius: 8px;
+    width: 100%;
+    height: auto;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    object-fit: cover;
+    transition: transform 0.5s ease-in-out;
 }
 
-.slick-prev::before,
-.slick-next::before {
-    color: gray;
-    font-size: 24px;
+.slide img:hover {
+    transform: scale(1.01);
 }
 
+.slick-dots {
+    bottom: -20px;
+}
 
+.slick-dots li button:before {
+    font-size: 12px;
+    color: #bbb;
+    opacity: 0.8;
+    transition: color 0.3s ease-in-out;
+}
+
+.slick-dots li.slick-active button:before {
+    color: #005aa7;
+}
+
+@media (max-width: 768px) {
+    .slide img {
+        border-radius: 10px;
+    }
+}
