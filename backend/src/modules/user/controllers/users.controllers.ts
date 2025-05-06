@@ -85,6 +85,8 @@ export class UserController {
   }
 
   @ApiBearerAuth()
+  @UseGuards(RolesGuard)
+  @ROLES(UserEnum.MANAGER, UserEnum.ADMIN, UserEnum.REGISTERED_CLIENT)
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(FileInterceptor('avatar'))
   @ApiFile('avatar', false, true)

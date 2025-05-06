@@ -1,4 +1,8 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 
 import {
   CategoryFurnitureID,
@@ -14,12 +18,15 @@ import { ListSubCategoriesFurnitureQueryDto } from '../dto/req/list-subcategorie
 import { SubCategoryReqDto } from '../dto/req/subcategory.req.dto';
 import { UpdateCategoryFurnitureReqDto } from '../dto/req/update-category.req.dto';
 import { UpdateSubCategoryFurnitureReqDto } from '../dto/req/update-subcategory.req.dto';
+import { AwsS3Service } from '../../../infrastructure/aws/services/aws-s3.service';
+import { FileTypeEnum } from '../../../infrastructure/aws/enum/file-type.enum';
 
 @Injectable()
 export class CategoriesService {
   constructor(
     private readonly categoryFurnitureRepository: CategoryFurnitureRepository,
     private readonly subCategoryFurnitureRepository: SubCategoryFurnitureRepository,
+    private readonly fileStorageService: AwsS3Service,
   ) {}
 
   public async getCategoriesFurniture(
@@ -36,6 +43,29 @@ export class CategoriesService {
       categoryFurnitureId,
       query,
     );
+  }
+
+  public async uploadCategoryPhoto(
+    categoryFurnitureId: CategoryFurnitureID,
+    file: Express.Multer.File,
+  ): Promise<void> {
+    const category =
+      await this.categoryFurnitureRepository.findByCategoryId(
+        categoryFurnitureId,
+      );
+    if (!category) throw new NotFoundException('Category not found');
+
+    const filePath = await this.fileStorageService.uploadFile(
+      file,
+      FileTypeEnum.IMAGE,
+      categoryFurnitureId,
+    );
+    if (category) await this.fileStorageService.deleteFile(category.photo);
+
+    await this.categoryFurnitureRepository.save({
+      ...category,
+      photo: filePath,
+    });
   }
 
   public async createCategoryFurniture(

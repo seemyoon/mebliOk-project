@@ -1,6 +1,6 @@
 import { createBrowserRouter, RouteObject } from 'react-router-dom';
 import HomeMainLayout from '../layout/HomeMainLayout';
-import FurniturePage from '../pages/FurniturePage/FurniturePage';
+import HomePage from '../pages/HomePage/HomePage';
 import ShippingInfoPage from '../pages/ShippingInfoPage/ShippingInfoPage';
 import CatalogPage from '../pages/CatalogPage/CatalogPage';
 import SignInPage from '../pages/SignInPage/SignInPage';
@@ -14,7 +14,7 @@ const routes: RouteObject[] = [{
   path: '/',
   element: <HomeMainLayout />,
   children: [
-    { index: true, element: <FurniturePage /> },
+    { index: true, element: <HomePage /> },
     { path: '/:id', element: <FurnitureIdPage /> },
     { path: '/catalog', element: <CatalogPage /> },
     { path: '/shipping-info', element: <ShippingInfoPage /> },

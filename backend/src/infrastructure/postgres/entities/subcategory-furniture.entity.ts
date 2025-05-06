@@ -27,6 +27,9 @@ export class SubCategoryFurnitureEntity extends CreateUpdateModel {
   @Column('timestamp', { nullable: true })
   deleted?: Date;
 
+  @Column('text')
+  photo: string;
+
   @Column()
   category_id: CategoryFurnitureID;
   @ManyToOne(

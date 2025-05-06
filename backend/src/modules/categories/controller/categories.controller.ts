@@ -7,10 +7,14 @@ import {
   Patch,
   Post,
   Query,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiBearerAuth, ApiConsumes, ApiTags } from '@nestjs/swagger';
 
+import { ApiFile } from '../../../common/decorators/api-file.decorator';
 import {
   CategoryFurnitureID,
   SubCategoryFurnitureID,
@@ -33,7 +37,7 @@ import { CategoriesMapper } from '../services/categories.mapper.service';
 import { CategoriesService } from '../services/categories.service';
 
 @ApiTags('Categories')
-@Controller('categories')
+@Controller('categories_temp')
 export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}
 
@@ -74,6 +78,21 @@ export class CategoriesController {
         categoryFurnitureID,
       ),
     );
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(RolesGuard)
+  @ROLES(UserEnum.MANAGER, UserEnum.ADMIN)
+  @ApiConsumes('multipart/form-data')
+  @UseInterceptors(FileInterceptor('photo'))
+  @ApiFile('photo', false, true)
+  @Post('/uploadCategoryPhoto/:categoryFurnitureID')
+  public async uploadCategoryPhoto(
+    @Param('categoryFurnitureID', ParseUUIDPipe)
+    categoryFurnitureID: CategoryFurnitureID,
+    @UploadedFile() file: Express.Multer.File,
+  ): Promise<void> {
+    await this.categoriesService.uploadCategoryPhoto(categoryFurnitureID, file);
   }
 
   @ApiBearerAuth()
