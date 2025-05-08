@@ -14,3 +14,5 @@ export const loadFurnitureList = createAsyncThunk(
     }
   },
 );
+
+// todo ById

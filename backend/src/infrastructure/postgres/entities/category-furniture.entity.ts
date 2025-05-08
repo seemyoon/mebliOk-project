@@ -14,8 +14,8 @@ export class CategoryFurnitureEntity extends CreateUpdateModel {
   @Column('text')
   title: string;
 
-  @Column('text')
-  photo: string;
+  @Column('text', { nullable: true })
+  photo?: string;
 
   @Column('timestamp', { nullable: true })
   deleted?: Date;

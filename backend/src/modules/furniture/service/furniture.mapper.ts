@@ -4,7 +4,7 @@ import { FavouriteFurnitureEntity } from '../../../infrastructure/postgres/entit
 import { FurnitureEntity } from '../../../infrastructure/postgres/entities/furniture.entity';
 import { SizeEntity } from '../../../infrastructure/postgres/entities/size.entity';
 import { BrandMapper } from '../../brand/services/brand.mapper';
-import { CategoriesMapper } from '../../categories/services/categories.mapper.service';
+import { CategoriesMapper } from '../../categories/services/categories.mapper';
 import { ColorFurnitureMapper } from '../../color/services/color.mapper';
 import { MaterialFurnitureMapper } from '../../material/services/material.mapper';
 import { ListFavouriteFurnitureQueryDto } from '../dto/req/list-favourite-furniture-query.dto';

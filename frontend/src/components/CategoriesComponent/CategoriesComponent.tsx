@@ -1,17 +1,34 @@
 import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { imageUrl } from '../../constants/url';
+import { useAppDispatch, useAppSelector } from '../../redux/store/store';
+import { categoriesActions } from '../../redux/slices/CategoriesSlice';
+import styles from './CategoriesComponent.module.css';
+
 
 const CategoriesComponent = () => {
-  const dispatch = useDispatch()
-  
+  const dispatch = useAppDispatch();
+  const { categoriesResult } = useAppSelector(state => state.categoryInfoState);
   
   useEffect(() => {
-    // dispatch()
-  }, []);
+    dispatch(categoriesActions.loadCategoryList());
+  }, [dispatch]);
+  console.log('imageUrl', imageUrl);
+  
   return (
-    <div>
-    
+    <div className={styles.categoriesGrid}>
+      {categoriesResult.map(category => (
+        <div key={category.id} className={styles.categoryCard}>
+          <div className={styles.overlay}></div>
+          <img
+            src={imageUrl + category.photo}
+            alt={category.title}
+            className={styles.categoryImage}
+          />
+          <div className={styles.categoryTitle}>{category.title}</div>
+        </div>
+      ))}
     </div>
+
   );
 };
 

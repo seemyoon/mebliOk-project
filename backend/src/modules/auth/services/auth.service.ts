@@ -58,6 +58,7 @@ export class AuthService {
           'role',
           'email',
           'avatar',
+          'password',
           'phoneNumber',
         ],
       });
@@ -77,6 +78,16 @@ export class AuthService {
         user.email = dto.email ?? user.email;
         user.phoneNumber = dto.phoneNumber ?? user.phoneNumber;
         await this.userRepository.save(user);
+      } else if (!user.password && (UserEnum.ADMIN || UserEnum.MANAGER)) {
+        user.password = await this.passwordService.hashPassword(
+          dto.password,
+          10,
+        );
+        user.name = dto.name ?? user.name;
+        user.email = dto.email ?? user.email;
+        user.phoneNumber = dto.phoneNumber ?? user.phoneNumber;
+        await this.userRepository.save(user);
+        console.log('asd');
       } else {
         throw new BadRequestException(
           'User with this email or phone number already exists',
@@ -115,16 +126,16 @@ export class AuthService {
       ),
     ]);
 
-    const actionToken = await this.tokenService.generateActionToken({
-      userId: user.id,
-      deviceId: dto.deviceId,
-    });
-
-    await this.mailService.sendEmail(
-      this.mailConfig.email, // todo user email (this.mailConfig.email is temporary)
-      EmailTypeEnum.WELCOME,
-      { name: user.name, actionToken },
-    );
+    // const actionToken = await this.tokenService.generateActionToken({
+    //   userId: user.id,
+    //   deviceId: dto.deviceId,
+    // });
+    //
+    // await this.mailService.sendEmail(
+    //   this.mailConfig.email, // todo user email (this.mailConfig.email is temporary)
+    //   EmailTypeEnum.WELCOME,
+    //   { name: user.name, actionToken },
+    // ); //todo fix verify email
 
     return { user: UserMapper.toResDto(user), tokens };
   }
@@ -143,7 +154,8 @@ export class AuthService {
 
     if (
       user.role === UserEnum.OAUTHREGISTERED_CLIENT ||
-      user.role === UserEnum.UNREGISTERED_CLIENT
+      user.role === UserEnum.UNREGISTERED_CLIENT ||
+      !user.password
     ) {
       throw new ConflictException('You need to sign up at first');
     }

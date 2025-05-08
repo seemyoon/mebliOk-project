@@ -33,11 +33,11 @@ import { CategoriesFurnitureListResDto } from '../dto/res/categories-list.res.dt
 import { CategoryFurnitureResDto } from '../dto/res/category-furniture.res.dto';
 import { SubCategoriesFurnitureListResDto } from '../dto/res/subcategories-list.res.dto';
 import { SubCategoryFurnitureResDto } from '../dto/res/subcategory-furniture.res.dto';
-import { CategoriesMapper } from '../services/categories.mapper.service';
+import { CategoriesMapper } from '../services/categories.mapper';
 import { CategoriesService } from '../services/categories.service';
 
 @ApiTags('Categories')
-@Controller('categories_temp')
+@Controller('categories')
 export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}
 

@@ -2,11 +2,13 @@ import { configureStore } from '@reduxjs/toolkit';
 import { furnitureSlice } from '../slices/furnitureSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { shippingInfoSlice } from '../slices/shippingInfoSlice';
+import { categoriesSlice } from '../slices/CategoriesSlice';
 
 export const store = configureStore({
   reducer: {
     furnitureSliceState: furnitureSlice.reducer,
     shippingInfoState: shippingInfoSlice.reducer,
+    categoryInfoState: categoriesSlice.reducer,
   },
 });
 

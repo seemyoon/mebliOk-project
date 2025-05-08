@@ -17,6 +17,7 @@ export class CategoriesMapper {
     return {
       id: data?.id,
       title: data?.title,
+      photo: data?.photo,
     };
   }
 
@@ -38,6 +39,7 @@ export class CategoriesMapper {
     return {
       id: data?.id,
       title: data?.title,
+      photo: data?.photo,
     };
   }
 

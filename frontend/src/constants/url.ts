@@ -1,4 +1,5 @@
 const baseUrl = 'http://localhost:3200';
+const imageUrl = 'https://mebliok-bucket.s3.us-east-1.amazonaws.com/';
 
 const urlBuilder = {
   extraInfo: {
@@ -8,6 +9,10 @@ const urlBuilder = {
   furniture: {
     base: baseUrl + '/furniture',
     getAllFurniture: (): string => urlBuilder.furniture.base + '/getAllFurniture?currency=UAH', //todo Pagination
+  },
+  category: {
+    base: baseUrl + '/categories',
+    getCategories: (): string => urlBuilder.category.base + '/getCategoriesFurniture',
   },
 };
 
@@ -25,4 +30,4 @@ const authUrlBuilder = {
     callback: (): string => authUrlBuilder.ouath.base + '/callback',
   },
 };
-export { baseUrl, urlBuilder, authUrlBuilder };
+export { baseUrl, urlBuilder, authUrlBuilder, imageUrl };
