@@ -25,7 +25,7 @@ export class UserEntity extends CreateUpdateModel {
   @Column('text', { nullable: true })
   avatar?: string;
 
-  @Column('boolean')
+  @Column('boolean', { nullable: true }) // todo. delete nullable
   isVerified: boolean;
 
   @Column('text', { select: false, nullable: true })

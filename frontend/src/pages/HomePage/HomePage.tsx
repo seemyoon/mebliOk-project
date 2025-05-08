@@ -4,7 +4,7 @@ import styles from './HomePage.module.css';
 import CategoriesComponent
   from '../../components/CategoriesComponent/CategoriesComponent';
 
-const HomePage = () => {
+export const HomePage = () => {
   
   return (
     <div className={styles.pageContainer}>
@@ -17,4 +17,3 @@ const HomePage = () => {
   );
 };
 
-export default HomePage;

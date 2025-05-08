@@ -1,6 +1,6 @@
 import { createBrowserRouter, RouteObject } from 'react-router-dom';
 import HomeMainLayout from '../layout/HomeMainLayout';
-import HomePage from '../pages/HomePage/HomePage';
+import { HomePage } from '../pages/HomePage/HomePage';
 import ShippingInfoPage from '../pages/ShippingInfoPage/ShippingInfoPage';
 import CatalogPage from '../pages/CatalogPage/CatalogPage';
 import SignInPage from '../pages/SignInPage/SignInPage';
