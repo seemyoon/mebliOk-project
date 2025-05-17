@@ -1,16 +1,17 @@
 .sliderContainer {
     width: 100%;
-    max-width: 1200px;
     margin: 0 auto;
     padding: 20px 0;
+}
+.slide {
+    height: 40vh;
 }
 
 .slide img {
     width: 100%;
-    height: auto;
-    border-radius: 16px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    height: 100%;
     object-fit: cover;
+    border-radius: 16px;
     transition: transform 0.5s ease-in-out;
 }
 

@@ -12,7 +12,6 @@ const CategoriesComponent = () => {
   useEffect(() => {
     dispatch(categoriesActions.loadCategoryList());
   }, [dispatch]);
-  console.log('imageUrl', imageUrl);
   
   return (
     <div className={styles.categoriesGrid}>
