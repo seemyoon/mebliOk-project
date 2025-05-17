@@ -3,17 +3,27 @@ import CarouselComponent
 import styles from './HomePage.module.css';
 import CategoriesComponent
   from '../../components/CategoriesComponent/CategoriesComponent';
+import AboutUsComponent
+  from '../../components/AboutUsComponent/AboutUsComponent';
+import StockComponent from '../../components/StockComponent/StockComponent';
 
 export const HomePage = () => {
   
   return (
-    <div className={styles.pageContainer}>
-      <div className={styles.carouselContainer}>
-        <CarouselComponent />
+    <div>
+      <div className={styles.pageContainer}>
+        <div className={styles.carouselContainer}>
+          <CarouselComponent />
+        </div>
+        <h1 className={styles.healing}>Категорії</h1>
+        <CategoriesComponent />
+        <button className={styles.roundedButton}>Переглянути повний каталог
+        </button>
       </div>
-      <h1>Категорії</h1>
-      <CategoriesComponent />
+      <AboutUsComponent />
+      <StockComponent />
     </div>
+  
   );
 };
 

@@ -1,14 +1,20 @@
 .pageContainer {
     display: flex;
     flex-direction: column;
-    align-items: center;
     padding: 20px;
+    width: 80%;
+    margin: 0 auto 30px;
+}
+
+.healing {
+    text-align: center;
 }
 
 .carouselContainer {
-    max-width: 600px;
+    display: flex;
+    justify-content: center;
+    margin: 0 0 40px;
     width: 100%;
-    margin-bottom: 40px;
 }
 
 .containerItems {
@@ -60,4 +66,27 @@
     border-radius: 5px;
     cursor: pointer;
 }
+
+.roundedButton {
+    display: inline-block;
+    padding: 15px 35px;
+    font-size: 14px;
+    color: white;
+    background: #00a2ff;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    text-decoration: none;
+    font-weight: 600;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+    margin: 40px auto 0;
+    text-align: center;
+}
+
+.roundedButton:hover {
+    transform: translateY(-0.9px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
+}
+
 
