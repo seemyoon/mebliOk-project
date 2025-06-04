@@ -6,6 +6,8 @@ import CategoriesComponent
 import AboutUsComponent
   from '../../components/AboutUsComponent/AboutUsComponent';
 import StockComponent from '../../components/StockComponent/StockComponent';
+import GetInTouchComponent
+  from '../../components/GetInTouchComponent/GetInTouchComponent';
 
 export const HomePage = () => {
   
@@ -22,6 +24,7 @@ export const HomePage = () => {
       </div>
       <AboutUsComponent />
       <StockComponent />
+      <GetInTouchComponent />
     </div>
   
   );
