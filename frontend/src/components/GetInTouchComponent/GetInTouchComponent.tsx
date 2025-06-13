@@ -1,13 +1,16 @@
 import styles from './GetInTouchComponent.module.css';
+import GetInTouchFormComponent
+  from '../FormComponent/GetInTouchFormComponent/GetInTouchFormComponent';
 
 
 const GetInTouchComponent = () => {
+  
   return (
     <div className={styles.contactSection}>
       <div className={styles.contactContainer}>
-        <h2 className={styles.contactTitle}>Get in Touch</h2>
-        <p className={styles.contactDescription}>Have a question or want to work
-          together? We'd love to hear from you.</p>
+        <h2 className={styles.contactTitle}>Зв'яжіться з нами</h2>
+        <p className={styles.contactDescription}>Маєте запитання? Ми будемо раді
+          вас почути.</p>
         
         <div className={styles.contactInfo}>
           <div className={styles.contactItem}>
@@ -25,39 +28,13 @@ const GetInTouchComponent = () => {
           <div className={styles.contactItem}>
             <img src="/getInTouch/envelope.svg" alt="Email"
                  className={styles.contactIcon} />
-            <span className={styles.contactText}>hello@uxflow.com</span>
+            <span className={styles.contactText}>mebliok@gmail.com</span>
           </div>
         </div>
         
-        <form className={styles.contactForm}>
-          <div className={styles.formGroup}>
-            <label htmlFor="name">Name</label>
-            <input type="text" id="name" name="name" required />
-          </div>
-          
-          <div className={styles.formGroup}>
-            <label htmlFor="email">Email</label>
-            <input type="email" id="email" name="email" required />
-          </div>
-          
-          <div className={styles.formGroup}>
-            <label htmlFor="message">Message</label>
-            <textarea id="message" name="message" required></textarea>
-          </div>
-          
-          <button type="submit" className={styles.submitBtn}>Send Message</button>
-        </form>
         
-        <div className={styles.socialLinks}>
-          <a href="https://www.instagram.com/mebliok/" aria-label="Instagram">
-            <img src="/footer/inst.svg" alt="Instagram"
-                 className={styles.socialIcon} />
-          </a>
-          <a href="https://www.facebook.com/mebliok/" aria-label="Facebook">
-            <img src="/footer/facebook.svg" alt="Facebook"
-                 className={styles.socialIcon} />
-          </a>
-        </div>
+        <GetInTouchFormComponent />
+      
       </div>
     </div>
   );

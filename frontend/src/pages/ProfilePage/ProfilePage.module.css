@@ -1,0 +1,136 @@
+.pageWrapper {
+    padding: 40px;
+    background-color: #f9fafc;
+    font-family: Arial, sans-serif;
+}
+
+.pageTitle {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.container {
+    display: flex;
+    gap: 30px;
+}
+
+.sidebar {
+    width: 280px;
+}
+
+.profileCard {
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    text-align: center;
+}
+
+.avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 2px;
+}
+
+.name {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 10px 0 5px;
+}
+
+.role {
+    display: inline-block;
+    background-color: #e0edff;
+    color: #3178f5;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    margin-bottom: 20px;
+}
+
+.contactInfo {
+    font-size: 14px;
+    color: #444;
+    line-height: 1.6;
+    text-align: left;
+}
+
+.mainContent {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.section {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    padding: 20px 25px;
+}
+
+.formGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    margin-top: 15px;
+}
+
+.inputGroup {
+    display: flex;
+    flex-direction: column;
+}
+
+.inputGroup label {
+    margin-bottom: 6px;
+    font-weight: 500;
+    color: #333;
+}
+
+.inputGroup input {
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.saveButton {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #4f8bff;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    align-self: flex-start;
+}
+
+.saveButton:hover {
+    background-color: #316edc;
+}
+
+.managementGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.managementItem {
+    background-color: #f5f7fa;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.managementItem:hover {
+    background-color: #e9eef5;
+}

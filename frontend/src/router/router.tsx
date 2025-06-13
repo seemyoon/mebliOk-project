@@ -9,6 +9,7 @@ import FurnitureIdPage from '../pages/FurnitureIdPage/FurnitureIdPage';
 import AboutUsPage from '../pages/AboutUsPage/AboutUsPage';
 import SignInViaGooglePage
   from '../pages/SignInViaGooglePage/SignInViaGooglePage';
+import ProfilePage from '../pages/ProfilePage/ProfilePage';
 
 const routes: RouteObject[] = [{
   path: '/',
@@ -22,6 +23,7 @@ const routes: RouteObject[] = [{
     { path: '/auth/sign-in-google', element: <SignInViaGooglePage /> },
     { path: '/auth/sign-up', element: <SignUpPage /> },
     { path: '/about-us', element: <AboutUsPage /> },
+    { path: '/profile', element: <ProfilePage /> },
   ],
 }];
 
