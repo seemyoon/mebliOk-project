@@ -1,22 +1,10 @@
-import axios from 'axios';
-import { baseUrl } from '../constants/url';
 import { retrieveLocalStorage } from '../helpers/retrieveLocalStorage';
 import { ITokenObtainPair } from '../interfaces/ITokenObtainPair';
 import { ISignUpUserData } from '../interfaces/ISignUpUserData';
 import { IAuthResponseData } from '../interfaces/IAuthResponseData';
 import { ISignInUserData } from '../interfaces/ISignInUserData';
+import { axiosInstance } from './api.service';
 
-const axiosInstance = axios.create({
-  baseURL: baseUrl,
-  headers: {},
-});
-
-axiosInstance.interceptors.request.use((requestObject) => {
-  if (localStorage.getItem('tokenPair') && requestObject.url !== '/auth' && requestObject.url !== '/auth/refresh') {
-    requestObject.headers.set('Authorization', 'Bearer' + retrieveLocalStorage<ITokenObtainPair>('tokenPair').accessToken);
-  }
-  return requestObject;
-});
 
 const authService = {
   signUp: async (signUpUserData: ISignUpUserData): Promise<boolean> => {

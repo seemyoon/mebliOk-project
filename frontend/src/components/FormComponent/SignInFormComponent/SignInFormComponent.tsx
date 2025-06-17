@@ -39,7 +39,7 @@ const SignInFormComponent: FC = () => {
       if (axiosError?.response?.status === 401) {
         setStatusMessage('email or phone is faulty');
       } else {
-        setStatusMessage('An error occurred, please try again later');
+        setStatusMessage('an error occurred, please try again later');
       }
     }
   };

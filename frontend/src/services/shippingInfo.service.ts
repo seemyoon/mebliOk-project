@@ -1,16 +1,6 @@
-import axios from 'axios';
-import { baseUrl, urlBuilder } from '../constants/url';
+import { urlBuilder } from '../constants/url';
 import { IShippingInfo } from '../interfaces/IShippingInfo';
-
-const axiosInstance = axios.create({
-  baseURL: baseUrl,
-  headers: {},
-});
-
-axiosInstance.interceptors.request.use(request => {
-  request.headers.set('Content-Type', 'application/json');
-  return request;
-});
+import { axiosInstance } from './api.service';
 
 const shippingInfoService = {
   getShippingInfo: async (): Promise<IShippingInfo> => {
